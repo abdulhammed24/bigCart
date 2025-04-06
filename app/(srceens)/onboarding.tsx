@@ -10,7 +10,7 @@ import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { OnboardingSlides, slides } from '@/components/OnboardingSlides';
-import { PrimaryBtn } from '@/components/primaryBtn';
+import { PrimaryBtn } from '@/components/PrimaryBtn';
 
 const { width, height } = Dimensions.get('window');
 

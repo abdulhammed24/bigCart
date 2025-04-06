@@ -11,7 +11,7 @@ import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { PrimaryBtn } from '@/components/primaryBtn';
+import { PrimaryBtn } from '@/components/PrimaryBtn';
 
 export default function Register() {
   const router = useRouter();
@@ -138,7 +138,7 @@ export default function Register() {
 
           {/* Sign Up Link */}
           <View className="items-center">
-            <Text className="text-gray text-[15px] font-poppinsRegular">
+            <Text className="text-gray text-[16px] font-poppinsRegular">
               Already have an account ?{' '}
               <Link
                 href="/(srceens)/(auth)/login"

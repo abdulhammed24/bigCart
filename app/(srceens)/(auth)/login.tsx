@@ -13,7 +13,7 @@ import { Image } from 'expo-image';
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { PrimaryBtn } from '@/components/primaryBtn';
+import { PrimaryBtn } from '@/components/PrimaryBtn';
 
 export default function Login() {
   const router = useRouter();
@@ -144,7 +144,7 @@ export default function Login() {
 
           {/* Sign Up Link */}
           <View className="items-center">
-            <Text className="text-gray text-[15px] font-poppinsRegular">
+            <Text className="text-gray text-[16px] font-poppinsRegular">
               Don’t have an account ?{' '}
               <Link
                 href="/(srceens)/(auth)/register"

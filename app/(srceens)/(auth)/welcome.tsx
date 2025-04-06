@@ -8,6 +8,7 @@ import {
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import { sharedStyles } from '@/styles/sharedStyles';
 
 export default function Welcome() {
   return (
@@ -51,10 +52,7 @@ export default function Welcome() {
 
         {/* Buttons */}
         <View className="mb-6 flex flex-col gap-2">
-          <TouchableOpacity
-            style={styles.primaryBtn}
-            className="flex w-full bg-white flex-row"
-          >
+          <TouchableOpacity className="flex w-full bg-white flex-row p-4 rounded-md items-center h-[60px]">
             <Image
               source={require('@/assets/icons/google.svg')}
               style={{ width: 24, height: 24, marginRight: 10 }}
@@ -71,8 +69,8 @@ export default function Welcome() {
               colors={['#aedc81', '#6cc51d']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={styles.primaryBtn}
-              className="flex w-full flex-row"
+              style={{ borderRadius: 6 }}
+              className="flex w-full flex-row p-4  items-center h-[60px]"
             >
               <Image
                 source={require('@/assets/icons/user.svg')}
@@ -91,7 +89,7 @@ export default function Welcome() {
 
         {/* Login Link */}
         <View className="items-center">
-          <Text className="text-gray text-[15px] font-poppinsRegular">
+          <Text className="text-gray text-[16px] font-poppinsRegular">
             Already have an account ?{' '}
             <Link
               href="/(srceens)/(auth)/login"
@@ -105,12 +103,3 @@ export default function Welcome() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  primaryBtn: {
-    padding: 16,
-    borderRadius: 6,
-    alignItems: 'center',
-    height: 60,
-  },
-});
