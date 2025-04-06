@@ -16,6 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#fff"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.anonymous.bigcart"
     },
     "web": {

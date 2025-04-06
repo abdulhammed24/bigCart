@@ -28,8 +28,8 @@ export default function Register() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 100}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={100}
     >
       <View className="flex-1">
         {/* Image Background Section */}
@@ -41,7 +41,7 @@ export default function Register() {
           >
             <View className="flex flex-row items-center justify-between">
               <TouchableOpacity
-                onPress={() => router.push('/(srceens)/(auth)/login')}
+                onPress={() => router.push('/(screens)/(auth)/login')}
               >
                 <Image
                   source={require('@/assets/icons/back-arrow.svg')}
@@ -141,7 +141,7 @@ export default function Register() {
             <Text className="text-gray text-[16px] font-poppinsRegular">
               Already have an account ?{' '}
               <Link
-                href="/(srceens)/(auth)/login"
+                href="/(screens)/(auth)/login"
                 className="text-black font-poppinsBold"
               >
                 Login

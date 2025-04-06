@@ -92,7 +92,7 @@ export default function Welcome() {
           <Text className="text-gray text-[16px] font-poppinsRegular">
             Already have an account ?{' '}
             <Link
-              href="/(srceens)/(auth)/login"
+              href="/(screens)/(auth)/login"
               className="text-black font-poppinsBold"
             >
               Login

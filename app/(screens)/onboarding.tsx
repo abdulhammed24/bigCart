@@ -77,7 +77,7 @@ export default function Onboarding() {
       </View>
       <View className="absolute bottom-6 left-6 right-6">
         {currentIndex === slides.length - 1 ? (
-          <Link href="/(srceens)/(auth)/welcome" asChild>
+          <Link href="/(screens)/(auth)/welcome" asChild>
             <PrimaryBtn title="Get Started" onPress={handleFinish} />
           </Link>
         ) : (

@@ -47,8 +47,8 @@ export default function Index() {
       <Redirect
         href={
           hasSeenOnboarding
-            ? '/(srceens)/(auth)/login'
-            : '/(srceens)/onboarding'
+            ? '/(screens)/(auth)/login'
+            : '/(screens)/onboarding'
         }
       />
     </View>

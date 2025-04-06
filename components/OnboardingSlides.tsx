@@ -61,15 +61,15 @@ export const OnboardingSlides = ({ item, index }: SlideItemProps) => (
         //   marginBottom: 16,
         //   textAlign: 'center',
         // }}
-        className="text-[30px] font-poppinsBold font-semibold text-black mb-4 text-center"
+        className="text-[30px] font-poppinsBold font-semibold text-black text-center"
       >
         {item.title}
       </Text>
       {index === 0 && (
         <Image
-          source="../assets/images/bigCart.svg"
-          className="bg-red h-20"
-          contentFit="cover"
+          source={require('@/assets/images/bigCart.svg')}
+          style={{ width: 130, height: 50 }}
+          contentFit="contain"
         />
       )}
       <Text className="text-gray text-center font-poppinsRegular text-[16px]">

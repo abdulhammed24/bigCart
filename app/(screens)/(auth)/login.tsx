@@ -4,16 +4,15 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 export default function Login() {
   const router = useRouter();
@@ -25,13 +24,14 @@ export default function Login() {
   //
   const handleLogin = () => {
     console.log('Sign up with:', { email, password });
+    router.push('/(screens)/onboarding');
   };
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={100}
     >
       <View className="flex-1">
         {/* Image Background Section */}
@@ -43,7 +43,7 @@ export default function Login() {
           >
             <View className="flex flex-row items-center justify-between">
               <TouchableOpacity
-                onPress={() => router.push('/(srceens)/(auth)/welcome')}
+                onPress={() => router.push('/(screens)/(auth)/welcome')}
               >
                 <Image
                   source={require('@/assets/icons/back-arrow.svg')}
@@ -139,7 +139,7 @@ export default function Login() {
             </View>
 
             {/* Login Button */}
-            <PrimaryBtn title="  Login" onPress={handleLogin} />
+            <PrimaryBtn title="Login" onPress={handleLogin} />
           </View>
 
           {/* Sign Up Link */}
@@ -147,7 +147,7 @@ export default function Login() {
             <Text className="text-gray text-[16px] font-poppinsRegular">
               Don’t have an account ?{' '}
               <Link
-                href="/(srceens)/(auth)/register"
+                href="/(screens)/(auth)/register"
                 className="text-black font-poppinsBold"
               >
                 Sign up
