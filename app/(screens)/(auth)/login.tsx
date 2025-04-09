@@ -12,7 +12,6 @@ import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 export default function Login() {
   const router = useRouter();
@@ -24,7 +23,7 @@ export default function Login() {
   //
   const handleLogin = () => {
     console.log('Sign up with:', { email, password });
-    router.push('/(screens)/onboarding');
+    router.push('/(tabs)/homepage');
   };
 
   return (

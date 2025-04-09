@@ -1,18 +1,11 @@
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
+import { View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { OnboardingSlides, slides } from '@/components/OnboardingSlides';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 interface Slide {
   id: string;
@@ -22,10 +15,9 @@ interface Slide {
 }
 
 export default function Onboarding() {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<Slide>>(null);
 
-  //
   const handleNext = () => {
     if (currentIndex < slides.length - 1) {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
@@ -33,12 +25,10 @@ export default function Onboarding() {
     }
   };
 
-  //
   const handleFinish = async () => {
     await AsyncStorage.setItem('hasSeenOnboarding', 'true');
   };
 
-  //
   const handleDotPress = (index: number) => {
     flatListRef.current?.scrollToIndex({ index, animated: true });
     setCurrentIndex(index);

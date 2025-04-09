@@ -5,14 +5,17 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { View } from 'react-native';
 
+// Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
+  const [appIsReady, setAppIsReady] = useState(false);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(
     null,
   );
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
+  // Load fonts
   const loadFonts = async () => {
     await Font.loadAsync({
       'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
@@ -20,37 +23,50 @@ export default function Index() {
       'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
       'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
     });
-    setFontsLoaded(true);
   };
 
+  // Initialize app state
   useEffect(() => {
     const initialize = async () => {
-      await loadFonts();
-      const value = await AsyncStorage.getItem('hasSeenOnboarding');
-      setHasSeenOnboarding(value === 'true');
+      try {
+        await loadFonts();
+        const onboardingValue = await AsyncStorage.getItem('hasSeenOnboarding');
+        const loggedInValue = await AsyncStorage.getItem('isLoggedIn');
+        setHasSeenOnboarding(onboardingValue === 'true');
+        setIsLoggedIn(loggedInValue === 'true');
+      } catch (e) {
+        console.warn('Error during initialization:', e);
+      } finally {
+        setAppIsReady(true);
+      }
     };
     initialize();
   }, []);
 
+  // Hide splash screen when app is ready
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded && hasSeenOnboarding !== null) {
+    if (appIsReady) {
       await SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, hasSeenOnboarding]);
+  }, [appIsReady]);
 
-  if (!fontsLoaded || hasSeenOnboarding === null) {
+  // Early return if app isn't ready
+  if (!appIsReady) {
     return null;
+  }
+
+  // Define redirect path with explicit type
+  let redirectPath:
+    | '/(screens)/onboarding'
+    | '/(tabs)/homepage'
+    | '/(screens)/(auth)/login' = '/(screens)/onboarding';
+  if (hasSeenOnboarding) {
+    redirectPath = isLoggedIn ? '/(tabs)/homepage' : '/(screens)/(auth)/login';
   }
 
   return (
     <View onLayout={onLayoutRootView}>
-      <Redirect
-        href={
-          hasSeenOnboarding
-            ? '/(screens)/(auth)/login'
-            : '/(screens)/onboarding'
-        }
-      />
+      <Redirect href={redirectPath} />
     </View>
   );
 }

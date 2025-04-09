@@ -1,6 +1,8 @@
 import { View, Text, ImageBackground, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 
+const { width, height } = Dimensions.get('window');
+
 interface Slide {
   id: string;
   title: string;
@@ -44,8 +46,6 @@ interface SlideItemProps {
   index: number;
 }
 
-const { width, height } = Dimensions.get('window');
-
 export const OnboardingSlides = ({ item, index }: SlideItemProps) => (
   <ImageBackground
     source={item.bg}
@@ -53,16 +53,7 @@ export const OnboardingSlides = ({ item, index }: SlideItemProps) => (
     resizeMode="cover"
   >
     <View className="flex-1 items-center max-w-[350px] mx-auto p-6">
-      <Text
-        // style={{
-        //   fontFamily: 'Poppins-Bold',
-        //   fontSize: 30,
-        //   color: '#000000',
-        //   marginBottom: 16,
-        //   textAlign: 'center',
-        // }}
-        className="text-[30px] font-poppinsBold font-semibold text-black text-center"
-      >
+      <Text className="text-[30px] font-poppinsBold font-semibold text-black text-center">
         {item.title}
       </Text>
       {index === 0 && (
