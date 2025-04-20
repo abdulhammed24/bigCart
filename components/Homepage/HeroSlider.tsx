@@ -49,7 +49,7 @@ export default function HeroSlider() {
         source={item.image}
         style={{ width: '100%', height: '100%', position: 'relative' }}
         imageStyle={{ width: '100%', height: '100%' }}
-        resizeMode="contain"
+        resizeMode="cover"
       >
         <View className="flex-1 absolute bottom-20 justify-center items-start">
           <Text className="text-[18px] font-poppinsBold text-center px-4 py-2">
