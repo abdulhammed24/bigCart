@@ -1,3 +1,4 @@
+import Rating from '@/components/Rating';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -87,10 +88,10 @@ export default function SingleProductDetails() {
 
           {/* Rating */}
           <View className="flex-row items-center flex gap-1 mb-4">
-            <Text className="text-black font-poppinsBold text-[14px]">
+            <Text className="text-black font-poppinsBold mt-1 text-[14px]">
               {product.rating}
             </Text>
-            <Text className="text-yellow-500">⭐ </Text>
+            <Rating rating={product.rating} />
             <Text className="text-gray font-poppinsMedium text-[14px]">
               ({product.reviews} reviews)
             </Text>
