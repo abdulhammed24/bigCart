@@ -1,58 +1,19 @@
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
+import { products } from '@/data/products';
+type FeaturedProductsProps = {
+  category?: string;
+};
 
-export default function FeaturedProducts() {
+export default function FeaturedProducts({ category }: FeaturedProductsProps) {
   const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
 
-  const products = [
-    {
-      name: 'Fresh Peach',
-      price: '$8.00',
-      unit: '1 lb',
-      image: require('@/assets/images/products/peach.png'),
-      bgColor: '#FFDCE0',
-    },
-    {
-      name: 'Avocado',
-      price: '$3.00',
-      unit: 'dozen',
-      image: require('@/assets/images/products/avocado.png'),
-      badge: 'NEW',
-      bgColor: '#FFF5D1',
-    },
-    {
-      name: 'Pineapple',
-      price: '$8.00',
-      unit: '1 lb',
-      image: require('@/assets/images/products/pineapple.png'),
-      bgColor: '#D1FADF',
-    },
-    {
-      name: 'Black Grapes',
-      price: '$8.00',
-      unit: '1 lb',
-      image: require('@/assets/images/products/grapes.png'),
-      badge: '-16%',
-      bgColor: '#E9D5FF',
-    },
-    {
-      name: 'Pomegranate',
-      price: '$3.00',
-      unit: '1 lb',
-      image: require('@/assets/images/products/pomegranate.png'),
-      badge: 'NEW',
-      bgColor: '#FEE2E2',
-    },
-    {
-      name: 'Fresh Broccoli',
-      price: '$8.00',
-      unit: '1 lb',
-      image: require('@/assets/images/products/broccoli.png'),
-      bgColor: '#D1FAE5',
-    },
-  ];
+  // Filter products by category if provided
+  const filteredProducts = category
+    ? products.filter((product) => product.category === category)
+    : products;
 
   const toggleFavorite = (index: number) => {
     setFavorites((prev) => ({
@@ -63,7 +24,7 @@ export default function FeaturedProducts() {
 
   return (
     <FlatList
-      data={products}
+      data={filteredProducts}
       renderItem={({ item, index }) => (
         <View className="bg-white rounded-xl mb-4 w-[48%] p-3 shadow-sm relative">
           {/* Favorite (Heart) Icon */}
@@ -79,18 +40,18 @@ export default function FeaturedProducts() {
           </TouchableOpacity>
 
           {/* Badge (New or Discount) */}
-          {item.badge && (
+          {(item.status === 'new' || item.discountPercentage) && (
             <View
-              className={`absolute top-3 left-3 px-2 py-[2px] rounded-sm ${
-                item.badge === 'NEW' ? 'bg-yellow-100' : 'bg-red-100'
+              className={`absolute top-3 left-3 px-2 z-10 py-[2px] rounded-sm ${
+                item.status === 'new' ? 'bg-yellow-100' : 'bg-red-100'
               }`}
             >
               <Text
                 className={`text-xs font-semibold ${
-                  item.badge === 'NEW' ? 'text-yellow-600' : 'text-red-500'
+                  item.status === 'new' ? 'text-yellow-600' : 'text-red-500'
                 }`}
               >
-                {item.badge}
+                {item.status === 'new' ? 'NEW' : `-${item.discountPercentage}%`}
               </Text>
             </View>
           )}
@@ -112,7 +73,7 @@ export default function FeaturedProducts() {
           {/* Product Info */}
           <View className="items-center justify-center">
             <Text className="text-green-600 font-poppinsMedium text-[14px]">
-              {item.price}
+              ${item.price.toFixed(2)}
             </Text>
             <Text className="font-poppinsBold text-[16px] mt-1">
               {item.name}

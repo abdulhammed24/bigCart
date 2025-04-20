@@ -64,13 +64,15 @@ export default function Homepage() {
                   <Text className="text-[18px] font-poppinsBold">
                     Featured products
                   </Text>
-                  <TouchableOpacity className="flex-row items-center">
-                    <Image
-                      source={require('@/assets/icons/view-all.svg')}
-                      style={{ width: 12, height: 12 }}
-                      contentFit="contain"
-                    />
-                  </TouchableOpacity>
+                  <Link href="/product-details/id" asChild>
+                    <TouchableOpacity className="flex-row items-center">
+                      <Image
+                        source={require('@/assets/icons/view-all.svg')}
+                        style={{ width: 12, height: 12 }}
+                        contentFit="contain"
+                      />
+                    </TouchableOpacity>
+                  </Link>
                 </View>
                 <FeaturedProducts />
               </View>
