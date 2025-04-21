@@ -57,7 +57,7 @@ export default function Welcome() {
 
         <View className="mb-6 flex flex-col gap-2">
           <Pressable
-            onPress={() => router.push('/(screens)/onboarding')}
+            // onPress={() => router.push('/(screens)/onboarding')}
             className="flex w-full bg-white flex-row p-4 rounded-md items-center h-[60px]"
           >
             <Image

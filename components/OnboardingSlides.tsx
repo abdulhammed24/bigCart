@@ -47,7 +47,11 @@ interface SlideItemProps {
 }
 
 export const OnboardingSlides = ({ item, index }: SlideItemProps) => (
-  <ImageBackground source={item.bg} style={{ flex: 1 }} resizeMode="cover">
+  <ImageBackground
+    source={item.bg}
+    style={{ width, height: '100%', flex: 1 }}
+    resizeMode="cover"
+  >
     {/* <View className="absolute inset-0 bg-black opacity-40" /> */}
     <View className="flex-1 items-center mt-5 max-w-[350px] mx-auto p-6">
       <Text className="text-[30px] font-poppinsBold font-semibold text-black text-center">
