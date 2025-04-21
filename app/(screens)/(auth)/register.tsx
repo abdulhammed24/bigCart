@@ -3,7 +3,7 @@ import {
   Text,
   ImageBackground,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -43,15 +43,13 @@ export default function Register() {
           >
             <View className="absolute inset-0 bg-black opacity-70" />
             <View className="flex mt-5 flex-row items-center justify-between">
-              <TouchableOpacity
-                onPress={() => router.push('/(screens)/(auth)/login')}
-              >
+              <Pressable onPress={() => router.push('/(screens)/(auth)/login')}>
                 <Image
                   source={require('@/assets/icons/back-arrow.svg')}
                   style={{ width: 24, height: 24 }}
                   contentFit="contain"
                 />
-              </TouchableOpacity>
+              </Pressable>
               <View className="flex-1 items-center">
                 <Text className="text-[40px] font-poppinsBold text-white">
                   Welcome
@@ -120,7 +118,7 @@ export default function Register() {
                 className="flex-1 text-[16px] text-black font-poppinsMedium px-6 h-[60px]"
                 placeholderTextColor="#868889"
               />
-              <TouchableOpacity
+              <Pressable
                 onPress={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2"
               >
@@ -129,7 +127,7 @@ export default function Register() {
                   size={24}
                   color="#868889"
                 />
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <PrimaryBtn title="Sign Up" onPress={handleSignUp} />

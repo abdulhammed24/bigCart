@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  Pressable,
-} from 'react-native';
+import { View, Text, ImageBackground, Pressable } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,13 +21,13 @@ export default function Welcome() {
         >
           <View className="absolute inset-0 bg-black opacity-70" />
           <View className="flex flex-row mt-5 items-center justify-between">
-            {/* <TouchableOpacity>
+            {/* <Pressable>
               <Image
                 source={require('@/assets/icons/back-arrow.svg')}
                 style={{ width: 24, height: 24 }}
                 contentFit="contain"
               />
-            </TouchableOpacity> */}
+            </Pressable> */}
             <View className="flex-1 items-center">
               <Text className="text-[40px] font-poppinsBold text-white">
                 Welcome

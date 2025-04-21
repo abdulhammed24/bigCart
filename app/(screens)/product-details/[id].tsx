@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import {
   ImageBackground,
   Text,
-  TouchableOpacity,
+  Pressable,
   View,
   StatusBar,
 } from 'react-native';
@@ -60,13 +60,13 @@ export default function SingleProductDetails() {
         className="justify-start p-6"
       >
         <View className="flex-row items-center mt-5 justify-between">
-          <TouchableOpacity onPress={() => router.back()}>
+          <Pressable onPress={() => router.back()}>
             <Image
               source={require('@/assets/icons/back-arrow-blk.svg')}
               style={{ width: 24, height: 24 }}
               contentFit="contain"
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </ImageBackground>
 
@@ -81,13 +81,13 @@ export default function SingleProductDetails() {
             <Text className="text-[20px] font-poppinsBold text-deepPrimary">
               ${product.price.toFixed(2)}
             </Text>
-            <TouchableOpacity onPress={() => toggleFavorite(product.id)}>
+            <Pressable onPress={() => toggleFavorite(product.id)}>
               <Ionicons
                 name={favorites[product.id] ? 'heart' : 'heart-outline'}
                 size={24}
                 color={favorites[product.id] ? 'red' : 'gray'}
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           <View className="mb-4">
@@ -122,23 +122,23 @@ export default function SingleProductDetails() {
               </Text>
             </View>
             <View className="flex-row items-center justify-between bg-gray-100 rounded-full h-full overflow-hidden">
-              <TouchableOpacity
+              <Pressable
                 onPress={decrementQuantity}
                 className="px-5 h-full justify-center"
               >
                 <Ionicons name="remove" size={24} color="#6CC51D" />
-              </TouchableOpacity>
+              </Pressable>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
               <Text className="text-black text-[20px] w-[50px] text-center font-poppinsBold">
                 {quantity}
               </Text>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
-              <TouchableOpacity
+              <Pressable
                 onPress={incrementQuantity}
                 className="px-5 h-full justify-center"
               >
                 <Ionicons name="add" size={24} color="#6CC51D" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           </View>
 

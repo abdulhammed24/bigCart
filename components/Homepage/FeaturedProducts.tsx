@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Pressable, FlatList } from 'react-native';
 import { useState } from 'react';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,7 +28,7 @@ export default function FeaturedProducts({ category }: FeaturedProductsProps) {
       renderItem={({ item, index }) => (
         <View className="bg-white rounded-xl mb-4 w-[48%] p-3 shadow-sm relative">
           {/* Favorite (Heart) Icon */}
-          <TouchableOpacity
+          <Pressable
             className="absolute top-3 right-3 z-10"
             onPress={() => toggleFavorite(index)}
           >
@@ -37,7 +37,7 @@ export default function FeaturedProducts({ category }: FeaturedProductsProps) {
               size={20}
               color={favorites[index] ? 'red' : 'gray'}
             />
-          </TouchableOpacity>
+          </Pressable>
 
           {/* Badge (New or Discount) */}
           {(item.status === 'new' || item.discountPercentage) && (
@@ -87,12 +87,12 @@ export default function FeaturedProducts({ category }: FeaturedProductsProps) {
           <View className="bg-[#EBEBEB] h-[1px] w-full my-3" />
 
           {/* Add to cart button */}
-          <TouchableOpacity className="flex-row items-center justify-center border border-green-600 rounded-lg py-2">
+          <Pressable className="flex-row items-center justify-center border border-green-600 rounded-lg py-2">
             <Ionicons name="bag-outline" size={16} color="#16A34A" />
             <Text className="text-green-600 font-poppinsMedium ml-2">
               Add to cart
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       )}
       keyExtractor={(_, index) => index.toString()}

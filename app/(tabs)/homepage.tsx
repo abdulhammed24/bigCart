@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Pressable, FlatList } from 'react-native';
 
 export default function Homepage() {
   const data = [1];
@@ -39,13 +39,13 @@ export default function Homepage() {
               <View className="flex-row justify-between items-center mb-4">
                 <Text className="text-[18px] font-poppinsBold">Categories</Text>
                 <Link href="/categories" asChild>
-                  <TouchableOpacity className="flex-row items-center">
+                  <Pressable className="flex-row items-center">
                     <Image
                       source={require('@/assets/icons/view-all.svg')}
                       style={{ width: 20, height: 12 }}
                       contentFit="contain"
                     />
-                  </TouchableOpacity>
+                  </Pressable>
                 </Link>
               </View>
               <Categories />
@@ -58,13 +58,13 @@ export default function Homepage() {
                   Featured products
                 </Text>
                 <Link href="/product-details/id" asChild>
-                  <TouchableOpacity className="flex-row items-center">
+                  <Pressable className="flex-row items-center">
                     <Image
                       source={require('@/assets/icons/view-all.svg')}
                       style={{ width: 20, height: 12 }}
                       contentFit="contain"
                     />
-                  </TouchableOpacity>
+                  </Pressable>
                 </Link>
               </View>
               <FeaturedProducts />

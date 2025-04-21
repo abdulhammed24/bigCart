@@ -1,6 +1,6 @@
 import { Tabs, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
@@ -73,7 +73,7 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             : 'heart-outline';
 
         return (
-          <TouchableOpacity
+          <Pressable
             key={route.key}
             onPress={onPress}
             style={{ flex: 1, alignItems: 'center' }}
@@ -83,11 +83,11 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
               size={24}
               color={isFocused ? '#6CC51D' : '#868889'}
             />
-          </TouchableOpacity>
+          </Pressable>
         );
       })}
       {/* Cart Button */}
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
           router.replace('/(screens)/cart');
         }}
@@ -123,7 +123,7 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
             <Text style={{ color: 'white', fontSize: 12 }}>3</Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

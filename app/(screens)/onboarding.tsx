@@ -1,4 +1,4 @@
-import { View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { View, FlatList, Pressable, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -55,7 +55,7 @@ export default function Onboarding() {
 
       <View className="absolute bottom-28 left-0 right-0 flex-row justify-center">
         {slides.map((_, index) => (
-          <TouchableOpacity
+          <Pressable
             key={index}
             onPress={() => handleDotPress(index)}
             activeOpacity={0.7}
@@ -65,7 +65,7 @@ export default function Onboarding() {
                 currentIndex === index ? 'bg-primary' : 'bg-gray_foreground'
               }`}
             />
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </View>
       <View className="absolute bottom-6 left-6 right-6">

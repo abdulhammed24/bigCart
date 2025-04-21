@@ -1,5 +1,5 @@
 // app/categories/[name].tsx
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
@@ -18,13 +18,13 @@ export default function CategoryDetail() {
       {/* Header */}
       <View className="p-6 bg-white">
         <View className="flex flex-row items-center justify-between">
-          <TouchableOpacity onPress={() => router.back()}>
+          <Pressable onPress={() => router.back()}>
             <Image
               source={require('@/assets/icons/back-arrow-blk.svg')}
               style={{ width: 24, height: 24 }}
               contentFit="contain"
             />
-          </TouchableOpacity>
+          </Pressable>
 
           <Text className="text-center font-poppinsBold text-[24px]">
             {name}

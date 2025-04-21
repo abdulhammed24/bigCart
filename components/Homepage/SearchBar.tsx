@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import React from 'react';
 import { Image } from 'expo-image';
 
@@ -16,13 +16,13 @@ export default function SearchBar() {
         // placeholderClassName="text-[16px]"
         className="flex-1 font-poppinsMedium text-[16px] h-[50px] text-base"
       />
-      <TouchableOpacity>
+      <Pressable>
         <Image
           source={require('@/assets/icons/filter.svg')}
           style={{ width: 16, height: 16 }}
           contentFit="contain"
         />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

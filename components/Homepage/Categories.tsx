@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, Pressable } from 'react-native';
 import { Image as ExpoImage } from 'expo-image';
 import { categories } from '@/data/categories';
 
@@ -19,7 +19,7 @@ export default function Categories() {
       // contentContainerStyle={{ paddingHorizontal: 24 }}
     >
       {categories.map((category) => (
-        <TouchableOpacity
+        <Pressable
           key={category.id}
           className="items-center mx-2"
           onPress={() => console.log(`Tapped ${category.name}`)}
@@ -37,7 +37,7 @@ export default function Categories() {
           <Text className="mt-5 text-[12px] font-poppinsMedium text-center text-gray">
             {category.name}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </ScrollView>
   );

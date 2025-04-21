@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function ForgotPassword() {
@@ -14,12 +14,13 @@ export default function ForgotPassword() {
         className="bg-white p-4 rounded-lg border border-gray-300 mb-4"
         placeholder="Email"
       />
-      <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mb-4">
+      <Pressable className="bg-blue-500 p-4 rounded-lg mb-4">
         <Text className="text-white text-center font-semibold">
           Send Reset Link
         </Text>
-      </TouchableOpacity>
-      <Link href="/"
+      </Pressable>
+      <Link
+        href="/"
         // href="/(screens)/(auth)/login"
         className="text-blue-500 text-center"
       >

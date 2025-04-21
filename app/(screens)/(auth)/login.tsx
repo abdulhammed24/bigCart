@@ -3,7 +3,7 @@ import {
   Text,
   ImageBackground,
   TextInput,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
@@ -40,7 +40,7 @@ export default function Login() {
           >
             <View className="absolute inset-0 bg-black opacity-70" />
             <View className="flex flex-row mt-5 items-center justify-between">
-              <TouchableOpacity
+              <Pressable
                 onPress={() => router.push('/(screens)/(auth)/welcome')}
               >
                 <Image
@@ -48,7 +48,7 @@ export default function Login() {
                   style={{ width: 24, height: 24 }}
                   contentFit="contain"
                 />
-              </TouchableOpacity>
+              </Pressable>
               <View className="flex-1 items-center">
                 <Text className="text-[40px] font-poppinsBold text-white">
                   Welcome
@@ -102,7 +102,7 @@ export default function Login() {
                 className="flex-1 text-[16px] text-black font-poppinsMedium px-6 h-[60px]"
                 placeholderTextColor="#868889"
               />
-              <TouchableOpacity
+              <Pressable
                 onPress={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2"
               >
@@ -111,12 +111,12 @@ export default function Login() {
                   size={24}
                   color="#868889"
                 />
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             {/* Remember Me & Forgot Password */}
             <View className="flex-row justify-between my-3">
-              <TouchableOpacity
+              <Pressable
                 onPress={() => setRememberMe(!rememberMe)}
                 className="flex-row items-center"
               >
@@ -128,12 +128,12 @@ export default function Login() {
                 <Text className="text-gray text-[14px] font-poppinsMedium ml-2">
                   Remember me
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity>
+              </Pressable>
+              <Pressable>
                 <Text className="text-blue text-[14px] font-poppinsMedium">
                   Forgot password
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             {/* Login Button */}

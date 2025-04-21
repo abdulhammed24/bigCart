@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, Pressable, FlatList } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { categories } from '@/data/categories';
@@ -28,13 +28,13 @@ export default function CategoryList() {
       {/* Header */}
       <View className="p-6 bg-white">
         <View className="flex flex-row items-center justify-between">
-          <TouchableOpacity onPress={() => router.back()}>
+          <Pressable onPress={() => router.back()}>
             <Image
               source={require('@/assets/icons/back-arrow-blk.svg')}
               style={{ width: 24, height: 24 }}
               contentFit="contain"
             />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-center font-poppinsBold text-[24px]">
             Categories
           </Text>
@@ -52,7 +52,7 @@ export default function CategoryList() {
           contentContainerStyle={{ paddingBottom: 20 }}
           columnWrapperStyle={{ justifyContent: 'space-between' }}
           renderItem={({ item }) => (
-            <TouchableOpacity
+            <Pressable
               className="mb-4 w-[30%]"
               onPress={() => handleCategoryPress(item)}
             >
@@ -71,7 +71,7 @@ export default function CategoryList() {
                   {item.name}
                 </Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           )}
         />
       </View>
