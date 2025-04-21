@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { OnboardingSlides, slides } from '@/components/OnboardingSlides';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
+import { StatusBar } from 'expo-status-bar';
 
 const { width } = Dimensions.get('window');
 
@@ -36,6 +37,7 @@ export default function Onboarding() {
 
   return (
     <View className="flex-1">
+      <StatusBar style="dark" translucent backgroundColor="transparent" />
       <FlatList
         ref={flatListRef}
         data={slides}
@@ -50,6 +52,7 @@ export default function Onboarding() {
           setCurrentIndex(index);
         }}
       />
+
       <View className="absolute bottom-28 left-0 right-0 flex-row justify-center">
         {slides.map((_, index) => (
           <TouchableOpacity

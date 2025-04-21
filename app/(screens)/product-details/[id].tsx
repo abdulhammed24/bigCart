@@ -1,10 +1,18 @@
+import { PrimaryBtn } from '@/components/PrimaryBtn';
 import Rating from '@/components/Rating';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  View,
+  StatusBar,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const product = {
   id: 1,
@@ -31,42 +39,48 @@ export default function SingleProductDetails() {
 
   const router = useRouter();
 
-  // Increment and decrement quantity
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   return (
-    <View className="flex-1 bg-gray-100">
-      {/* ImageBackground - Top Half */}
-      <View style={{ flex: 0.8 }}>
-        <ImageBackground
-          source={product.image}
-          resizeMode="cover"
-          style={{ flex: 1 }}
-          className="justify-start p-6"
-        >
-          <View className="flex-row items-center justify-between">
-            <TouchableOpacity onPress={() => router.back()}>
-              <Image
-                source={require('@/assets/icons/back-arrow-blk.svg')}
-                style={{ width: 24, height: 24 }}
-                contentFit="contain"
-              />
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      </View>
+    <View className="flex-1">
+      {/* StatusBar with transparent background */}
+      <StatusBar
+        barStyle="dark-content"
+        translucent
+        backgroundColor="transparent"
+      />
 
-      {/* Content - Bottom Half */}
-      <View className="flex-1 bg-offWhite rounded-t-[20px] p-6 -mt-5 shadow-lg">
+      {/* ImageBackground - Full screen, behind status bar */}
+      <ImageBackground
+        source={product.image}
+        resizeMode="cover"
+        style={{ flex: 0.8, paddingTop: StatusBar.currentHeight || 0 }}
+        className="justify-start p-6"
+      >
+        <View className="flex-row items-center mt-5 justify-between">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Image
+              source={require('@/assets/icons/back-arrow-blk.svg')}
+              style={{ width: 24, height: 24 }}
+              contentFit="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+
+      {/* Content - Bottom Half with SafeAreaView */}
+      <SafeAreaView
+        style={{ flex: 1, marginTop: -20 }}
+        edges={['bottom', 'left', 'right']}
+        className="bg-offWhite rounded-t-[20px] p-6 shadow-lg"
+      >
         <View>
           <View className="flex flex-row justify-between mb-2">
-            {/* Price */}
-            <Text className="text-[20px] font-poppinsBold  text-deepPrimary">
+            <Text className="text-[20px] font-poppinsBold text-deepPrimary">
               ${product.price.toFixed(2)}
             </Text>
-
             <TouchableOpacity onPress={() => toggleFavorite(product.id)}>
               <Ionicons
                 name={favorites[product.id] ? 'heart' : 'heart-outline'}
@@ -76,7 +90,6 @@ export default function SingleProductDetails() {
             </TouchableOpacity>
           </View>
 
-          {/* Title & Weight */}
           <View className="mb-4">
             <Text className="text-[24px] font-poppinsBold text-black">
               {product.name}
@@ -86,7 +99,6 @@ export default function SingleProductDetails() {
             </Text>
           </View>
 
-          {/* Rating */}
           <View className="flex-row items-center flex gap-1 mb-4">
             <Text className="text-black font-poppinsBold mt-1 text-[14px]">
               {product.rating}
@@ -97,14 +109,12 @@ export default function SingleProductDetails() {
             </Text>
           </View>
 
-          {/* Description */}
           <View className="mb-6">
             <Text className="text-gray font-poppinsMedium text-[14px]">
               {product.description}
             </Text>
           </View>
 
-          {/* Quantity Selector */}
           <View className="mb-6 rounded-[10px] h-[50px] bg-white flex items-center justify-between flex-row">
             <View className="px-5">
               <Text className="text-gray font-poppinsMedium text-[14px]">
@@ -118,17 +128,11 @@ export default function SingleProductDetails() {
               >
                 <Ionicons name="remove" size={24} color="#6CC51D" />
               </TouchableOpacity>
-
-              {/* Left line */}
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
-
-              <Text className="text-black text-[20px] w-[50px] text-center  font-poppinsBold">
+              <Text className="text-black text-[20px] w-[50px] text-center font-poppinsBold">
                 {quantity}
               </Text>
-
-              {/* Right line */}
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
-
               <TouchableOpacity
                 onPress={incrementQuantity}
                 className="px-5 h-full justify-center"
@@ -138,23 +142,14 @@ export default function SingleProductDetails() {
             </View>
           </View>
 
-          {/* Add to Cart Button */}
-          <TouchableOpacity>
-            <LinearGradient
-              colors={['#aedc81', '#6cc51d']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ borderRadius: 10 }}
-              className="flex-row p-4 items-center h-[60px] shadow-md"
-            >
-              <Text className="text-white text-[16px] font-semibold flex-1 text-center">
-                Add to Cart
-              </Text>
-              <Ionicons name="cart-outline" size={24} color="white" />
-            </LinearGradient>
-          </TouchableOpacity>
+          <PrimaryBtn
+            title="Add to Cart"
+            onPress={() => console.log('Add to Cart')}
+            rightIcon={require('@/assets/icons/cart.svg')}
+            style={{ borderRadius: 10 }}
+          />
         </View>
-      </View>
+      </SafeAreaView>
     </View>
   );
 }

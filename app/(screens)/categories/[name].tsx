@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type CategoryParams = {
   name: string;
@@ -13,7 +14,7 @@ export default function CategoryDetail() {
   const { name } = useLocalSearchParams<CategoryParams>();
 
   return (
-    <View className="flex-1">
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="p-6 bg-white">
         <View className="flex flex-row items-center justify-between">
@@ -25,7 +26,7 @@ export default function CategoryDetail() {
             />
           </TouchableOpacity>
 
-          <Text className="font- text-center font-poppinsBold text-[24px]">
+          <Text className="text-center font-poppinsBold text-[24px]">
             {name}
           </Text>
 
@@ -37,6 +38,6 @@ export default function CategoryDetail() {
       <View className="flex-1 p-6 bg-offWhite">
         <FeaturedProducts category={name} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

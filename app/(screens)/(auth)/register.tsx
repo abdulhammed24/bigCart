@@ -3,15 +3,18 @@ import {
   Text,
   ImageBackground,
   TextInput,
+  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
+import { StatusBar } from 'expo-status-bar';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function Register() {
   const router = useRouter();
@@ -20,18 +23,17 @@ export default function Register() {
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  // Define the onPress handler for the button
   const handleSignUp = () => {
     console.log('Sign up with:', { email, phoneNumber, password });
+    router.push('/(tabs)/homepage');
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={100}
-    >
+    <KeyboardAwareScrollView>
       <View className="flex-1">
+        {/* StatusBar */}
+        <StatusBar style="light" translucent backgroundColor="transparent" />
+
         {/* Image Background Section */}
         <View className="h-[350px]">
           <ImageBackground
@@ -39,7 +41,8 @@ export default function Register() {
             resizeMode="cover"
             className="flex-1 justify-start p-6"
           >
-            <View className="flex flex-row items-center justify-between">
+            <View className="absolute inset-0 bg-black opacity-70" />
+            <View className="flex mt-5 flex-row items-center justify-between">
               <TouchableOpacity
                 onPress={() => router.push('/(screens)/(auth)/login')}
               >
@@ -58,8 +61,8 @@ export default function Register() {
           </ImageBackground>
         </View>
 
-        {/* Content Section */}
-        <View className="flex-1 h-[400px] bg-offWhite rounded-t-[10px] -mt-8 p-6">
+        {/* Red Background Section */}
+        <View className="flex-1  p-6 bg-offWhite rounded-t-[10px] -mt-8">
           <View className="mb-6">
             <Text className="text-[24px] font-poppinsBold text-black mb-2">
               Create account
@@ -69,7 +72,6 @@ export default function Register() {
             </Text>
           </View>
           <View className="mb-6 flex flex-col gap-2">
-            {/* Email Input */}
             <View className="bg-white relative rounded-md px-5 py-3 flex flex-row items-center h-[60px]">
               <Image
                 source={require('@/assets/icons/mail.svg')}
@@ -86,7 +88,6 @@ export default function Register() {
               />
             </View>
 
-            {/* Phone Number Input */}
             <View className="bg-white relative rounded-md px-5 py-3 flex flex-row items-center h-[60px]">
               <Image
                 source={require('@/assets/icons/phone.svg')}
@@ -104,7 +105,6 @@ export default function Register() {
               />
             </View>
 
-            {/* Password Input */}
             <View className="bg-white relative rounded-md px-5 py-3 flex flex-row items-center h-[60px]">
               <Image
                 source={require('@/assets/icons/lock.svg')}
@@ -132,11 +132,8 @@ export default function Register() {
               </TouchableOpacity>
             </View>
 
-            {/* Sign Up Button */}
             <PrimaryBtn title="Sign Up" onPress={handleSignUp} />
           </View>
-
-          {/* Sign Up Link */}
           <View className="items-center">
             <Text className="text-gray text-[16px] font-poppinsRegular">
               Already have an account ?{' '}
@@ -150,6 +147,6 @@ export default function Register() {
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 }

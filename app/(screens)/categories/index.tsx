@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { categories } from '@/data/categories';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Category = {
   id: number;
@@ -23,7 +24,7 @@ export default function CategoryList() {
   };
 
   return (
-    <View className="flex-1">
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <View className="p-6 bg-white">
         <View className="flex flex-row items-center justify-between">
@@ -34,7 +35,7 @@ export default function CategoryList() {
               contentFit="contain"
             />
           </TouchableOpacity>
-          <Text className="font- text-center font-poppinsBold text-[24px]">
+          <Text className="text-center font-poppinsBold text-[24px]">
             Categories
           </Text>
 
@@ -43,7 +44,7 @@ export default function CategoryList() {
       </View>
 
       {/* Category Grid */}
-      <View className="flex-1 px-6 bg-offWhite pt-6">
+      <View className="flex-1 px-6 bg-offWhite py-6">
         <FlatList
           data={categories}
           numColumns={3}
@@ -74,6 +75,6 @@ export default function CategoryList() {
           )}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -3,16 +3,21 @@ import {
   Text,
   ImageBackground,
   TouchableOpacity,
-  StyleSheet,
+  Pressable,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { sharedStyles } from '@/styles/sharedStyles';
+import { StatusBar } from 'expo-status-bar';
+import { PrimaryBtn } from '@/components/PrimaryBtn';
 
 export default function Welcome() {
+  const router = useRouter();
   return (
     <View className="flex-1">
+      {/* StatusBar  */}
+      <StatusBar style="light" translucent backgroundColor="transparent" />
+
       {/* Image Background Section */}
       <View className="h-[60%]">
         <ImageBackground
@@ -20,7 +25,8 @@ export default function Welcome() {
           resizeMode="cover"
           className="flex-1 justify-start p-6"
         >
-          <View className="flex flex-row items-center justify-between">
+          <View className="absolute inset-0 bg-black opacity-70" />
+          <View className="flex flex-row mt-5 items-center justify-between">
             {/* <TouchableOpacity>
               <Image
                 source={require('@/assets/icons/back-arrow.svg')}
@@ -33,7 +39,6 @@ export default function Welcome() {
                 Welcome
               </Text>
             </View>
-            {/* <View style={{ width: 24 }} /> */}
           </View>
         </ImageBackground>
       </View>
@@ -50,9 +55,11 @@ export default function Welcome() {
           </Text>
         </View>
 
-        {/* Buttons */}
         <View className="mb-6 flex flex-col gap-2">
-          <TouchableOpacity className="flex w-full bg-white flex-row p-4 rounded-md items-center h-[60px]">
+          <Pressable
+            onPress={() => router.push('/(screens)/onboarding')}
+            className="flex w-full bg-white flex-row p-4 rounded-md items-center h-[60px]"
+          >
             <Image
               source={require('@/assets/icons/google.svg')}
               style={{ width: 24, height: 24, marginRight: 10 }}
@@ -63,31 +70,15 @@ export default function Welcome() {
                 Continue with Google
               </Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <LinearGradient
-              colors={['#aedc81', '#6cc51d']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ borderRadius: 6 }}
-              className="flex w-full flex-row p-4  items-center h-[60px]"
-            >
-              <Image
-                source={require('@/assets/icons/user.svg')}
-                style={{ width: 24, height: 24, marginRight: 10 }}
-                contentFit="contain"
-              />
+          </Pressable>
 
-              <View className="flex-1 items-center">
-                <Text className="text-white text-center text-[16px] font-poppinsMedium">
-                  Create an account
-                </Text>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
+          <PrimaryBtn
+            title="Create an account"
+            onPress={() => router.push('/(screens)/(auth)/register')}
+            leftIcon={require('@/assets/icons/user.svg')}
+          />
         </View>
 
-        {/* Login Link */}
         <View className="items-center">
           <Text className="text-gray text-[16px] font-poppinsRegular">
             Already have an account ?{' '}
