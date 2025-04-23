@@ -20,7 +20,6 @@ interface PrimaryButtonProps {
   iconColor?: string;
 }
 
-// 👇 Wrap with forwardRef to support ref from <Link asChild>
 export const PrimaryBtn = forwardRef<View, PrimaryButtonProps>(
   (
     {

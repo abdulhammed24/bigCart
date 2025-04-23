@@ -58,7 +58,7 @@ export default function Onboarding() {
           <Pressable
             key={index}
             onPress={() => handleDotPress(index)}
-            activeOpacity={0.7}
+            // activeOpacity={0.7}
           >
             <View
               className={`size-2 rounded-full mx-2 ${
