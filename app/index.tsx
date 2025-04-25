@@ -33,7 +33,8 @@ export default function Index() {
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync();
-      router.replace('/(screens)/onboarding');
+      // router.replace('/(screens)/onboarding');
+      router.replace('/(tabs)/homepage');
     }
   }, [appIsReady]);
 

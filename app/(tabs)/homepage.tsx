@@ -72,6 +72,7 @@ export default function Homepage() {
           </View>
         }
         contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
       />
     </LinearGradient>
   );

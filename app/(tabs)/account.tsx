@@ -6,42 +6,49 @@ const accountItems = [
   {
     icon: require('@/assets/icons/account/about-me.svg'),
     label: 'About me',
-    href: '/account/about',
+    href: '/',
+    // href: '/account/about',
   },
   {
     icon: require('@/assets/icons/account/orders.svg'),
     label: 'My orders',
-    href: '/account/orders',
+    href: '/',
+    // href: '/account/orders',
   },
   {
     icon: require('@/assets/icons/account/favorites.svg'),
     label: 'My favorites',
-    href: '/account/favorites',
+    href: '/',
+    // href: '/account/favorites',
   },
   {
     icon: require('@/assets/icons/account/address.svg'),
     label: 'My address',
-    href: '/account/address',
+    href: '/app/(screens)/my-address',
   },
   {
     icon: require('@/assets/icons/account/credits-card.svg'),
     label: 'Credit cards',
-    href: '/account/cards',
+    href: '/',
+    // href: '/account/cards',
   },
   {
     icon: require('@/assets/icons/account/transactions.svg'),
     label: 'Transactions',
-    href: '/account/transactions',
+    href: '/',
+    // href: '/account/transactions',
   },
   {
     icon: require('@/assets/icons/account/notifications.svg'),
     label: 'Notifications',
-    href: '/account/notifications',
+    href: '/',
+    // href: '/account/notifications',
   },
   {
     icon: require('@/assets/icons/account/sign-out.svg'),
     label: 'Sign out',
-    href: '/logout',
+    href: '/',
+    // href: '/logout',
     noArrow: true,
   },
 ];
@@ -49,7 +56,7 @@ const accountItems = [
 export default function Account() {
   return (
     <View className="flex-1">
-      {/*  */}
+      {/* Header */}
       <View className="p-6 h-32 bg-white" />
 
       {/* Floating profile card */}
@@ -83,40 +90,41 @@ export default function Account() {
         </View>
       </View>
 
-      {/*  */}
+      {/* Account Items */}
       <View className="bg-offWhite pt-40 px-6 flex-1">
         <View className="flex flex-col gap-2">
           {accountItems.map((item, index) => (
-            <Pressable
-              key={index}
-              className="flex-row justify-between items-center p-3 rounded-xl"
-              // style={({ pressed }) => [
-              //   {
-              //     backgroundColor: pressed ? '#f0f0f0' : 'transparent',
-              //     transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
-              //   },
-              // ]}
-              onPress={() => console.log('Pressed')}
-            >
-              <View className="flex-row items-center gap-3">
-                <Image
-                  source={item.icon}
-                  style={{ width: 20, height: 20 }}
-                  contentFit="contain"
-                />
-                <Text className="font-poppinsBold text-[14px]">
-                  {item.label}
-                </Text>
-              </View>
+            <Link href="/(screens)/my-address" asChild key={index}>
+              <Pressable
+                className="flex-row justify-between items-center p-3 rounded-xl"
+                // Optional: Add pressed styles if desired
+                style={({ pressed }) => [
+                  {
+                    backgroundColor: pressed ? '#f0f0f0' : 'transparent',
+                    transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
+                  },
+                ]}
+              >
+                <View className="flex-row items-center gap-3">
+                  <Image
+                    source={item.icon}
+                    style={{ width: 20, height: 20 }}
+                    contentFit="contain"
+                  />
+                  <Text className="font-poppinsBold text-[14px]">
+                    {item.label}
+                  </Text>
+                </View>
 
-              {!item.noArrow && (
-                <Image
-                  source={require('@/assets/icons/view-all.svg')}
-                  style={{ width: 10, height: 18 }}
-                  contentFit="contain"
-                />
-              )}
-            </Pressable>
+                {!item.noArrow && (
+                  <Image
+                    source={require('@/assets/icons/view-all.svg')}
+                    style={{ width: 10, height: 18 }}
+                    contentFit="contain"
+                  />
+                )}
+              </Pressable>
+            </Link>
           ))}
         </View>
       </View>
