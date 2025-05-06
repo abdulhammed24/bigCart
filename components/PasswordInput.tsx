@@ -1,26 +1,33 @@
-import React from 'react';
-import { View, TextInput, TextInputProps } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, TextInputProps, Pressable } from 'react-native';
 import { Image } from 'expo-image';
+import { Ionicons } from '@expo/vector-icons';
 
-interface InputFieldProps
+interface PasswordInputProps
   extends Omit<TextInputProps, 'value' | 'onChangeText'> {
-  iconSource?: any;
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
   error?: boolean;
   backgroundColor?: string;
+  iconSource?: any;
 }
 
-export const InputField: React.FC<InputFieldProps> = ({
-  iconSource,
+export const PasswordInput: React.FC<PasswordInputProps> = ({
   placeholder,
   value,
   onChangeText,
   error,
   backgroundColor = 'bg-offWhite',
+  iconSource,
   ...textInputProps
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <View
       className={`rounded-md px-5 py-3 flex flex-row items-center h-[50px] ${
@@ -35,26 +42,29 @@ export const InputField: React.FC<InputFieldProps> = ({
           className="absolute left-5 top-1/2"
           accessibilityElementsHidden={true}
         />
-      ) : // : iconName ? (
-      //   <Ionicons
-      //     name={iconName}
-      //     size={18}
-      //     color="#868889"
-      //     className="absolute left-5 top-1/2"
-      //   />
-      // )
-
-      null}
-
+      ) : null}
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
+        secureTextEntry={!showPassword}
         className="flex-1 text-[14px] text-gray font-poppinsMedium px-3 h-[50px]"
         placeholderTextColor="#868889"
+        autoCapitalize="none"
         accessibilityLabel={placeholder}
         {...textInputProps}
       />
+      <Pressable
+        onPress={toggleShowPassword}
+        className="absolute right-3 top-1/2"
+        accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+      >
+        <Ionicons
+          name={showPassword ? 'eye' : 'eye-off'}
+          size={18}
+          color="#868889"
+        />
+      </Pressable>
     </View>
   );
 };

@@ -1,13 +1,19 @@
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Link, LinkProps } from 'expo-router';
 import { View, Text, Pressable } from 'react-native';
 
-const accountItems = [
+interface AccountItem {
+  icon: any;
+  label: string;
+  href: LinkProps['href'];
+  noArrow?: boolean;
+}
+
+const accountItems: AccountItem[] = [
   {
     icon: require('@/assets/icons/account/about-me.svg'),
     label: 'About me',
-    href: '/',
-    // href: '/account/about',
+    href: '/(screens)/about',
   },
   {
     icon: require('@/assets/icons/account/orders.svg'),
@@ -24,25 +30,22 @@ const accountItems = [
   {
     icon: require('@/assets/icons/account/address.svg'),
     label: 'My address',
-    href: '/app/(screens)/my-address',
+    href: '/(screens)/my-address',
   },
   {
     icon: require('@/assets/icons/account/credits-card.svg'),
     label: 'Credit cards',
-    href: '/',
-    // href: '/account/cards',
+    href: '/(screens)/add-address',
   },
   {
     icon: require('@/assets/icons/account/transactions.svg'),
     label: 'Transactions',
-    href: '/',
-    // href: '/account/transactions',
+    href: '/(screens)/transactions',
   },
   {
     icon: require('@/assets/icons/account/notifications.svg'),
     label: 'Notifications',
-    href: '/',
-    // href: '/account/notifications',
+    href: '/(screens)/notifications',
   },
   {
     icon: require('@/assets/icons/account/sign-out.svg'),
@@ -94,10 +97,9 @@ export default function Account() {
       <View className="bg-offWhite pt-40 px-6 flex-1">
         <View className="flex flex-col gap-2">
           {accountItems.map((item, index) => (
-            <Link href="/(screens)/my-address" asChild key={index}>
+            <Link href={item.href} asChild key={index}>
               <Pressable
                 className="flex-row justify-between items-center p-3 rounded-xl"
-                // Optional: Add pressed styles if desired
                 style={({ pressed }) => [
                   {
                     backgroundColor: pressed ? '#f0f0f0' : 'transparent',

@@ -5,6 +5,7 @@ import { Image } from 'expo-image';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useRouter } from 'expo-router';
 import AddressCard from '@/components/AddressCard';
+import { Header } from '@/components/Header';
 
 //
 interface Address {
@@ -74,27 +75,19 @@ export default function MyAddress() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
-      <View className="p-6 bg-white">
-        <View className="flex flex-row items-center justify-between">
-          <Pressable onPress={() => router.back()}>
-            <Image
-              source={require('@/assets/icons/back-arrow-blk.svg')}
-              style={{ width: 24, height: 24 }}
-              contentFit="contain"
-            />
-          </Pressable>
-          <Text className="text-center font-poppinsBold text-[24px]">
-            My Address
-          </Text>
-          <Pressable onPress={() => router.back()}>
+
+      <Header
+        title="My Address"
+        rightComponent={
+          <Pressable onPress={() => router.push('/(screens)/add-address')}>
             <Image
               source={require('@/assets/icons/add.svg')}
               style={{ width: 24, height: 24 }}
               contentFit="contain"
             />
           </Pressable>
-        </View>
-      </View>
+        }
+      />
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: 50 }}

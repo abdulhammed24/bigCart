@@ -1,17 +1,9 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  TextInput,
-  Pressable,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from 'react-native';
+import { View, Text, ImageBackground, Pressable } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { InputField } from '@/components/InputField';
+import { PasswordInput } from '@/components/PasswordInput';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -21,7 +13,6 @@ export default function Register() {
   const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleSignUp = () => {
     console.log('Sign up with:', { email, phoneNumber, password });
@@ -29,13 +20,10 @@ export default function Register() {
   };
 
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView className="flex-1 bg-offWhite">
       <View className="flex-1">
-        {/* StatusBar */}
         <StatusBar style="light" translucent backgroundColor="transparent" />
-
-        {/* Image Background Section */}
-        <View className="h-[350px]">
+        <View className="h-[400px]">
           <ImageBackground
             source={require('@/assets/images/onboarding/signup.png')}
             resizeMode="cover"
@@ -59,8 +47,7 @@ export default function Register() {
           </ImageBackground>
         </View>
 
-        {/* Red Background Section */}
-        <View className="flex-1  p-6 bg-offWhite rounded-t-[10px] -mt-8">
+        <View className="flex-1 p-6 bg-offWhite rounded-t-[10px] -mt-8">
           <View className="mb-6">
             <Text className="text-[24px] font-poppinsBold text-black mb-2">
               Create account
@@ -70,71 +57,36 @@ export default function Register() {
             </Text>
           </View>
           <View className="mb-6 flex flex-col gap-2">
-            <View className="bg-white relative rounded-md px-5 py-3 flex flex-row items-center h-[60px]">
-              <Image
-                source={require('@/assets/icons/mail.svg')}
-                style={{ width: 24, height: 24 }}
-                contentFit="contain"
-                className="absolute left-5 top-1/2"
-              />
-              <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Email Address"
-                className="flex-1 text-[16px] text-black font-poppinsMedium px-6 h-[60px]"
-                placeholderTextColor="#868889"
-              />
-            </View>
-
-            <View className="bg-white relative rounded-md px-5 py-3 flex flex-row items-center h-[60px]">
-              <Image
-                source={require('@/assets/icons/phone.svg')}
-                style={{ width: 24, height: 24 }}
-                contentFit="contain"
-                className="absolute left-5 top-1/2"
-              />
-              <TextInput
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
-                className="flex-1 text-[16px] text-black font-poppinsMedium px-6 h-[60px]"
-                placeholderTextColor="#868889"
-              />
-            </View>
-
-            <View className="bg-white relative rounded-md px-5 py-3 flex flex-row items-center h-[60px]">
-              <Image
-                source={require('@/assets/icons/lock.svg')}
-                style={{ width: 24, height: 24 }}
-                contentFit="contain"
-                className="absolute left-5 top-1/2"
-              />
-              <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Password"
-                secureTextEntry={!showPassword}
-                className="flex-1 text-[16px] text-black font-poppinsMedium px-6 h-[60px]"
-                placeholderTextColor="#868889"
-              />
-              <Pressable
-                onPress={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2"
-              >
-                <Ionicons
-                  name={showPassword ? 'eye' : 'eye-off'}
-                  size={24}
-                  color="#868889"
-                />
-              </Pressable>
-            </View>
-
+            <InputField
+              iconSource={require('@/assets/icons/mail.svg')}
+              placeholder="Email Address"
+              value={email}
+              onChangeText={setEmail}
+              backgroundColor="bg-white"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <InputField
+              iconSource={require('@/assets/icons/phone.svg')}
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              backgroundColor="bg-white"
+              keyboardType="phone-pad"
+            />
+            <PasswordInput
+              iconSource={require('@/assets/icons/lock.svg')}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              backgroundColor="bg-white"
+              autoCapitalize="none"
+            />
             <PrimaryBtn title="Sign Up" onPress={handleSignUp} />
           </View>
           <View className="items-center">
             <Text className="text-gray text-[16px] font-poppinsRegular">
-              Already have an account ?{' '}
+              Already have an account?{' '}
               <Link
                 href="/(screens)/(auth)/login"
                 className="text-black font-poppinsBold"
