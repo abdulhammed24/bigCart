@@ -12,9 +12,9 @@ interface FormData {
   email: string;
 }
 
-export default function ForgotPassword() {
+export default function VerifyEmail() {
   const router = useRouter();
-  // Form state for password recovery
+  // Form state for verify Email
   const [formData, setFormData] = useState<FormData>({
     email: '',
   });
@@ -26,20 +26,20 @@ export default function ForgotPassword() {
 
   // Handle saving the form
   const handleSave = () => {
-    // Validate email for password recovery
+    // Validate email for verify Email
     if (!formData.email) {
       alert('Please enter an email address');
       return;
     }
-    // Add logic to send password recovery link
+    // Add logic to send verify Email link
     console.log('Sending recovery link to:', formData.email);
-    router.push('/(screens)/(auth)/verify-email');
+    router.push('/(screens)/(auth)/verify-code');
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar style="dark" translucent backgroundColor="transparent" />
-      <Header title="Password Recovery" backgroundColor="bg-offWhite" />
+      <Header backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
@@ -48,7 +48,7 @@ export default function ForgotPassword() {
         <View className="flex-1 px-6 py-6 pt-24 flex flex-col gap-4">
           <View className="mb-6 flex items-center">
             <Text className="text-[24px]  text-center font-poppinsBold text-black mb-2">
-              Forgot Password
+              Verify Email
             </Text>
             <Text className="text-gray text-center text-[16px] font-poppinsMedium">
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -67,7 +67,7 @@ export default function ForgotPassword() {
             />
 
             {/*  */}
-            <PrimaryBtn title="Send Link" onPress={handleSave} />
+            <PrimaryBtn title="Next" onPress={handleSave} />
           </View>
         </View>
       </KeyboardAwareScrollView>

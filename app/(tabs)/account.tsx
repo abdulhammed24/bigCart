@@ -24,8 +24,7 @@ const accountItems: AccountItem[] = [
   {
     icon: require('@/assets/icons/account/favorites.svg'),
     label: 'My favorites',
-    href: '/',
-    // href: '/account/favorites',
+    href: '/(screens)/favorites',
   },
   {
     icon: require('@/assets/icons/account/address.svg'),
@@ -93,7 +92,7 @@ export default function Account() {
         </View>
       </View>
 
-      {/* Account Items */}
+      {/*  */}
       <View className="bg-offWhite pt-40 px-6 flex-1">
         <View className="flex flex-col gap-2">
           {accountItems.map((item, index) => (

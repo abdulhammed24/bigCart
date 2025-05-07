@@ -50,7 +50,9 @@ export default function TabLayout() {
           options={{
             title: 'Favorites',
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-              <Ionicons name="heart-outline" size={size} color={color} />
+              <Pressable onPress={() => router.push('/(screens)/favorites')}>
+                <Ionicons name="heart-outline" size={size} color={color} />
+              </Pressable>
             ),
           }}
         />

@@ -96,7 +96,7 @@ export default function About() {
       {/*  */}
       <Header title="About me" />
       <KeyboardAwareScrollView
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         className="flex-1 bg-offWhite"
       >
@@ -177,10 +177,12 @@ export default function About() {
             </View>
           </View>
         </View>
+
+        {/*  */}
+        <View className="px-6 pb-6 bg-offWhite mt-auto">
+          <PrimaryBtn title="Save Settings" onPress={handleSave} />
+        </View>
       </KeyboardAwareScrollView>
-      <View className="px-6 pb-6 bg-offWhite">
-        <PrimaryBtn title="Save Settings" onPress={handleSave} />
-      </View>
     </SafeAreaView>
   );
 }

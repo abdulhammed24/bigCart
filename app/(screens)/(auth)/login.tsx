@@ -111,7 +111,9 @@ export default function Login() {
                   Remember me
                 </Text>
               </View>
-              <Pressable>
+              <Pressable
+                onPress={() => router.push('/(screens)/(auth)/forgot-password')}
+              >
                 <Text className="text-blue text-[14px] font-poppinsMedium">
                   Forgot password
                 </Text>

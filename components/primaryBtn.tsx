@@ -40,7 +40,7 @@ export const PrimaryBtn = forwardRef<View, PrimaryButtonProps>(
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={[{ borderRadius: 6 }, style]}
-          className="flex w-full flex-row p-4 items-center h-[60px] shadow-md"
+          className="flex w-full flex-row p-4 items-center h-[50px] shadow-md"
         >
           {/* Left Icon */}
           {leftIcon && (
@@ -53,7 +53,7 @@ export const PrimaryBtn = forwardRef<View, PrimaryButtonProps>(
 
           {/* Text */}
           <View className="flex-1 items-center">
-            <Text className="text-white text-center text-[16px] font-poppinsMedium">
+            <Text className="text-white text-center text-[14px] font-poppinsMedium">
               {title}
             </Text>
           </View>

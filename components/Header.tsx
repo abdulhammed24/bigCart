@@ -4,7 +4,8 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 
 interface HeaderProps {
-  title: string;
+  title?: string;
+  backgroundColor?: string;
   rightComponent?: React.ReactNode;
   onBackPress?: () => void;
 }
@@ -12,6 +13,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   title,
   rightComponent,
+  backgroundColor = 'bg-white',
   onBackPress,
 }) => {
   const router = useRouter();
@@ -25,7 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <View className="p-6 bg-white">
+    <View className={`p-6 ${backgroundColor}`}>
       <View className="flex flex-row items-center justify-between">
         <Pressable onPress={handleBackPress}>
           <Image
@@ -34,9 +36,13 @@ export const Header: React.FC<HeaderProps> = ({
             contentFit="contain"
           />
         </Pressable>
-        <Text className="text-center font-poppinsBold text-[24px]">
-          {title}
-        </Text>
+        {title ? (
+          <Text className="text-center font-poppinsBold text-[24px]">
+            {title}
+          </Text>
+        ) : (
+          <View style={{ flex: 1 }} />
+        )}
         {rightComponent || <View style={{ width: 24 }} />}
       </View>
     </View>

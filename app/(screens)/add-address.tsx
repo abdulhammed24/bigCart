@@ -71,11 +71,11 @@ export default function AddAddress() {
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <Header title="Add Address" />
       <KeyboardAwareScrollView
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         className="flex-1 bg-offWhite"
       >
-        <View className="px-6 py-6 flex flex-col gap-4">
+        <View className="px-6 flex-1 py-6 flex flex-col gap-4">
           <View className="flex flex-col gap-2">
             <InputField
               iconSource={require('@/assets/icons/my-address/user.svg')}
@@ -141,11 +141,12 @@ export default function AddAddress() {
             </Text>
           </View>
         </View>
+
+        {/*  */}
+        <View className="px-6 pb-6 bg-offWhite mt-auto">
+          <PrimaryBtn title="Add address" onPress={handleSave} />
+        </View>
       </KeyboardAwareScrollView>
-      {/* Fixed Save Button at Bottom */}
-      <View className="px-6 pb-6 bg-offWhite">
-        <PrimaryBtn title="Add address" onPress={handleSave} />
-      </View>
     </SafeAreaView>
   );
 }
