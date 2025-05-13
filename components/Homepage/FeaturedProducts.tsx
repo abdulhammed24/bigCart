@@ -58,13 +58,10 @@ export default function FeaturedProducts({ category }: FeaturedProductsProps) {
 
           {/* Image with Colored Background */}
           <View className="items-center justify-center mb-3">
-            <View
-              style={{ backgroundColor: item.bgColor }}
-              className="w-24 h-24 rounded-full items-center justify-center"
-            >
+            <View className="w-24 h-24 rounded-full items-center justify-center">
               <Image
                 source={item.image}
-                style={{ width: 60, height: 60 }}
+                style={{ width: 100, height: 80 }}
                 contentFit="contain"
               />
             </View>

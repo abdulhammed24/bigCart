@@ -1,6 +1,6 @@
 export type Category = {
   id: number;
   name: string;
-  icon: any; // Consider using ImageSourcePropType from react-native
+  icon: any;
   backgroundColor: string;
 };

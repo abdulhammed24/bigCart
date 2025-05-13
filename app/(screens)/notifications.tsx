@@ -1,10 +1,11 @@
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import CustomToggle from '@/components/CustomToggle';
 import { Header } from '@/components/Header';
+import { PrimaryBtn } from '@/components/PrimaryBtn';
 
 export default function Notifications() {
   const router = useRouter();
@@ -28,11 +29,7 @@ export default function Notifications() {
       {/* Header */}
       <Header title="Notifications" />
 
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 50 }}
-        showsVerticalScrollIndicator={false}
-        className="flex-1 px-6 bg-offWhite py-6"
-      >
+      <View className="flex-1 px-6 bg-offWhite py-6">
         <View className="flex flex-col gap-5">
           {/* Allow Notifications */}
           <View className="flex flex-row gap-5 p-6 bg-white">
@@ -108,7 +105,15 @@ export default function Notifications() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
+
+      {/* Save Button */}
+      <View className="px-6 pb-6 bg-offWhite">
+        <PrimaryBtn
+          title="Save settings"
+          onPress={() => console.log('Save settings')}
+        />
+      </View>
     </SafeAreaView>
   );
 }

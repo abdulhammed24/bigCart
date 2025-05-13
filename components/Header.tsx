@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-
+import { useColorScheme } from 'nativewind';
 interface HeaderProps {
   title?: string;
   backgroundColor?: string;
@@ -17,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   onBackPress,
 }) => {
   const router = useRouter();
+  // const { colorScheme, toggleColorScheme } = useColorScheme();
 
   const handleBackPress = () => {
     if (onBackPress) {
@@ -36,6 +37,16 @@ export const Header: React.FC<HeaderProps> = ({
             contentFit="contain"
           />
         </Pressable>
+
+        {/* <Pressable
+          className="p-4 bg-white dark:bg-black"
+          onPress={toggleColorScheme}
+        >
+          <Text className="text-black dark:text-white">
+            Click me to {colorScheme === 'dark' ? 'light' : 'dark'} mode!
+          </Text>
+        </Pressable> */}
+
         {title ? (
           <Text className="text-center font-poppinsBold text-[24px]">
             {title}

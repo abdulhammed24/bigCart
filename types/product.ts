@@ -4,7 +4,6 @@ export type Product = {
   price: number;
   unit: string;
   image: any;
-  bgColor: string;
   category: string;
   status?: 'new' | 'sale' | 'popular' | 'featured';
   discountPercentage?: number;
