@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { Ionicons } from '@expo/vector-icons';
 import { ProgressSteps } from '@/components/ProgressSteps';
+import { useRouter } from 'expo-router';
 
 // ShippingOption Component
 interface ShippingOptionProps {
@@ -77,6 +78,7 @@ const ShippingOption: React.FC<ShippingOptionProps> = ({
 
 // Main ShippingMethod Component
 export default function ShippingMethod() {
+  const router = useRouter();
   const [selectedOption, setSelectedOption] =
     useState<string>('Standard Delivery');
 
@@ -107,7 +109,7 @@ export default function ShippingMethod() {
       <Header title="Shipping Method" />
 
       {/* Progress Steps */}
-      <ProgressSteps />
+      <ProgressSteps currentStep="Delivery" />
 
       {/* Shipping Options */}
       <View className="flex-1 px-6 bg-offWhite py-6">
@@ -129,7 +131,8 @@ export default function ShippingMethod() {
       <View className="px-6 pb-6 bg-offWhite">
         <PrimaryBtn
           title="Save settings"
-          onPress={() => console.log('Save settings', selectedOption)}
+          // onPress={() => console.log('Save settings', selectedOption)}
+          onPress={() => router.push('/(screens)/shipping-address')}
         />
       </View>
     </SafeAreaView>

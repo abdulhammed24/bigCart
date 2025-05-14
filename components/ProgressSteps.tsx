@@ -47,16 +47,29 @@ const ProgressStep: React.FC<StepProps> = ({
   </View>
 );
 
-export const ProgressSteps: React.FC = () => {
+interface ProgressStepsProps {
+  currentStep: 'Delivery' | 'Address' | 'Payment';
+}
+
+export const ProgressSteps: React.FC<ProgressStepsProps> = ({
+  currentStep,
+}) => {
   const steps = [
-    { number: '1', label: 'Delivery', isActive: true },
+    { number: '1', label: 'Delivery', isActive: false },
     { number: '2', label: 'Address', isActive: false },
     { number: '3', label: 'Payment', isActive: false },
   ];
 
+  // Set isActive based on currentStep, including previous steps
+  const stepIndex = steps.findIndex((step) => step.label === currentStep);
+  const updatedSteps = steps.map((step, index) => ({
+    ...step,
+    isActive: index <= stepIndex, // Activate current step and all previous steps
+  }));
+
   return (
     <View className="flex-row p-6 bg-offWhite">
-      {steps.map((step, index) => (
+      {updatedSteps.map((step, index) => (
         <ProgressStep
           key={step.label}
           number={step.number}
