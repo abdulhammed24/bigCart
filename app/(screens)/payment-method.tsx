@@ -6,6 +6,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Header } from '@/components/Header';
 import { ProgressSteps } from '@/components/ProgressSteps';
 import { PaymentForm } from '@/components/PaymentMethod/PaymentForm';
+import {
+  formatCardNumber,
+  formatExpiry,
+  validateCardNumber,
+  validateExpiry,
+  validateCVV,
+} from '../utils/paymentUtils';
 import { PaymentOptions } from '@/components/PaymentMethod/PaymentOption';
 
 interface PaymentOption {
@@ -40,7 +47,15 @@ export default function PaymentMethod() {
   ];
 
   const handleInputChange = (key: keyof PaymentFormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+    let formattedValue = value;
+    if (key === 'cardNumber') {
+      formattedValue = formatCardNumber(value);
+    } else if (key === 'expiry') {
+      formattedValue = formatExpiry(value);
+    } else if (key === 'cvv') {
+      formattedValue = value.replace(/\D/g, '').slice(0, 3);
+    }
+    setFormData((prev) => ({ ...prev, [key]: formattedValue }));
   };
 
   const handleToggleChange = (value: boolean) => {
@@ -48,37 +63,32 @@ export default function PaymentMethod() {
   };
 
   const handleProceed = () => {
-    // Validate form fields for Credit Card
-    if (
-      !formData.name ||
-      !formData.cardNumber ||
-      !formData.expiry ||
-      !formData.cvv
-    ) {
-      alert('Please fill in all card details');
+    if (!formData.name.trim()) {
+      alert('Please enter the name on card');
       return;
     }
-    // Basic validation for card number (16 digits), expiry (MM/YY), and CVV (3-4 digits)
-    if (!/^\d{16}$/.test(formData.cardNumber)) {
-      alert('Card number must be 16 digits');
+    if (!validateCardNumber(formData.cardNumber)) {
+      alert('Invalid card number (must be 16 digits and pass Luhn check)');
       return;
     }
-    if (!/^\d{2}\/\d{2}$/.test(formData.expiry)) {
-      alert('Expiry must be in MM/YY format');
+    if (!validateExpiry(formData.expiry)) {
+      alert('Invalid or expired expiry date (must be MM/YY, not in past)');
       return;
     }
-    if (!/^\d{3,4}$/.test(formData.cvv)) {
-      alert('CVV must be 3 or 4 digits');
+    if (!validateCVV(formData.cvv)) {
+      alert('CVV must be exactly 3 digits');
       return;
     }
 
-    // Navigate to order confirmation, passing payment method and form data
     router.push({
       // pathname: '/(screens)/order-confirmation',
       pathname: '/',
       params: {
         paymentMethod: 'Credit Card',
-        paymentDetails: JSON.stringify(formData),
+        paymentDetails: JSON.stringify({
+          ...formData,
+          cardNumber: formData.cardNumber.replace(/\s/g, ''), // Store without spaces
+        }),
         address: params.newAddress,
       },
     });
@@ -88,7 +98,6 @@ export default function PaymentMethod() {
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <Header title="Payment Method" />
 
-      {/* Progress Steps */}
       <ProgressSteps currentStep="Payment" />
 
       <PaymentOptions paymentOptions={paymentOptions} />

@@ -30,7 +30,7 @@ export default function Favorites() {
         <View>
           <PrimaryBtn
             title="Start Shopping"
-            onPress={() => console.log('Start Shopping')}
+            onPress={() => router.replace('/(tabs)/homepage')}
           />
         </View>
       </View>
