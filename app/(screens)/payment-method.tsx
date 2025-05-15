@@ -12,7 +12,7 @@ import {
   validateCardNumber,
   validateExpiry,
   validateCVV,
-} from '../utils/paymentUtils';
+} from '@/utils/paymentUtils';
 import { PaymentOptions } from '@/components/PaymentMethod/PaymentOption';
 
 interface PaymentFormData {

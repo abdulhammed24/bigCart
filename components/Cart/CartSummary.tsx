@@ -1,4 +1,3 @@
-// components/Cart/CartSummary.tsx
 import React from 'react';
 import { View, Text } from 'react-native';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
