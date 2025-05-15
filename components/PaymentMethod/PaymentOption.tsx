@@ -8,13 +8,13 @@ interface PaymentOption {
   icon: keyof typeof Ionicons.glyphMap;
 }
 
-interface PaymentOptionsProps {
-  paymentOptions: PaymentOption[];
-}
+const paymentOptions: PaymentOption[] = [
+  { id: '1', name: 'PayPal', icon: 'logo-paypal' },
+  { id: '2', name: 'Credit Card', icon: 'card' },
+  { id: '3', name: 'Apple Pay', icon: 'logo-apple' },
+];
 
-export const PaymentOptions: React.FC<PaymentOptionsProps> = ({
-  paymentOptions,
-}) => {
+export const PaymentOptions = ({}) => {
   return (
     <View className="px-6 bg-offWhite py-6">
       <View className="flex flex-row gap-5 items-center justify-center">

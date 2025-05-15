@@ -47,6 +47,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
             value={formData.cardNumber}
             onChangeText={(text) => handleInputChange('cardNumber', text)}
             backgroundColor="bg-white"
+            maxLength={19}
             keyboardType="numeric"
           />
           <View className="flex flex-row gap-2">
@@ -57,6 +58,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
                 value={formData.expiry}
                 onChangeText={(text) => handleInputChange('expiry', text)}
                 backgroundColor="bg-white"
+                maxLength={5}
                 keyboardType="numeric"
               />
             </View>
@@ -68,6 +70,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
                 onChangeText={(text) => handleInputChange('cvv', text)}
                 backgroundColor="bg-white"
                 keyboardType="numeric"
+                maxLength={4}
                 secureTextEntry
               />
             </View>

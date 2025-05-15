@@ -1,3 +1,4 @@
+import { Header } from '@/components/Header';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -10,21 +11,7 @@ export default function OrderSuccess() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
-      <View className="p-6 bg-white">
-        <View className="flex flex-row items-center justify-between">
-          <Pressable onPress={() => router.back()}>
-            <Image
-              source={require('@/assets/icons/back-arrow-blk.svg')}
-              style={{ width: 24, height: 24 }}
-              contentFit="contain"
-            />
-          </Pressable>
-          <Text className="text-center font-poppinsBold text-[24px]">
-            Order Success
-          </Text>
-          <View style={{ width: 24 }} />
-        </View>
-      </View>
+      <Header title="Order Success" showBackButton={false} />
 
       <View className="flex-1 px-6 justify-between bg-offWhite py-6">
         <View className="flex flex-1 flex-col gap-5 items-center justify-center">
@@ -42,8 +29,8 @@ export default function OrderSuccess() {
         </View>
         <View>
           <PrimaryBtn
-            title="Start Shopping"
-            onPress={() => console.log('Start Shopping')}
+            title="Track order"
+            onPress={() => console.log('Track order')}
           />
         </View>
       </View>
