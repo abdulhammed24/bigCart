@@ -80,31 +80,33 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <>
           <View className="h-[1px] w-full bg-[#EBEBEB]" />
 
-          <View className="flex flex-col gap-2">
+          <View className="flex flex-col gap-1.5">
             {order.tracking.map((step, index, arr) => (
-              <View key={index} className="flex-row items-start">
-                <View className="items-center mr-3">
+              <View key={index} className="flex-row items-center">
+                {/* Timeline markers (circles and lines) */}
+                <View className="items-center w-5 mr-3">
                   <View
                     className={`w-3 h-3 rounded-full ${
-                      step.done ? 'bg-green' : 'bg-gray-300'
+                      step.done ? 'bg-[#34C759]' : 'bg-gray'
                     }`}
                   />
                   {index < arr.length - 1 && (
-                    <View className="w-[2px] h-6 bg-gray-300 mt-[2px]" />
+                    <View className="w-[2px] h-6 bg-gray mt-1" />
                   )}
                 </View>
 
-                <View>
+                {/* Timeline text (label and date) */}
+                <View className="flex flex-row flex-1 justify-between items-center">
                   <Text
-                    className={`text-sm font-poppinsBold ${
-                      step.done ? 'text-black' : 'text-gray-400'
+                    className={`text-[14px] font-poppinsBold ${
+                      step.done ? 'text-black' : 'text-gray'
                     }`}
                   >
                     {step.label}
                   </Text>
                   <Text
-                    className={`text-xs font-poppinsRegular ${
-                      step.done ? 'text-black' : 'text-gray-400'
+                    className={`text-[12px] font-poppinsRegular ${
+                      step.done ? 'text-black' : 'text-gray'
                     }`}
                   >
                     {step.date}
