@@ -3,17 +3,25 @@ import { useState } from 'react';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { products } from '@/data/products';
+
 type FeaturedProductsProps = {
   category?: string;
+  limit?: number;
 };
 
-export default function FeaturedProducts({ category }: FeaturedProductsProps) {
+export default function FeaturedProducts({
+  category,
+  limit,
+}: FeaturedProductsProps) {
   const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
 
-  // Filter products by category if provided
-  const filteredProducts = category
+  let filteredProducts = category
     ? products.filter((product) => product.category === category)
     : products;
+
+  if (limit) {
+    filteredProducts = filteredProducts.slice(0, limit);
+  }
 
   const toggleFavorite = (index: number) => {
     setFavorites((prev) => ({
@@ -94,6 +102,7 @@ export default function FeaturedProducts({ category }: FeaturedProductsProps) {
       )}
       keyExtractor={(_, index) => index.toString()}
       numColumns={2}
+      showsVerticalScrollIndicator={false}
       columnWrapperStyle={{ justifyContent: 'space-between' }}
       contentContainerStyle={{ paddingBottom: 20 }}
     />

@@ -57,7 +57,7 @@ export default function Homepage() {
                 <Text className="text-[18px] font-poppinsBold">
                   Featured products
                 </Text>
-                <Link href="/product-details/id" asChild>
+                <Link href="/featured-products" asChild>
                   <Pressable className="flex-row items-center">
                     <Image
                       source={require('@/assets/icons/view-all.svg')}
@@ -67,7 +67,7 @@ export default function Homepage() {
                   </Pressable>
                 </Link>
               </View>
-              <FeaturedProducts />
+              <FeaturedProducts limit={4} />
             </View>
           </View>
         }
