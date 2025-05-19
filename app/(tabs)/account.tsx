@@ -18,8 +18,7 @@ const accountItems: AccountItem[] = [
   {
     icon: require('@/assets/icons/account/orders.svg'),
     label: 'My orders',
-    href: '/',
-    // href: '/account/orders',
+    href: '/(screens)/my-orders',
   },
   {
     icon: require('@/assets/icons/account/favorites.svg'),
@@ -34,7 +33,7 @@ const accountItems: AccountItem[] = [
   {
     icon: require('@/assets/icons/account/credits-card.svg'),
     label: 'Credit cards',
-    href: '/(screens)/add-address',
+    href: '/(screens)/my-cards',
   },
   {
     icon: require('@/assets/icons/account/transactions.svg'),
@@ -99,10 +98,14 @@ export default function Account() {
             <Link href={item.href} asChild key={index}>
               <Pressable
                 className="flex-row justify-between items-center p-3 rounded-xl"
+                android_ripple={{
+                  color: 'rgba(0, 0, 0, 0.1)',
+                }}
                 style={({ pressed }) => [
                   {
-                    backgroundColor: pressed ? '#f0f0f0' : 'transparent',
-                    transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
+                    backgroundColor: pressed
+                      ? 'rgba(0, 0, 0, 0.1)'
+                      : 'transparent',
                   },
                 ]}
               >
@@ -112,7 +115,7 @@ export default function Account() {
                     style={{ width: 20, height: 20 }}
                     contentFit="contain"
                   />
-                  <Text className="font-poppinsBold text-[14px]">
+                  <Text className="font-poppinsBold text-[15px]">
                     {item.label}
                   </Text>
                 </View>
