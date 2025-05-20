@@ -92,12 +92,12 @@ export default function Account() {
       </View>
 
       {/*  */}
-      <View className="bg-offWhite pt-40 px-6 flex-1">
+      <View className="bg-offWhite pt-40 flex-1">
         <View className="flex flex-col gap-2">
           {accountItems.map((item, index) => (
             <Link href={item.href} asChild key={index}>
               <Pressable
-                className="flex-row justify-between items-center p-3 rounded-xl"
+                className="flex-row justify-between items-center p-3 px-6 rounded-xl"
                 android_ripple={{
                   color: 'rgba(0, 0, 0, 0.1)',
                 }}

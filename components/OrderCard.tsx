@@ -80,19 +80,31 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <>
           <View className="h-[1px] w-full bg-[#EBEBEB]" />
 
-          <View className="flex flex-col gap-1.5">
+          <View className="flex flex-col gap-6 relative">
             {order.tracking.map((step, index, arr) => (
-              <View key={index} className="flex-row items-center">
-                {/* Timeline markers (circles and lines) */}
-                <View className="items-center w-5 mr-3">
+              <View key={index} className="flex-row items-center relative">
+                {/* Line segment between this step and the next (except for the last step) */}
+                {index < arr.length - 1 && (
                   <View
-                    className={`w-3 h-3 rounded-full ${
-                      step.done ? 'bg-[#34C759]' : 'bg-gray'
+                    className={`absolute w-[1px] h-12 ${
+                      step.done && arr[index + 1].done
+                        ? 'bg-primary'
+                        : 'bg-offWhite'
+                    }`}
+                    style={{
+                      left: 8,
+                      top: 10,
+                    }}
+                  />
+                )}
+
+                {/* Dot column */}
+                <View className="w-5 mr-3 items-center">
+                  <View
+                    className={`w-2.5 h-2.5 rounded-full z-10 ${
+                      step.done ? 'bg-primary' : 'bg-offWhite'
                     }`}
                   />
-                  {index < arr.length - 1 && (
-                    <View className="w-[2px] h-6 bg-gray mt-1" />
-                  )}
                 </View>
 
                 {/* Timeline text (label and date) */}
