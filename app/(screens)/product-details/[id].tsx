@@ -2,11 +2,11 @@ import { PrimaryBtn } from '@/components/PrimaryBtn';
 import Rating from '@/components/Rating';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { ImageBackground, Text, Pressable, View } from 'react-native';
+import { ImageBackground, Text, View } from 'react-native';
+import { IconButton, TouchableRipple } from 'react-native-paper';
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -28,6 +28,7 @@ export default function SingleProductDetails() {
   const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
   const [quantity, setQuantity] = useState(1);
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   const toggleFavorite = (productId: number) => {
     setFavorites((prev) => ({
@@ -35,8 +36,6 @@ export default function SingleProductDetails() {
       [productId]: !prev[productId],
     }));
   };
-
-  const router = useRouter();
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
@@ -55,13 +54,21 @@ export default function SingleProductDetails() {
         className="justify-start p-6"
       >
         <View className="flex-row items-center mt-5 justify-between">
-          <Pressable onPress={() => router.back()}>
-            <Image
-              source={require('@/assets/icons/back-arrow-blk.svg')}
-              style={{ width: 24, height: 24 }}
-              contentFit="contain"
-            />
-          </Pressable>
+          <IconButton
+            onPress={() => router.back()}
+            icon={() => (
+              <Image
+                source={require('@/assets/icons/back-arrow-blk.svg')}
+                style={{ width: 24, height: 24 }}
+                contentFit="contain"
+              />
+            )}
+            size={24}
+            accessibilityLabel="Go back"
+            rippleColor="rgba(0, 0, 0, 0.1)"
+            style={{ margin: -8 }}
+            className="rounded-full"
+          />
         </View>
       </ImageBackground>
 
@@ -76,13 +83,20 @@ export default function SingleProductDetails() {
             <Text className="text-[20px] font-poppinsBold text-deepPrimary">
               ${product.price.toFixed(2)}
             </Text>
-            <Pressable onPress={() => toggleFavorite(product.id)}>
+
+            <TouchableRipple
+              onPress={() => toggleFavorite(product.id)}
+              rippleColor="rgba(0, 0, 0, 0.1)"
+              borderless={true}
+              className="absolute rounded-full top-1 right-1 p-2"
+              style={{ margin: -8 }}
+            >
               <Ionicons
                 name={favorites[product.id] ? 'heart' : 'heart-outline'}
                 size={24}
                 color={favorites[product.id] ? 'red' : 'gray'}
               />
-            </Pressable>
+            </TouchableRipple>
           </View>
 
           <View className="mb-4">
@@ -116,30 +130,36 @@ export default function SingleProductDetails() {
                 Quantity
               </Text>
             </View>
-            <View className="flex-row items-center justify-between bg-gray-100 rounded-full h-full overflow-hidden">
-              <Pressable
+            <View className="flex-row items-center justify-between rounded-[10px] h-full overflow-hidden">
+              <TouchableRipple
                 onPress={decrementQuantity}
+                rippleColor="rgba(0, 0, 0, 0.1)"
+                borderless={true}
                 className="px-5 h-full justify-center"
               >
                 <Ionicons name="remove" size={24} color="#6CC51D" />
-              </Pressable>
+              </TouchableRipple>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
               <Text className="text-black text-[20px] w-[50px] text-center font-poppinsBold">
                 {quantity}
               </Text>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
-              <Pressable
+              <TouchableRipple
                 onPress={incrementQuantity}
+                rippleColor="rgba(0, 0, 0, 0.1)"
+                borderless={true}
                 className="px-5 h-full justify-center"
               >
                 <Ionicons name="add" size={24} color="#6CC51D" />
-              </Pressable>
+              </TouchableRipple>
             </View>
           </View>
 
           <PrimaryBtn
             title="Add to Cart"
-            onPress={() => console.log('Add to Cart')}
+            onPress={() => {
+              router.push('/(screens)/cart');
+            }}
             rightIcon={require('@/assets/icons/cart.svg')}
             style={{ borderRadius: 10 }}
           />

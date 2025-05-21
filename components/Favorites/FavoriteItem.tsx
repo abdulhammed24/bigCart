@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableRipple } from 'react-native-paper';
 
 interface FavoriteItemProps {
   item: {
@@ -48,16 +49,19 @@ export const FavoriteItem: React.FC<FavoriteItemProps> = ({
         </View>
       </View>
       <View className="flex justify-center self-end">
-        <Pressable
+        <TouchableRipple
           className="flex-row items-center justify-center border border-green-600 rounded-lg py-2 px-2"
           onPress={() => onAddToCart?.(item)}
-          accessibilityLabel="Add to cart"
+          rippleColor="rgba(0, 0, 0, 0.1)"
+          borderless={true}
         >
-          <Ionicons name="bag-outline" size={16} color="#16A34A" />
-          <Text className="text-green-600 font-poppinsMedium ml-2">
-            Add to cart
-          </Text>
-        </Pressable>
+          <View className="flex-row items-center">
+            <Ionicons name="bag-outline" size={16} color="#6CC51D" />
+            <Text className="text-green-600 font-poppinsMedium ml-2">
+              Add to cart
+            </Text>
+          </View>
+        </TouchableRipple>
       </View>
     </View>
   );

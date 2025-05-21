@@ -41,11 +41,11 @@ export const Header: React.FC<HeaderProps> = ({
                 contentFit="contain"
               />
             )}
-            size={24} // Matches icon size
+            size={24}
             onPress={handleBackPress}
             accessibilityLabel="Go back"
-            rippleColor="rgba(0, 0, 0, 0.1)" // Matches other components
-            style={{ margin: -8 }} // Adjust for Tailwind p-3 (12px) equivalent
+            rippleColor="rgba(0, 0, 0, 0.1)"
+            style={{ margin: -8 }}
             className="rounded-full"
           />
         ) : (

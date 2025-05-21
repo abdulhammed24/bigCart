@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableRipple } from 'react-native-paper';
 
 interface CartItemProps {
   item: {
@@ -23,7 +24,7 @@ export const CartItem: React.FC<CartItemProps> = ({
   onDecrement,
 }) => {
   return (
-    <View className="flex flex-row gap-5 p-3 justify-between items-center bg-white rounded-lg">
+    <View className="flex flex-row gap-5 p-2.5 justify-between items-center bg-white rounded-lg">
       <View className="flex flex-row gap-5 items-center flex-[0.7]">
         <View>
           <Image
@@ -46,26 +47,30 @@ export const CartItem: React.FC<CartItemProps> = ({
       </View>
       <View className="flex-[0.3] flex items-end">
         <View className="flex-col items-center justify-between overflow-hidden">
-          <Pressable
+          <TouchableRipple
             onPress={() => onIncrement(item.id)}
-            className="flex items-center justify-center"
-            accessibilityLabel="Increase quantity"
+            rippleColor="rgba(0, 0, 0, 0.1)"
+            borderless={true}
+            className="p-3 items-center justify-center rounded-full"
+            style={{ width: 40, height: 40 }}
           >
             <Ionicons name="add" size={24} color="#6CC51D" />
-          </Pressable>
+          </TouchableRipple>
           <Text
             className="text-gray text-[20px] h-[40px] rounded-full font-poppinsBold text-center"
             style={{ lineHeight: 60 }}
           >
             {item.quantity}
           </Text>
-          <Pressable
+          <TouchableRipple
             onPress={() => onDecrement(item.id)}
-            className="flex items-center justify-center"
-            accessibilityLabel="Decrease quantity"
+            rippleColor="rgba(0, 0, 0, 0.1)"
+            borderless={true}
+            className="p-3 items-center justify-center rounded-full"
+            style={{ width: 40, height: 40 }}
           >
             <Ionicons name="remove" size={24} color="#6CC51D" />
-          </Pressable>
+          </TouchableRipple>
         </View>
       </View>
     </View>
@@ -76,7 +81,7 @@ export const HiddenCartItem: React.FC<
   Pick<CartItemProps, 'item' | 'onDelete'>
 > = ({ item, onDelete }) => {
   return (
-    <View className="flex flex-row gap-5 p-3 justify-end flex-1 items-center bg-[#FF3B30] rounded-lg">
+    <View className="flex flex-row gap-5 p-2.5 justify-end flex-1 items-center bg-[#FF3B30] rounded-lg">
       <Pressable
         className="w-12 h-full items-center justify-center"
         onPress={() => onDelete(item.id)}

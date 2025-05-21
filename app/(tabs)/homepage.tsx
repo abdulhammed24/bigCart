@@ -35,11 +35,13 @@ export default function Homepage() {
                 <Text className="text-[18px] font-poppinsBold">Categories</Text>
                 <TouchableRipple
                   onPress={() => {
+                    console.log('Categories View All pressed');
                     router.push('/categories');
                   }}
                   rippleColor="rgba(0, 0, 0, 0.2)"
                   borderless={true}
-                  className="p-2 rounded-full"
+                  className="p-3 rounded-full items-center justify-center"
+                  style={{ width: 40, height: 40, margin: -8 }}
                 >
                   <Image
                     source={require('@/assets/icons/view-all.svg')}
@@ -48,21 +50,22 @@ export default function Homepage() {
                   />
                 </TouchableRipple>
               </View>
-              {/*  */}
               <Categories />
             </View>
             <View className="mb-8">
-              <View className="flex-row justify-between items-center mb-2">
+              <View className="flex-row justify-between items-center mb-4">
                 <Text className="text-[18px] font-poppinsBold">
                   Featured products
                 </Text>
                 <TouchableRipple
                   onPress={() => {
+                    console.log('Featured Products View All pressed');
                     router.push('/featured-products');
                   }}
                   rippleColor="rgba(0, 0, 0, 0.2)"
                   borderless={true}
-                  className="p-2 rounded-full"
+                  className="p-3 rounded-full items-center justify-center"
+                  style={{ width: 40, height: 40, margin: -8 }}
                 >
                   <Image
                     source={require('@/assets/icons/view-all.svg')}
@@ -71,7 +74,6 @@ export default function Homepage() {
                   />
                 </TouchableRipple>
               </View>
-              {/*  */}
               <FeaturedProducts limit={4} />
             </View>
           </View>
