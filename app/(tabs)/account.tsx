@@ -1,6 +1,8 @@
 import { Image } from 'expo-image';
-import { Link, LinkProps } from 'expo-router';
-import { View, Text, Pressable } from 'react-native';
+import { LinkProps } from 'expo-router';
+import { View, Text } from 'react-native';
+import { TouchableRipple } from 'react-native-paper';
+import { useRouter } from 'expo-router';
 
 interface AccountItem {
   icon: any;
@@ -49,12 +51,17 @@ const accountItems: AccountItem[] = [
     icon: require('@/assets/icons/account/sign-out.svg'),
     label: 'Sign out',
     href: '/',
-    // href: '/logout',
     noArrow: true,
   },
 ];
 
 export default function Account() {
+  const router = useRouter(); // Initialize router
+
+  const handleItemPress = (href: LinkProps['href']) => {
+    router.push(href); // Navigate to the item's href
+  };
+
   return (
     <View className="flex-1">
       {/* Header */}
@@ -91,24 +98,17 @@ export default function Account() {
         </View>
       </View>
 
-      {/*  */}
+      {/* Account Items */}
       <View className="bg-offWhite pt-40 flex-1">
         <View className="flex flex-col gap-2">
           {accountItems.map((item, index) => (
-            <Link href={item.href} asChild key={index}>
-              <Pressable
-                className="flex-row justify-between items-center p-3 px-6 rounded-xl"
-                android_ripple={{
-                  color: 'rgba(0, 0, 0, 0.1)',
-                }}
-                style={({ pressed }) => [
-                  {
-                    backgroundColor: pressed
-                      ? 'rgba(0, 0, 0, 0.1)'
-                      : 'transparent',
-                  },
-                ]}
-              >
+            <TouchableRipple
+              key={index}
+              onPress={() => handleItemPress(item.href)}
+              rippleColor="rgba(0, 0, 0, 0.1)"
+              className="p-3 px-6 rounded-xl"
+            >
+              <View className="flex-row justify-between items-center">
                 <View className="flex-row items-center gap-3">
                   <Image
                     source={item.icon}
@@ -127,8 +127,8 @@ export default function Account() {
                     contentFit="contain"
                   />
                 )}
-              </Pressable>
-            </Link>
+              </View>
+            </TouchableRipple>
           ))}
         </View>
       </View>

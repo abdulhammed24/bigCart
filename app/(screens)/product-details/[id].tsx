@@ -4,15 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
+import { ImageBackground, Text, Pressable, View } from 'react-native';
 import {
-  ImageBackground,
-  Text,
-  Pressable,
-  View,
-  StatusBar,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 const product = {
   id: 1,
@@ -29,6 +27,7 @@ const product = {
 export default function SingleProductDetails() {
   const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
   const [quantity, setQuantity] = useState(1);
+  const insets = useSafeAreaInsets();
 
   const toggleFavorite = (productId: number) => {
     setFavorites((prev) => ({
@@ -46,17 +45,13 @@ export default function SingleProductDetails() {
   return (
     <View className="flex-1">
       {/* StatusBar with transparent background */}
-      <StatusBar
-        barStyle="dark-content"
-        translucent
-        backgroundColor="transparent"
-      />
+      <StatusBar style="dark" translucent backgroundColor="transparent" />
 
       {/* ImageBackground - Full screen, behind status bar */}
       <ImageBackground
         source={product.image}
         resizeMode="cover"
-        style={{ flex: 0.8, paddingTop: StatusBar.currentHeight || 0 }}
+        style={{ flex: 0.8, paddingTop: insets.top }}
         className="justify-start p-6"
       >
         <View className="flex-row items-center mt-5 justify-between">

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { IconButton } from 'react-native-paper';
 
 interface HeaderProps {
   title?: string;
@@ -32,33 +33,21 @@ export const Header: React.FC<HeaderProps> = ({
     <View className={`p-6 ${backgroundColor}`}>
       <View className="flex flex-row items-center justify-between">
         {showBackButton ? (
-          <Pressable
+          <IconButton
+            icon={() => (
+              <Image
+                source={require('@/assets/icons/back-arrow-blk.svg')}
+                style={{ width: 24, height: 24 }}
+                contentFit="contain"
+              />
+            )}
+            size={24} // Matches icon size
             onPress={handleBackPress}
             accessibilityLabel="Go back"
-            android_ripple={{
-              color: 'rgba(0, 0, 0, 0.1)',
-              borderless: true,
-              radius: 30,
-            }}
-            style={({ pressed }) => [
-              {
-                padding: 10,
-                borderRadius: 100,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: pressed ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
-              },
-            ]}
-          >
-            <Image
-              source={require('@/assets/icons/back-arrow-blk.svg')}
-              style={{
-                width: 24,
-                height: 24,
-              }}
-              contentFit="contain"
-            />
-          </Pressable>
+            rippleColor="rgba(0, 0, 0, 0.1)" // Matches other components
+            style={{ margin: -8 }} // Adjust for Tailwind p-3 (12px) equivalent
+            className="rounded-full"
+          />
         ) : (
           <View style={{ width: 24 }} />
         )}

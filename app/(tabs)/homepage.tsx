@@ -1,15 +1,16 @@
-import { IconButton } from 'react-native-paper';
 import { View, Text, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { TouchableRipple } from 'react-native-paper';
+import { Image } from 'expo-image';
 import Categories from '@/components/Homepage/Categories';
 import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
 import HeroSlider from '@/components/Homepage/HeroSlider';
 import SearchBar from '@/components/Homepage/SearchBar';
-import { Image } from 'expo-image';
 
 export default function Homepage() {
   const data = [1];
+  const router = useRouter();
 
   return (
     <LinearGradient
@@ -32,22 +33,22 @@ export default function Homepage() {
             <View className="mb-8">
               <View className="flex-row justify-between items-center mb-2">
                 <Text className="text-[18px] font-poppinsBold">Categories</Text>
-                <Link href="/categories" asChild>
-                  <IconButton
-                    icon={() => (
-                      <Image
-                        source={require('@/assets/icons/view-all.svg')}
-                        style={{ width: 20, height: 12 }}
-                        contentFit="contain"
-                      />
-                    )}
-                    size={15}
-                    style={{ backgroundColor: 'transparent' }}
-                    rippleColor="rgba(0, 0, 0, 0.2)"
-                    onPress={() => console.log('Categories View All pressed')}
+                <TouchableRipple
+                  onPress={() => {
+                    router.push('/categories');
+                  }}
+                  rippleColor="rgba(0, 0, 0, 0.2)"
+                  borderless={true}
+                  className="p-2 rounded-full"
+                >
+                  <Image
+                    source={require('@/assets/icons/view-all.svg')}
+                    style={{ width: 20, height: 12 }}
+                    contentFit="contain"
                   />
-                </Link>
+                </TouchableRipple>
               </View>
+              {/*  */}
               <Categories />
             </View>
             <View className="mb-8">
@@ -55,24 +56,22 @@ export default function Homepage() {
                 <Text className="text-[18px] font-poppinsBold">
                   Featured products
                 </Text>
-                <Link href="/featured-products" asChild>
-                  <IconButton
-                    icon={() => (
-                      <Image
-                        source={require('@/assets/icons/view-all.svg')}
-                        style={{ width: 20, height: 12 }}
-                        contentFit="contain"
-                      />
-                    )}
-                    size={15}
-                    style={{ backgroundColor: 'transparent' }}
-                    rippleColor="rgba(0, 0, 0, 0.2)"
-                    onPress={() =>
-                      console.log('Featured Products View All pressed')
-                    }
+                <TouchableRipple
+                  onPress={() => {
+                    router.push('/featured-products');
+                  }}
+                  rippleColor="rgba(0, 0, 0, 0.2)"
+                  borderless={true}
+                  className="p-2 rounded-full"
+                >
+                  <Image
+                    source={require('@/assets/icons/view-all.svg')}
+                    style={{ width: 20, height: 12 }}
+                    contentFit="contain"
                   />
-                </Link>
+                </TouchableRipple>
               </View>
+              {/*  */}
               <FeaturedProducts limit={4} />
             </View>
           </View>

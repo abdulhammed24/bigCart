@@ -1,8 +1,9 @@
-import { View, Text, Pressable, FlatList } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { useState } from 'react';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { products } from '@/data/products';
+import { TouchableRipple } from 'react-native-paper';
 
 type FeaturedProductsProps = {
   category?: string;
@@ -14,6 +15,10 @@ export default function FeaturedProducts({
   limit,
 }: FeaturedProductsProps) {
   const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
+  const [addedToCart, setAddedToCart] = useState<{ [key: number]: boolean }>(
+    {},
+  );
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 
   let filteredProducts = category
     ? products.filter((product) => product.category === category)
@@ -30,22 +35,49 @@ export default function FeaturedProducts({
     }));
   };
 
+  const addToCart = (index: number) => {
+    setAddedToCart((prev) => ({
+      ...prev,
+      [index]: true,
+    }));
+    setQuantities((prev) => ({
+      ...prev,
+      [index]: prev[index] || 1,
+    }));
+  };
+
+  const incrementQuantity = (index: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [index]: (prev[index] || 1) + 1,
+    }));
+  };
+
+  const decrementQuantity = (index: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [index]: prev[index] > 1 ? prev[index] - 1 : 1,
+    }));
+  };
+
   return (
     <FlatList
       data={filteredProducts}
       renderItem={({ item, index }) => (
         <View className="bg-white rounded-xl mb-4 w-[48%] p-3 shadow-sm relative">
           {/* Favorite (Heart) Icon */}
-          <Pressable
-            className="absolute top-3 right-3 z-10"
+          <TouchableRipple
             onPress={() => toggleFavorite(index)}
+            rippleColor="rgba(0, 0, 0, 0.1)"
+            borderless={true}
+            className="absolute top-1 right-1 p-2"
           >
             <Ionicons
               name={favorites[index] ? 'heart' : 'heart-outline'}
               size={20}
               color={favorites[index] ? 'red' : 'gray'}
             />
-          </Pressable>
+          </TouchableRipple>
 
           {/* Badge (New or Discount) */}
           {(item.status === 'new' || item.discountPercentage) && (
@@ -91,13 +123,41 @@ export default function FeaturedProducts({
           {/* Divider */}
           <View className="bg-[#EBEBEB] h-[1px] w-full my-3" />
 
-          {/* Add to cart button */}
-          <Pressable className="flex-row items-center justify-center border border-green-600 rounded-lg py-2">
-            <Ionicons name="bag-outline" size={16} color="#16A34A" />
-            <Text className="text-green-600 font-poppinsMedium ml-2">
-              Add to cart
-            </Text>
-          </Pressable>
+          {/* Conditional Rendering: Add to Cart or Quantity Selector */}
+          {!addedToCart[index] ? (
+            <TouchableRipple
+              className="flex-row items-center justify-center border border-green-600 rounded-lg py-2"
+              onPress={() => addToCart(index)}
+              rippleColor="rgba(0, 0, 0, 0.1)"
+            >
+              <View className="flex-row items-center">
+                <Ionicons name="bag-outline" size={16} color="#16A34A" />
+                <Text className="text-green-600 font-poppinsMedium ml-2">
+                  Add to cart
+                </Text>
+              </View>
+            </TouchableRipple>
+          ) : (
+            <View className="flex-row items-center justify-between bg-gray-100 rounded-full h-[40px] overflow-hidden">
+              <TouchableRipple
+                onPress={() => decrementQuantity(index)}
+                className="px-3 h-full justify-center"
+                rippleColor="rgba(0, 0, 0, 0.1)"
+              >
+                <Ionicons name="remove" size={24} color="#6CC51D" />
+              </TouchableRipple>
+              <Text className="text-black text-[16px] w-[50px] text-center font-poppinsMedium">
+                {quantities[index] || 1}
+              </Text>
+              <TouchableRipple
+                onPress={() => incrementQuantity(index)}
+                className="px-3 h-full justify-center"
+                rippleColor="rgba(0, 0, 0, 0.1)"
+              >
+                <Ionicons name="add" size={24} color="#6CC51D" />
+              </TouchableRipple>
+            </View>
+          )}
         </View>
       )}
       keyExtractor={(_, index) => index.toString()}
