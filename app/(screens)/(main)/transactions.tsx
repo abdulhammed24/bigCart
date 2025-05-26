@@ -1,9 +1,9 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Transaction {
   id: string;

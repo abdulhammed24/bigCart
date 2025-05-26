@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import CustomToggle from '@/components/CustomToggle';
 import { Header } from '@/components/Header';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Notifications() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Notifications() {
     };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <Header title="Notifications" />
 
@@ -112,6 +113,6 @@ export default function Notifications() {
           onPress={() => console.log('Save settings')}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

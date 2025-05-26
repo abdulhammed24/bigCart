@@ -73,7 +73,7 @@ export default function MyAddress() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
 
       <Header
@@ -114,6 +114,6 @@ export default function MyAddress() {
           onPress={() => console.log('Saved addresses:', addresses)}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

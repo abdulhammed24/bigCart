@@ -67,7 +67,7 @@ export default function MyCards() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       {/* Header */}
       <Header
         title="My Cards"
@@ -107,6 +107,6 @@ export default function MyCards() {
           onPress={() => console.log('Saved cards:', cards)}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
