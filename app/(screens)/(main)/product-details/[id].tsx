@@ -1,6 +1,5 @@
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import Rating from '@/components/Rating';
-import ReusableStatusBar from '@/components/ReusableStatusBar';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -44,12 +43,8 @@ export default function SingleProductDetails() {
 
   return (
     <View className="flex-1">
-      {/* StatusBar with transparent background */}
-      <ReusableStatusBar
-        style="dark"
-        backgroundColor="transparent"
-        translucent={true}
-      />
+      {/*  */}
+      {/* <ReusableStatusBar style="dark" backgroundColor="transparent" /> */}
 
       {/* ImageBackground - Full screen, behind status bar */}
       <ImageBackground
@@ -163,7 +158,7 @@ export default function SingleProductDetails() {
           <PrimaryBtn
             title="Add to Cart"
             onPress={() => {
-              router.push('/(screens)/cart');
+              router.push('/(screens)/(main)/cart');
             }}
             rightIcon={require('@/assets/icons/cart.svg')}
             style={{ borderRadius: 10 }}

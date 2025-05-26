@@ -132,7 +132,7 @@ export default function ShippingMethod() {
         <PrimaryBtn
           title="Save settings"
           // onPress={() => console.log('Save settings', selectedOption)}
-          onPress={() => router.push('/(screens)/shipping-address')}
+          onPress={() => router.push('/(screens)/(main)/shipping-address')}
         />
       </View>
     </SafeAreaView>

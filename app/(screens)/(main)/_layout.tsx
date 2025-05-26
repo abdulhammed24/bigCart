@@ -1,16 +1,16 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import ReusableStatusBar from '@/components/ReusableStatusBar';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 export default function MainScreensLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <>
-      <ReusableStatusBar
-        style="dark"
-        backgroundColor="white"
-        translucent={false}
-      />
-
+      <View className="bg-white left-0 right-0 top-0 absolute h-44" />
+      <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false }} />
     </>
   );

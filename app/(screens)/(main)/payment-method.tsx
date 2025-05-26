@@ -76,7 +76,7 @@ export default function PaymentMethod() {
     // }
 
     router.replace({
-      pathname: '/(screens)/order-success',
+      pathname: '/(screens)/(main)/order-success',
       params: {
         paymentMethod: 'Credit Card',
         paymentDetails: JSON.stringify({

@@ -52,7 +52,9 @@ export default function TabLayout() {
           options={{
             title: 'Favorites',
             tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-              <Pressable onPress={() => router.push('/(screens)/favorites')}>
+              <Pressable
+                onPress={() => router.push('/(screens)/(main)/favorites')}
+              >
                 <Ionicons name="heart-outline" size={size} color={color} />
               </Pressable>
             ),
@@ -66,7 +68,7 @@ export default function TabLayout() {
             title: 'Cart',
             tabBarIcon: ({ size }) => (
               <Pressable
-                onPress={() => router.push('/(screens)/cart')}
+                onPress={() => router.push('/(screens)/(main)/cart')}
                 style={{
                   backgroundColor: '#6CC51D',
                   borderRadius: 50,

@@ -7,7 +7,6 @@ import { ScrollView } from 'moti';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useRouter } from 'expo-router';
 import CreditCard from '@/components/CreditCard';
-import ReusableStatusBar from '@/components/ReusableStatusBar';
 
 // Define the Card interface
 interface Card {
@@ -72,7 +71,7 @@ export default function MyCards() {
       <Header
         title="My Cards"
         rightComponent={
-          <Pressable onPress={() => router.push('/(screens)/add-card')}>
+          <Pressable onPress={() => router.push('/(screens)/(main)/add-card')}>
             <Image
               source={require('@/assets/icons/add.svg')}
               style={{ width: 24, height: 24 }}

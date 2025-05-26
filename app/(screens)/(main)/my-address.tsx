@@ -79,7 +79,9 @@ export default function MyAddress() {
       <Header
         title="My Address"
         rightComponent={
-          <Pressable onPress={() => router.push('/(screens)/add-address')}>
+          <Pressable
+            onPress={() => router.push('/(screens)/(main)/add-address')}
+          >
             <Image
               source={require('@/assets/icons/add.svg')}
               style={{ width: 24, height: 24 }}

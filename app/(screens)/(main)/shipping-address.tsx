@@ -67,7 +67,7 @@ export default function ShippingAddress() {
     router.setParams({ newAddress: JSON.stringify(formData) });
 
     // Navigate to payment-method screen
-    router.push('/(screens)/payment-method');
+    router.push('/(screens)/(main)/payment-method');
   };
 
   return (
