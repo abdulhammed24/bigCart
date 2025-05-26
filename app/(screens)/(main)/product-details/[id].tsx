@@ -3,8 +3,9 @@ import Rating from '@/components/Rating';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+
 import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
 import { ImageBackground, Text, View } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import {
@@ -43,9 +44,6 @@ export default function SingleProductDetails() {
 
   return (
     <View className="flex-1">
-      {/*  */}
-      {/* <ReusableStatusBar style="dark" backgroundColor="transparent" /> */}
-
       {/* ImageBackground - Full screen, behind status bar */}
       <ImageBackground
         source={product.image}
@@ -53,6 +51,11 @@ export default function SingleProductDetails() {
         style={{ flex: 0.8, paddingTop: insets.top }}
         className="justify-start p-6"
       >
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="transparent"
+          translucent
+        />
         <View className="flex-row items-center mt-5 justify-between">
           <IconButton
             onPress={() => router.back()}

@@ -5,6 +5,7 @@ import { Image } from 'expo-image';
 import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
+import { StatusBar } from 'react-native';
 
 type CategoryParams = {
   name: string;
@@ -16,6 +17,7 @@ export default function CategoryDetail() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title={name} />
 

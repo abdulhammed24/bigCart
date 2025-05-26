@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import CustomToggle from '@/components/CustomToggle';
@@ -25,6 +25,7 @@ export default function Notifications() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title="Notifications" />
 

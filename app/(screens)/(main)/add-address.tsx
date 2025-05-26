@@ -8,6 +8,7 @@ import { PrimaryBtn } from '@/components/PrimaryBtn';
 import CustomToggle from '@/components/CustomToggle';
 import { Header } from '@/components/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StatusBar } from 'react-native';
 
 interface Address {
   name: string;
@@ -69,6 +70,7 @@ export default function AddAddress() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title="Add Address" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

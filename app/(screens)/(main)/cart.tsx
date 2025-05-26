@@ -1,8 +1,7 @@
-// screens/Cart.tsx
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { CartItem, HiddenCartItem } from '@/components/Cart/CartItem';
@@ -93,6 +92,8 @@ export default function Cart() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+
       <Header title="Shopping Cart" />
       {items.length === 0 ? (
         <EmptyCart />

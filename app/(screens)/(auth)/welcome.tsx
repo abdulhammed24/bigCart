@@ -1,8 +1,12 @@
-import { View, Text, ImageBackground, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  Pressable,
+  StatusBar,
+} from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 
 export default function Welcome() {
@@ -10,7 +14,11 @@ export default function Welcome() {
   return (
     <View className="flex-1">
       {/* StatusBar  */}
-      <StatusBar style="light" translucent />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
       {/* Image Background Section */}
       <View className="h-[60%]">

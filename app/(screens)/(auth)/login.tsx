@@ -1,11 +1,16 @@
-import { View, Text, ImageBackground, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  Pressable,
+  StatusBar,
+} from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { InputField } from '@/components/InputField';
 import { PasswordInput } from '@/components/PasswordInput';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
-import { StatusBar } from 'expo-status-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomToggle from '@/components/CustomToggle';
 
@@ -46,7 +51,11 @@ export default function Login() {
   return (
     <KeyboardAwareScrollView className="flex-1 bg-offWhite">
       <View className="flex-1">
-        <StatusBar style="light" translucent />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
         <View className="h-[400px]">
           <ImageBackground
             source={require('@/assets/images/onboarding/login.png')}

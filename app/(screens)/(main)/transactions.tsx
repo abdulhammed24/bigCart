@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, ScrollView, Pressable, StatusBar } from 'react-native';
 import React from 'react';
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
@@ -69,6 +69,7 @@ export default function Transactions() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title="Transactions" />
       <ScrollView
         contentContainerStyle={{ paddingBottom: 50 }}

@@ -1,10 +1,9 @@
-import { View, FlatList, Pressable, Dimensions } from 'react-native';
+import { View, FlatList, Pressable, Dimensions, StatusBar } from 'react-native';
 import { Link } from 'expo-router';
 import { useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { OnboardingSlides, slides } from '@/components/OnboardingSlides';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
-import { StatusBar } from 'expo-status-bar';
 
 const { width } = Dimensions.get('window');
 
@@ -37,7 +36,11 @@ export default function Onboarding() {
 
   return (
     <View className="flex-1">
-      <StatusBar style="dark" translucent />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
       <FlatList
         ref={flatListRef}
         data={slides}

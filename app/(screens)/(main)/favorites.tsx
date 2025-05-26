@@ -2,7 +2,7 @@
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import {
@@ -60,6 +60,8 @@ export default function Favorites() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+
       <Header title="Favorites" onBackPress={() => router.back()} />
       {items.length === 0 ? (
         <EmptyFavorites />

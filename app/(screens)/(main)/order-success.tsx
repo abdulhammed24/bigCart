@@ -2,7 +2,7 @@ import { Header } from '@/components/Header';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function OrderSuccess() {
@@ -10,6 +10,7 @@ export default function OrderSuccess() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title="Order Success" showBackButton={false} />
 

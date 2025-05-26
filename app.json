@@ -13,8 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/bigCart.png",
-        "backgroundColor": "#F4F5F9"
+        "foregroundImage": "./assets/images/bigCart.png"
       }
     },
     "web": {
@@ -29,8 +28,7 @@
         {
           "image": "./assets/images/bigCart.png",
           "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#F4F5F9"
+          "resizeMode": "contain"
         }
       ],
       "expo-font",

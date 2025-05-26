@@ -2,6 +2,7 @@ import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
 import OrderCard from '@/components/OrderCard';
+import { StatusBar } from 'react-native';
 
 // Define the orders array (as created above)
 const orders = [
@@ -75,6 +76,7 @@ const orders = [
 export default function MyOrders() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title="My Orders" />
 

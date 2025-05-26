@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
 import { PaymentForm } from '@/components/PaymentMethod/PaymentForm';
+import { StatusBar } from 'react-native';
 
 // Define the PaymentFormData interface (copied from PaymentForm for type safety)
 interface PaymentFormData {
@@ -29,6 +30,7 @@ export default function AddCard() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title="Add Credit Card" />
       <PaymentForm
         formData={formData}

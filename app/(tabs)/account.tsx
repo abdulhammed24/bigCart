@@ -15,37 +15,37 @@ const accountItems: AccountItem[] = [
   {
     icon: require('@/assets/icons/account/about-me.svg'),
     label: 'About me',
-    href: '/(screens)/about',
+    href: '/(screens)/(main)/about',
   },
   {
     icon: require('@/assets/icons/account/orders.svg'),
     label: 'My orders',
-    href: '/(screens)/my-orders',
+    href: '/(screens)/(main)/my-orders',
   },
   {
     icon: require('@/assets/icons/account/favorites.svg'),
     label: 'My favorites',
-    href: '/(screens)/favorites',
+    href: '/(screens)/(main)/favorites',
   },
   {
     icon: require('@/assets/icons/account/address.svg'),
     label: 'My address',
-    href: '/(screens)/my-address',
+    href: '/(screens)/(main)/my-address',
   },
   {
     icon: require('@/assets/icons/account/credits-card.svg'),
     label: 'Credit cards',
-    href: '/(screens)/my-cards',
+    href: '/(screens)/(main)/my-cards',
   },
   {
     icon: require('@/assets/icons/account/transactions.svg'),
     label: 'Transactions',
-    href: '/(screens)/transactions',
+    href: '/(screens)/(main)/transactions',
   },
   {
     icon: require('@/assets/icons/account/notifications.svg'),
     label: 'Notifications',
-    href: '/(screens)/notifications',
+    href: '/(screens)/(main)/notifications',
   },
   {
     icon: require('@/assets/icons/account/sign-out.svg'),

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, StatusBar } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
@@ -6,7 +6,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { InputField } from '@/components/InputField';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
 
 interface FormData {
   email: string;
@@ -38,7 +37,7 @@ export default function ForgotPassword() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" translucent />
+      <StatusBar backgroundColor="#F4F5F9" barStyle="dark-content" />
       <Header title="Password Recovery" backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

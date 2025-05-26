@@ -6,7 +6,7 @@ import { InputField } from '@/components/InputField';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
 
 interface FormData {
   newPassword: string;
@@ -50,7 +50,7 @@ export default function ResetPassword() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" translucent />
+      <StatusBar backgroundColor="#F4F5F9" barStyle="dark-content" />
       <Header backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

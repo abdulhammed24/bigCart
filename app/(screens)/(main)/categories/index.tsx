@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { categories } from '@/data/categories';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
+import { StatusBar } from 'react-native';
 
 type Category = {
   id: number;
@@ -26,6 +27,7 @@ export default function CategoryList() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title="  Categories" />
 

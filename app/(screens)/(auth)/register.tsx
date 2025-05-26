@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { InputField } from '@/components/InputField';
 import { PasswordInput } from '@/components/PasswordInput';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
-import { StatusBar } from 'expo-status-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StatusBar } from 'react-native';
 
 export default function Register() {
   const router = useRouter();
@@ -22,7 +22,11 @@ export default function Register() {
   return (
     <KeyboardAwareScrollView className="flex-1 bg-offWhite">
       <View className="flex-1">
-        <StatusBar style="light" translucent />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
         <View className="h-[400px]">
           <ImageBackground
             source={require('@/assets/images/onboarding/signup.png')}

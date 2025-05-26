@@ -6,6 +6,7 @@ import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useRouter } from 'expo-router';
 import AddressCard from '@/components/AddressCard';
 import { Header } from '@/components/Header';
+import { StatusBar } from 'react-native';
 
 //
 interface Address {
@@ -74,6 +75,7 @@ export default function MyAddress() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
 
       <Header

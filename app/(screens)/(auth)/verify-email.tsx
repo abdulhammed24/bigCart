@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { InputField } from '@/components/InputField';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
 
 interface FormData {
   email: string;
@@ -38,7 +38,7 @@ export default function VerifyEmail() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" translucent />
+      <StatusBar backgroundColor="#F4F5F9" barStyle="dark-content" />
       <Header backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

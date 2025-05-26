@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Header } from '@/components/Header';
@@ -6,7 +6,6 @@ import { InputField } from '@/components/InputField';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 
 // Define the type for form data
 interface FormData {
@@ -45,7 +44,7 @@ export default function VerifyCode() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" translucent />
+      <StatusBar backgroundColor="#F4F5F9" barStyle="dark-content" />
       <Header backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

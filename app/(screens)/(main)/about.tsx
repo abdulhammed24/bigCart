@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -93,6 +93,7 @@ export default function About() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/*  */}
       <Header title="About me" />
       <KeyboardAwareScrollView

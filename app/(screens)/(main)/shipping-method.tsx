@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Animated } from 'react-native';
+import { View, Text, Pressable, Animated, StatusBar } from 'react-native';
 import React, { useState, useRef } from 'react';
 import { Header } from '@/components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -105,6 +105,7 @@ export default function ShippingMethod() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title="Shipping Method" />
 
