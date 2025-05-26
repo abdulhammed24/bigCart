@@ -44,7 +44,7 @@ export default function SingleProductDetails() {
   return (
     <View className="flex-1">
       {/* StatusBar with transparent background */}
-      <StatusBar style="dark" translucent backgroundColor="transparent" />
+      <StatusBar style="dark" translucent />
 
       {/* ImageBackground - Full screen, behind status bar */}
       <ImageBackground

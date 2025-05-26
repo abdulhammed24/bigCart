@@ -8,7 +8,9 @@ export default function TabLayout() {
   const router = useRouter();
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" backgroundColor="#fff" />
+      <View className="bg-white left-0 right-0 top-0 absolute h-44" />
+      <StatusBar style="dark" />
+
       <Tabs
         screenOptions={{
           headerShown: false,

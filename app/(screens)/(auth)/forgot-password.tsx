@@ -38,7 +38,7 @@ export default function ForgotPassword() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" translucent backgroundColor="transparent" />
+      <StatusBar style="dark" translucent />
       <Header title="Password Recovery" backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

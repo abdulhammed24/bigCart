@@ -37,7 +37,7 @@ export default function Onboarding() {
 
   return (
     <View className="flex-1">
-      <StatusBar style="dark" translucent backgroundColor="transparent" />
+      <StatusBar style="dark" translucent />
       <FlatList
         ref={flatListRef}
         data={slides}

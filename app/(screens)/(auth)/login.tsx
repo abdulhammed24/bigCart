@@ -46,7 +46,7 @@ export default function Login() {
   return (
     <KeyboardAwareScrollView className="flex-1 bg-offWhite">
       <View className="flex-1">
-        <StatusBar style="light" translucent backgroundColor="transparent" />
+        <StatusBar style="light" translucent />
         <View className="h-[400px]">
           <ImageBackground
             source={require('@/assets/images/onboarding/login.png')}

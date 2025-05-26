@@ -45,7 +45,7 @@ export default function VerifyCode() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" translucent backgroundColor="transparent" />
+      <StatusBar style="dark" translucent />
       <Header backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

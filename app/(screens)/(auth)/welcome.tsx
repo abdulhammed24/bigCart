@@ -10,7 +10,7 @@ export default function Welcome() {
   return (
     <View className="flex-1">
       {/* StatusBar  */}
-      <StatusBar style="light" translucent backgroundColor="transparent" />
+      <StatusBar style="light" translucent />
 
       {/* Image Background Section */}
       <View className="h-[60%]">

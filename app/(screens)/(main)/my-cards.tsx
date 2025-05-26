@@ -7,6 +7,7 @@ import { ScrollView } from 'moti';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useRouter } from 'expo-router';
 import CreditCard from '@/components/CreditCard';
+import ReusableStatusBar from '@/components/ReusableStatusBar';
 
 // Define the Card interface
 interface Card {
@@ -66,7 +67,7 @@ export default function MyCards() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+    <View style={{ flex: 1 }}>
       {/* Header */}
       <Header
         title="My Cards"
@@ -106,6 +107,6 @@ export default function MyCards() {
           onPress={() => console.log('Saved cards:', cards)}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

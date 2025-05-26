@@ -1,7 +1,5 @@
 import { View, Text } from 'react-native';
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import CustomToggle from '@/components/CustomToggle';
 import { Header } from '@/components/Header';
@@ -25,7 +23,7 @@ export default function Notifications() {
     };
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+    <View style={{ flex: 1 }}>
       {/* Header */}
       <Header title="Notifications" />
 
@@ -114,6 +112,6 @@ export default function Notifications() {
           onPress={() => console.log('Save settings')}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
