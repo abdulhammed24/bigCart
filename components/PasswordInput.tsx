@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TextInputProps, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableRipple } from 'react-native-paper';
 
 interface PasswordInputProps
   extends Omit<TextInputProps, 'value' | 'onChangeText'> {
@@ -54,17 +55,20 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
         accessibilityLabel={placeholder}
         {...textInputProps}
       />
-      <Pressable
+
+      <TouchableRipple
         onPress={toggleShowPassword}
-        className="absolute right-3 top-1/2"
+        className="absolute right-3 rounded-full p-2 top-1/3"
         accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+        rippleColor="rgba(0, 0, 0, 0.1)"
+        borderless={true}
       >
         <Ionicons
           name={showPassword ? 'eye' : 'eye-off'}
           size={18}
           color="#868889"
         />
-      </Pressable>
+      </TouchableRipple>
     </View>
   );
 };

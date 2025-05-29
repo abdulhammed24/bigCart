@@ -138,7 +138,7 @@ export default function Register() {
             {({ handleChange, handleSubmit, values, errors, touched }) => (
               <View className="mb-6 flex flex-col gap-2">
                 <InputField
-                  iconSource={require('@/assets/icons/user.svg')}
+                  iconSource={require('@/assets/icons/my-address/user.svg')}
                   placeholder="Full Name"
                   value={values.name}
                   onChangeText={handleChange('name')}

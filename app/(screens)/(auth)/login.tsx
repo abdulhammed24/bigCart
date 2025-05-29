@@ -75,6 +75,8 @@ export default function Login() {
       className="flex-1 bg-offWhite"
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
+      enableOnAndroid={true}
+      extraScrollHeight={90}
     >
       <View className="flex-1">
         <StatusBar

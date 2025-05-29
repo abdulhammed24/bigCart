@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { TouchableRipple } from 'react-native-paper';
@@ -7,10 +7,25 @@ import Categories from '@/components/Homepage/Categories';
 import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
 import HeroSlider from '@/components/Homepage/HeroSlider';
 import SearchBar from '@/components/Homepage/SearchBar';
+import { useState, useCallback } from 'react';
 
 export default function Homepage() {
   const data = [1];
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // Increment refreshKey to trigger re-fetch in child components
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      console.error('Refresh error:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
   return (
     <LinearGradient
@@ -50,7 +65,7 @@ export default function Homepage() {
                   />
                 </TouchableRipple>
               </View>
-              <Categories />
+              <Categories refreshKey={refreshKey} />
             </View>
             <View className="mb-8">
               <View className="flex-row justify-between items-center mb-4">
@@ -60,7 +75,7 @@ export default function Homepage() {
                 <TouchableRipple
                   onPress={() => {
                     console.log('Featured Products View All pressed');
-                    router.push('/featured-products');
+                    router.push('/(screens)/(main)/product-details');
                   }}
                   rippleColor="rgba(0, 0, 0, 0.2)"
                   borderless={true}
@@ -74,12 +89,20 @@ export default function Homepage() {
                   />
                 </TouchableRipple>
               </View>
+              {/* <FeaturedProducts limit={4} refreshKey={refreshKey} /> */}
               <FeaturedProducts limit={4} />
             </View>
           </View>
         }
         contentContainerStyle={{ paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#6CC51D']} // Customize refresh indicator color
+          />
+        }
       />
     </LinearGradient>
   );

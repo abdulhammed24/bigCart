@@ -15,7 +15,8 @@ export const registerSchema = Yup.object().shape({
       message: 'Invalid phone number format (e.g., +1234567890)',
       excludeEmptyString: true,
     })
-    .nullable(),
+    .nullable()
+    .required('Phone Numberd is required'),
 });
 
 export const loginSchema = Yup.object().shape({

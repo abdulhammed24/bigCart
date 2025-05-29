@@ -69,7 +69,7 @@ export default function FeaturedProducts({
         <TouchableRipple
           onPress={() => {
             router.push({
-              pathname: '/(screens)/product-details/[id]',
+              pathname: '/(screens)/(main)/product-details/[id]',
               params: { id: item.id },
             });
           }}
