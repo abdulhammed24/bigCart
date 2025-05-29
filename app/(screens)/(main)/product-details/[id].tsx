@@ -44,38 +44,38 @@ export default function SingleProductDetails() {
 
   return (
     <View className="flex-1">
-      {/* ImageBackground - Full screen, behind status bar */}
-      <ImageBackground
-        source={product.image}
-        resizeMode="cover"
-        style={{ flex: 0.8, paddingTop: insets.top }}
-        className="justify-start p-6"
-      >
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor="transparent"
-          translucent
-        />
-        <View className="flex-row items-center mt-5 justify-between">
-          <IconButton
-            onPress={() => router.back()}
-            icon={() => (
-              <Image
-                source={require('@/assets/icons/back-arrow-blk.svg')}
-                style={{ width: 24, height: 24 }}
-                contentFit="contain"
-              />
-            )}
-            size={24}
-            accessibilityLabel="Go back"
-            rippleColor="rgba(0, 0, 0, 0.1)"
-            style={{ margin: -8 }}
-            className="rounded-full"
-          />
-        </View>
-      </ImageBackground>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <View className="h-[400px]">
+        <ImageBackground
+          source={product.image}
+          resizeMode="cover"
+          style={{ flex: 0.8, paddingTop: insets.top }}
+          className="flex-1 justify-start p-6"
+        >
+          <View className="flex-row items-center mt-5 justify-between">
+            <IconButton
+              onPress={() => router.back()}
+              icon={() => (
+                <Image
+                  source={require('@/assets/icons/back-arrow-blk.svg')}
+                  style={{ width: 24, height: 24 }}
+                  contentFit="contain"
+                />
+              )}
+              size={24}
+              accessibilityLabel="Go back"
+              rippleColor="rgba(0, 0, 0, 0.1)"
+              style={{ margin: -8 }}
+              className="rounded-full"
+            />
+          </View>
+        </ImageBackground>
+      </View>
 
-      {/* Content - Bottom Half with SafeAreaView */}
       <SafeAreaView
         style={{ flex: 1, marginTop: -20 }}
         edges={['bottom', 'left', 'right']}

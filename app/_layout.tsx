@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import '@/app/global.css';
+import Toast from 'react-native-toast-message';
 
 export default function RootLayout() {
   return (
@@ -10,6 +11,7 @@ export default function RootLayout() {
         <Stack.Screen name="(screens)" />
         <Stack.Screen name="(tabs)" />
       </Stack>
+      <Toast position="bottom" />
     </SafeAreaProvider>
   );
 }

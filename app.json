@@ -9,11 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.big-cart.app"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/bigCart.png"
+        "foregroundImage": "./assets/images/bigCart.png",
+        "package": "com.big-cart.app"
       }
     },
     "web": {

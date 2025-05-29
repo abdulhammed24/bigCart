@@ -3,12 +3,15 @@ import { LinkProps } from 'expo-router';
 import { View, Text } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { useAuthStore } from '@/store/authStore';
+import Toast from 'react-native-toast-message';
 
 interface AccountItem {
   icon: any;
   label: string;
-  href: LinkProps['href'];
+  href?: LinkProps['href'];
   noArrow?: boolean;
+  onPress?: () => void;
 }
 
 const accountItems: AccountItem[] = [
@@ -50,17 +53,38 @@ const accountItems: AccountItem[] = [
   {
     icon: require('@/assets/icons/account/sign-out.svg'),
     label: 'Sign out',
-    href: '/',
     noArrow: true,
+    onPress: () => {}, // Placeholder, will be overridden
   },
 ];
 
 export default function Account() {
-  const router = useRouter(); // Initialize router
-
-  const handleItemPress = (href: LinkProps['href']) => {
-    router.push(href); // Navigate to the item's href
+  const router = useRouter();
+  const { logout } = useAuthStore();
+  const handleItemPress = async (item: AccountItem) => {
+    if (item.label === 'Sign out') {
+      try {
+        await logout();
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'You have been signed out.',
+        });
+        router.replace('/(screens)/(auth)/login');
+      } catch (error: any) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to sign out. Please try again.',
+        });
+      }
+    } else if (item.href) {
+      router.push(item.href);
+    }
   };
+
+  //
+  const { user } = useAuthStore();
 
   return (
     <View className="flex-1">
@@ -90,10 +114,15 @@ export default function Account() {
         </View>
 
         {/* Name & Email */}
+
         <View className="items-center mt-4">
+          {/* <Text className="font-poppinsBold text-[18px]">
+    {user?.name || 'User'}
+  </Text> */}
+
           <Text className="font-poppinsBold text-[18px]">Olivia Austin</Text>
           <Text className="text-[14px] font-poppinsRegular text-gray">
-            oliviaaustin@gmail.com
+            {user?.email || 'No email'}
           </Text>
         </View>
       </View>
@@ -104,7 +133,7 @@ export default function Account() {
           {accountItems.map((item, index) => (
             <TouchableRipple
               key={index}
-              onPress={() => handleItemPress(item.href)}
+              onPress={() => handleItemPress(item)}
               rippleColor="rgba(0, 0, 0, 0.1)"
               className="p-3 px-6 rounded-xl"
             >

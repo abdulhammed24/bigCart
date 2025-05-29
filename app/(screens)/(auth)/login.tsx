@@ -8,48 +8,74 @@ import {
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useState } from 'react';
+import { Formik } from 'formik';
 import { InputField } from '@/components/InputField';
 import { PasswordInput } from '@/components/PasswordInput';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomToggle from '@/components/CustomToggle';
-
-interface LoginFormState {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
+import Toast from 'react-native-toast-message';
+import { useAuthStore } from '../../../store/authStore';
+import { loginSchema } from '../../../lib/validationSchemas';
+import { account } from '../../../lib/appwriteconfig';
 
 export default function Login() {
   const router = useRouter();
-  const [formState, setFormState] = useState<LoginFormState>({
-    email: '',
-    password: '',
-    rememberMe: false,
-  });
+  const { setUser } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Type-safe handler for input changes
-  const handleInputChange = (field: keyof LoginFormState, value: string) => {
-    setFormState((prev) => ({ ...prev, [field]: value }));
-  };
-
-  // Handler for toggling rememberMe
-  const handleRememberMeToggle = (value: boolean) => {
-    setFormState((prev) => ({ ...prev, rememberMe: value }));
-  };
-
-  // Handle login
-  const handleLogin = () => {
-    console.log('Login with:', {
-      email: formState.email,
-      password: formState.password,
-      rememberMe: formState.rememberMe,
+  const login = async (email: string, password: string) => {
+    await account.createEmailPasswordSession(email, password);
+    const userData = await account.get();
+    setUser({
+      userId: userData.$id,
+      email: userData.email,
     });
-    router.push('/(tabs)/homepage');
+  };
+
+  const handleLogin = async (values: {
+    email: string;
+    password: string;
+    rememberMe: boolean;
+  }) => {
+    setIsLoading(true);
+    try {
+      await login(values.email, values.password);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Logged in successfully!',
+      });
+      router.replace('/(tabs)/homepage');
+    } catch (error: any) {
+      console.log('Login Error:', error.code, error.message, error);
+      let errorMessage = 'Failed to log in';
+      if (error.code === 401) {
+        errorMessage = 'Invalid email or password';
+      } else if (error.code === 429) {
+        errorMessage = 'Too many requests. Please try again in a few minutes.';
+      } else if (error.code === 412) {
+        errorMessage = 'A session is already active. Please log out first.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <KeyboardAwareScrollView className="flex-1 bg-offWhite">
+    <KeyboardAwareScrollView
+      className="flex-1 bg-offWhite"
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+    >
       <View className="flex-1">
         <StatusBar
           barStyle="light-content"
@@ -92,47 +118,78 @@ export default function Login() {
             </Text>
           </View>
 
-          <View className="mb-6 flex flex-col gap-2">
-            <InputField
-              iconSource={require('@/assets/icons/mail.svg')}
-              placeholder="Email Address"
-              value={formState.email}
-              onChangeText={(text) => handleInputChange('email', text)}
-              backgroundColor="bg-white"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            <PasswordInput
-              iconSource={require('@/assets/icons/lock.svg')}
-              placeholder="Password"
-              value={formState.password}
-              onChangeText={(text) => handleInputChange('password', text)}
-              backgroundColor="bg-white"
-              autoCapitalize="none"
-            />
-            <View className="flex-row justify-between my-3">
-              <View className="flex-row items-center">
-                <CustomToggle
-                  value={formState.rememberMe}
-                  onValueChange={handleRememberMeToggle}
+          <Formik
+            initialValues={{ email: '', password: '', rememberMe: false }}
+            validationSchema={loginSchema}
+            onSubmit={handleLogin}
+          >
+            {({ handleChange, handleSubmit, values, errors, touched }) => (
+              <View className="mb-6 flex flex-col gap-2">
+                <InputField
+                  iconSource={require('@/assets/icons/mail.svg')}
+                  placeholder="Email Address"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  backgroundColor="bg-white"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
-                <Text className="text-gray text-[14px] font-poppinsMedium ml-2">
-                  Remember me
-                </Text>
+                {touched.email && errors.email && (
+                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                    {errors.email}
+                  </Text>
+                )}
+
+                <PasswordInput
+                  iconSource={require('@/assets/icons/lock.svg')}
+                  placeholder="Password"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  backgroundColor="bg-white"
+                  autoCapitalize="none"
+                />
+                {touched.password && errors.password && (
+                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                    {errors.password}
+                  </Text>
+                )}
+
+                <View className="flex-row justify-between my-3">
+                  <View className="flex-row items-center">
+                    <CustomToggle
+                      value={values.rememberMe}
+                      onValueChange={(value) =>
+                        handleChange('rememberMe')(value ? 'true' : 'false')
+                      }
+                    />
+                    <Text className="text-gray-500 text-[14px] font-poppinsMedium ml-2">
+                      Remember me
+                    </Text>
+                  </View>
+                  <Pressable
+                    onPress={() =>
+                      router.push('/(screens)/(auth)/forgot-password')
+                    }
+                  >
+                    <Text className="text-blue text-[14px] font-poppinsMedium">
+                      Forgot password
+                    </Text>
+                  </Pressable>
+                </View>
+
+                <PrimaryBtn
+                  title="Continue"
+                  onPress={handleSubmit}
+                  isLoading={isLoading}
+                  loadingText="Logging in..."
+                  disabled={isLoading}
+                />
               </View>
-              <Pressable
-                onPress={() => router.push('/(screens)/(auth)/forgot-password')}
-              >
-                <Text className="text-blue text-[14px] font-poppinsMedium">
-                  Forgot password
-                </Text>
-              </Pressable>
-            </View>
-            <PrimaryBtn title="Login" onPress={handleLogin} />
-          </View>
+            )}
+          </Formik>
 
           <View className="items-center">
-            <Text className="text-gray text-[16px] font-poppinsRegular">
+            <Text className="text-gray-700 text-[14px] font-poppinsRegular">
               Don’t have an account?{' '}
               <Link
                 href="/(screens)/(auth)/register"
