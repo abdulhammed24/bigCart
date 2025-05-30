@@ -146,7 +146,7 @@ export default function Register() {
                   autoCapitalize="words"
                 />
                 {touched.name && errors.name && (
-                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
                     {errors.name}
                   </Text>
                 )}
@@ -161,7 +161,7 @@ export default function Register() {
                   autoCapitalize="none"
                 />
                 {touched.email && errors.email && (
-                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
                     {errors.email}
                   </Text>
                 )}
@@ -175,7 +175,7 @@ export default function Register() {
                   keyboardType="phone-pad"
                 />
                 {touched.phoneNumber && errors.phoneNumber && (
-                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
                     {errors.phoneNumber}
                   </Text>
                 )}
@@ -189,7 +189,7 @@ export default function Register() {
                   autoCapitalize="none"
                 />
                 {touched.password && errors.password && (
-                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
                     {errors.password}
                   </Text>
                 )}

@@ -24,7 +24,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   return (
     <View
       className={`rounded-md px-5 py-3 flex flex-row items-center h-[50px] ${
-        error ? 'border border-red-500' : ''
+        error ? 'border border-destructive' : ''
       } ${backgroundColor}`}
     >
       {iconSource ? (

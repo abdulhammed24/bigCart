@@ -1,68 +1,107 @@
-import { View, Text, Pressable, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  FlatList,
+  RefreshControl,
+  StatusBar,
+} from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { categories } from '@/data/categories';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
-import { StatusBar } from 'react-native';
-
-type Category = {
-  id: number;
-  name: string;
-  icon: any;
-  backgroundColor: string;
-};
+import { useCategoriesStore } from '@/store/categoriesStore';
+import { useState, useCallback } from 'react';
+import GridCategoriesSkeleton from '@/components/Homepage/GridCategoriesSkeleton';
 
 export default function CategoryList() {
   const router = useRouter();
+  const { categories, loading, error, refreshCategories } =
+    useCategoriesStore();
+  const [refreshing, setRefreshing] = useState(false);
 
-  const handleCategoryPress = (category: Category) => {
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refreshCategories();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshCategories]);
+
+  const handleCategoryPress = (category: { $id: string; name: string }) => {
     router.push({
-      pathname: '/categories/[name]',
+      pathname: '/product-details/[id]',
       params: {
-        name: category.name,
+        id: category.$id,
       },
     });
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return <GridCategoriesSkeleton />;
+    }
+
+    if (error) {
+      return <Text className="text-destructive text-center">{error}</Text>;
+    }
+
+    if (categories.length === 0) {
+      return (
+        <Text className="text-gray-600 text-center">No products available</Text>
+      );
+    }
+
+    return (
+      <FlatList
+        data={categories}
+        numColumns={3}
+        keyExtractor={(item) => item.$id}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
+        renderItem={({ item }) => (
+          <Pressable
+            className="mb-4 w-[30%]"
+            onPress={() => handleCategoryPress(item)}
+          >
+            <View className="bg-white p-3 rounded-lg items-center">
+              <View
+                className="w-16 h-16 rounded-full justify-center items-center"
+                style={{ backgroundColor: item.backgroundColor || '#E0E0E0' }}
+              >
+                {item.icon ? (
+                  <Image
+                    source={{ uri: item.icon }}
+                    style={{ width: 32, height: 32 }}
+                    contentFit="cover"
+                  />
+                ) : (
+                  <Text className="text-gray text-center">No Image</Text>
+                )}
+              </View>
+              <Text className="mt-3 text-[12px] font-poppinsMedium text-center text-gray">
+                {item.name}
+              </Text>
+            </View>
+          </Pressable>
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={['#6CC51D']}
+          />
+        }
+      />
+    );
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      {/* Header */}
-      <Header title="  Categories" />
-
-      {/* Category Grid */}
-      <View className="flex-1 px-6 bg-offWhite py-6">
-        <FlatList
-          data={categories}
-          numColumns={3}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingBottom: 20 }}
-          columnWrapperStyle={{ justifyContent: 'space-between' }}
-          renderItem={({ item }) => (
-            <Pressable
-              className="mb-4 w-[30%]"
-              onPress={() => handleCategoryPress(item)}
-            >
-              <View className="bg-white p-3 rounded-lg items-center">
-                <View
-                  className="w-16 h-16 rounded-full justify-center items-center"
-                  style={{ backgroundColor: item.backgroundColor }}
-                >
-                  <Image
-                    source={item.icon}
-                    style={{ width: 32, height: 32 }}
-                    contentFit="contain"
-                  />
-                </View>
-                <Text className="mt-3 text-[12px] font-poppinsMedium text-center text-gray-500">
-                  {item.name}
-                </Text>
-              </View>
-            </Pressable>
-          )}
-        />
-      </View>
+      <Header title="Categories" />
+      <View className="flex-1 px-6 bg-offWhite py-6">{renderContent()}</View>
     </SafeAreaView>
   );
 }

@@ -137,7 +137,7 @@ export default function Login() {
                   autoCapitalize="none"
                 />
                 {touched.email && errors.email && (
-                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
                     {errors.email}
                   </Text>
                 )}
@@ -151,7 +151,7 @@ export default function Login() {
                   autoCapitalize="none"
                 />
                 {touched.password && errors.password && (
-                  <Text className="text-red-500 text-[12px] font-poppinsRegular">
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
                     {errors.password}
                   </Text>
                 )}
@@ -164,7 +164,7 @@ export default function Login() {
                         handleChange('rememberMe')(value ? 'true' : 'false')
                       }
                     />
-                    <Text className="text-gray-500 text-[14px] font-poppinsMedium ml-2">
+                    <Text className="text-gray text-[14px] font-poppinsMedium ml-2">
                       Remember me
                     </Text>
                   </View>

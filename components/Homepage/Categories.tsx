@@ -2,55 +2,16 @@ import { View, Text, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { TouchableRipple } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { databases } from '@/lib/appwriteconfig';
-import { Models } from 'react-native-appwrite';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useCategoriesStore } from '@/store/categoriesStore';
+import HorizontalCategoriesSkeleton from './HorizontalCategoriesSkeleton';
 
-interface Category {
-  $id: string;
-  name: string;
-  icon?: string;
-}
-
-interface CategoriesProps {
-  refreshKey: number;
-}
-
-export default function Categories({ refreshKey }: CategoriesProps) {
+export default function Categories() {
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { categories, loading, error } = useCategoriesStore();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const response = await databases.listDocuments(
-          process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
-          process.env.EXPO_PUBLIC_APPWRITE_CATEGORIES_COLLECTION_ID!,
-        );
-        const mappedCategories: Category[] = response.documents.map(
-          (doc: Models.Document) => ({
-            $id: doc.$id,
-            name: doc.name as string,
-            icon: doc.icon as string | undefined,
-          }),
-        );
-        setCategories(mappedCategories);
-      } catch (error: any) {
-        console.error('Error fetching categories:', error);
-        setError('Failed to load categories');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCategories();
-  }, [refreshKey]);
-
-  const handleCategoryPress = (category: Category) => {
+  const handleCategoryPress = (category: { $id: string; name: string }) => {
     router.push({
       pathname: '/categories/[id]',
       params: {
@@ -60,34 +21,16 @@ export default function Categories({ refreshKey }: CategoriesProps) {
   };
 
   if (loading) {
-    return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {[...Array(7)].map((_, index) => (
-          <View
-            key={index}
-            style={{ alignItems: 'center', marginHorizontal: 8 }}
-          >
-            <ShimmerPlaceholder
-              LinearGradient={LinearGradient}
-              style={{ width: 64, height: 64, borderRadius: 32 }}
-            />
-            <ShimmerPlaceholder
-              LinearGradient={LinearGradient}
-              style={{ width: 60, height: 12, borderRadius: 4, marginTop: 12 }}
-            />
-          </View>
-        ))}
-      </ScrollView>
-    );
+    return <HorizontalCategoriesSkeleton />;
   }
 
   if (error) {
-    return <Text className="text-red-500 text-center">{error}</Text>;
+    return <Text className="text-destructive text-center">{error}</Text>;
   }
 
   if (categories.length === 0) {
     return (
-      <Text className="text-gray-500 text-center">No categories available</Text>
+      <Text className="text-gray text-center">No categories available</Text>
     );
   }
 
@@ -104,13 +47,15 @@ export default function Categories({ refreshKey }: CategoriesProps) {
             <View className="w-16 h-16 rounded-full justify-center items-center">
               {category.icon ? (
                 <Image
-                  source={{ uri: category.icon }} // Cloudinary URL
+                  source={{ uri: category.icon }}
                   style={{ width: 32, height: 32 }}
                   contentFit="contain"
-                  // placeholder={require('@/assets/images/placeholder.png')}
                 />
               ) : (
-                <Text className="text-gray-500 text-xs">No Icon</Text>
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  style={{ width: 32, height: 32, borderRadius: 16 }}
+                />
               )}
             </View>
             <Text className="mt-3 text-[12px] font-poppinsMedium text-center text-gray">

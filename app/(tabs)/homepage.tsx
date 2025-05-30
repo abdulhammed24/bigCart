@@ -8,24 +8,27 @@ import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
 import HeroSlider from '@/components/Homepage/HeroSlider';
 import SearchBar from '@/components/Homepage/SearchBar';
 import { useState, useCallback } from 'react';
+import { useCategoriesStore } from '@/store/categoriesStore';
+import { useFeaturedProductsStore } from '@/store/featuredProductsStore';
 
 export default function Homepage() {
-  const data = [1];
+  const data = [1]; // Dummy data for FlatList
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const { refreshCategories } = useCategoriesStore();
+  const { refreshProducts } = useFeaturedProductsStore();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      // Increment refreshKey to trigger re-fetch in child components
-      setRefreshKey((prev) => prev + 1);
+      refreshCategories();
+      refreshProducts(undefined, 4);
     } catch (error) {
       console.error('Refresh error:', error);
     } finally {
-      setRefreshing(false);
+      setTimeout(() => setRefreshing(false), 1000);
     }
-  }, []);
+  }, [refreshCategories, refreshProducts]);
 
   return (
     <LinearGradient
@@ -50,7 +53,6 @@ export default function Homepage() {
                 <Text className="text-[18px] font-poppinsBold">Categories</Text>
                 <TouchableRipple
                   onPress={() => {
-                    console.log('Categories View All pressed');
                     router.push('/categories');
                   }}
                   rippleColor="rgba(0, 0, 0, 0.2)"
@@ -65,7 +67,7 @@ export default function Homepage() {
                   />
                 </TouchableRipple>
               </View>
-              <Categories refreshKey={refreshKey} />
+              <Categories />
             </View>
             <View className="mb-8">
               <View className="flex-row justify-between items-center mb-4">
@@ -74,7 +76,6 @@ export default function Homepage() {
                 </Text>
                 <TouchableRipple
                   onPress={() => {
-                    console.log('Featured Products View All pressed');
                     router.push('/(screens)/(main)/product-details');
                   }}
                   rippleColor="rgba(0, 0, 0, 0.2)"
@@ -89,7 +90,6 @@ export default function Homepage() {
                   />
                 </TouchableRipple>
               </View>
-              {/* <FeaturedProducts limit={4} refreshKey={refreshKey} /> */}
               <FeaturedProducts limit={4} />
             </View>
           </View>
@@ -100,7 +100,7 @@ export default function Homepage() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={['#6CC51D']} // Customize refresh indicator color
+            colors={['#6CC51D']}
           />
         }
       />
