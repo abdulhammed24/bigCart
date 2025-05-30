@@ -31,7 +31,7 @@ export default function CategoryList() {
 
   const handleCategoryPress = (category: { $id: string; name: string }) => {
     router.push({
-      pathname: '/product-details/[id]',
+      pathname: '/categories/[id]',
       params: {
         id: category.$id,
       },
@@ -49,7 +49,9 @@ export default function CategoryList() {
 
     if (categories.length === 0) {
       return (
-        <Text className="text-gray-600 text-center">No products available</Text>
+        <Text className="text-gray-600 text-center">
+          No categories available
+        </Text>
       );
     }
 

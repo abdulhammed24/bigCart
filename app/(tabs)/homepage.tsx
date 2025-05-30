@@ -9,24 +9,26 @@ import HeroSlider from '@/components/Homepage/HeroSlider';
 import SearchBar from '@/components/Homepage/SearchBar';
 import { useState, useCallback } from 'react';
 import { useCategoriesStore } from '@/store/categoriesStore';
-import { useFeaturedProductsStore } from '@/store/featuredProductsStore';
+import { useProductStore } from '@/store/featuredProductsStore';
 
 export default function Homepage() {
-  const data = [1]; // Dummy data for FlatList
+  const data = [1];
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
   const { refreshCategories } = useCategoriesStore();
-  const { refreshProducts } = useFeaturedProductsStore();
+  const { refreshProducts } = useProductStore();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      refreshCategories();
-      refreshProducts(undefined, 4);
-    } catch (error) {
-      console.error('Refresh error:', error);
+      console.log('Homepage: Starting refresh');
+      await Promise.all([refreshCategories(), refreshProducts()]);
+      console.log('Homepage: Refresh successful');
+    } catch (error: any) {
+      console.error('Homepage: Refresh error:', error.message || error);
     } finally {
-      setTimeout(() => setRefreshing(false), 1000);
+      setRefreshing(false);
+      console.log('Homepage: Refreshing state reset');
     }
   }, [refreshCategories, refreshProducts]);
 
@@ -72,7 +74,7 @@ export default function Homepage() {
             <View className="mb-8">
               <View className="flex-row justify-between items-center mb-4">
                 <Text className="text-[18px] font-poppinsBold">
-                  Featured products
+                  Featured Products
                 </Text>
                 <TouchableRipple
                   onPress={() => {
@@ -101,6 +103,7 @@ export default function Homepage() {
             refreshing={refreshing}
             onRefresh={onRefresh}
             colors={['#6CC51D']}
+            tintColor="#6CC51D"
           />
         }
       />

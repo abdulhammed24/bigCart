@@ -1,29 +1,30 @@
-// app/categories/[name].tsx
-import { View, Text, Pressable } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Image } from 'expo-image';
+import { View, Text } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import FeaturedProducts from '@/components/Homepage/FeaturedProducts';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
 import { StatusBar } from 'react-native';
+import { useCategoriesStore } from '@/store/categoriesStore';
 
 type CategoryParams = {
-  name: string;
+  id: string;
 };
 
 export default function CategoryDetail() {
-  const router = useRouter();
-  const { name } = useLocalSearchParams<CategoryParams>();
+  const { id } = useLocalSearchParams<CategoryParams>();
+  const { categories } = useCategoriesStore();
+
+  // Find category by $id
+  const category = categories.find((cat) => cat.$id === id);
+  const categoryName = category ? category.name : 'Category';
+  console.log(categoryName);
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      {/* Header */}
-      <Header title={name} />
-
-      {/* Category Content */}
+      <Header title={categoryName} />
       <View className="flex-1 p-6 bg-offWhite">
-        <FeaturedProducts category={name} />
+        <FeaturedProducts category={categoryName} />
       </View>
     </SafeAreaView>
   );

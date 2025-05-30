@@ -52,7 +52,7 @@ export const useCategoriesStore = create<CategoriesState>()(
           );
           set({ categories: mappedCategories, loading: false, error: null });
         } catch (error: any) {
-          console.error('Error fetching categories:', error.message || error);
+          // console.error('Error fetching categories:', error.message || error);
           set({ error: 'Failed to load categories', loading: false });
         }
       },

@@ -25,7 +25,7 @@ export default function Categories() {
   }
 
   if (error) {
-    return <Text className="text-destructive text-center">{error}</Text>;
+    return <Text className="text-red-500 text-center">{error}</Text>;
   }
 
   if (categories.length === 0) {

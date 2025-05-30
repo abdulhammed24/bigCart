@@ -1,43 +1,44 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Models, Query } from 'react-native-appwrite';
+import { Models } from 'react-native-appwrite';
 import { databases } from '@/lib/appwriteconfig';
 
 interface Product {
-  $id: string;
+  id: string;
   name: string;
-  category: string;
   price: number;
   unit: string;
-  image?: string;
+  image: string;
+  category: string;
   status?: string;
   discountPercentage?: number;
+  rating: number;
+  description: string;
+  inStock: boolean;
 }
 
-interface FeaturedProductsState {
+interface ProductState {
   products: Product[];
   loading: boolean;
   error: string | null;
-  fetchProducts: (category?: string, limit?: number) => Promise<void>;
-  refreshProducts: (category?: string, limit?: number) => Promise<void>;
+  fetchProducts: () => Promise<void>;
+  refreshProducts: () => Promise<void>;
 }
 
-export const useFeaturedProductsStore = create<FeaturedProductsState>()(
+export const useProductStore = create<ProductState>()(
   persist(
     (set, get) => ({
       products: [],
       loading: false,
       error: null,
-      fetchProducts: async (category?: string, limit?: number) => {
+      fetchProducts: async () => {
+        const { loading, products } = get();
+        if (loading) return;
+        if (products.length > 0) return;
+
         try {
           set({ loading: true, error: null });
-          console.log(
-            'Fetching products with category:',
-            category,
-            'limit:',
-            limit,
-          );
 
           const databaseId = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID;
           const collectionId =
@@ -46,46 +47,64 @@ export const useFeaturedProductsStore = create<FeaturedProductsState>()(
             throw new Error('Missing Appwrite configuration.');
           }
 
-          const queries = category ? [Query.equal('category', category)] : [];
           const response = await databases.listDocuments(
             databaseId,
             collectionId,
-            queries,
           );
-          console.log('Fetched documents:', response.documents);
-
           const mappedProducts: Product[] = response.documents.map(
             (doc: Models.Document) => ({
-              $id: doc.$id,
+              id: doc.$id,
               name: doc.name as string,
-              category: doc.category as string,
               price: doc.price as number,
               unit: doc.unit as string,
-              image: doc.image as string | undefined,
+              image: doc.image as string,
+              category: doc.category as string,
               status: doc.status as string | undefined,
               discountPercentage: doc.discountPercentage as number | undefined,
+              rating: doc.rating as number,
+              description: doc.description as string,
+              inStock: doc.inStock as boolean,
             }),
           );
-
-          const filteredProducts =
-            limit !== undefined
-              ? mappedProducts.slice(0, limit)
-              : mappedProducts;
-          set({ products: filteredProducts, loading: false, error: null });
+          set({ products: mappedProducts, loading: false, error: null });
         } catch (error: any) {
-          console.error('Error fetching products:', error.message || error);
+          // console.error('Error fetching products:', error.message || error);
           set({ error: 'Failed to load products', loading: false });
         }
       },
-      refreshProducts: async (category?: string, limit?: number) => {
+      refreshProducts: async () => {
         try {
           set({ loading: true, error: null });
-          console.log('Starting refresh for products');
-          await get().fetchProducts(category, limit);
-          console.log('Refresh completed');
-        } finally {
-          set({ loading: false });
-          console.log('Loading state reset after refresh');
+          const databaseId = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID;
+          const collectionId =
+            process.env.EXPO_PUBLIC_APPWRITE_PRODUCTS_COLLECTION_ID;
+          if (!databaseId || !collectionId) {
+            throw new Error('Missing Appwrite configuration.');
+          }
+
+          const response = await databases.listDocuments(
+            databaseId,
+            collectionId,
+          );
+          const mappedProducts: Product[] = response.documents.map(
+            (doc: Models.Document) => ({
+              id: doc.$id,
+              name: doc.name as string,
+              price: doc.price as number,
+              unit: doc.unit as string,
+              image: doc.image as string,
+              category: doc.category as string,
+              status: doc.status as string | undefined,
+              discountPercentage: doc.discountPercentage as number | undefined,
+              rating: doc.rating as number,
+              description: doc.description as string,
+              inStock: doc.inStock as boolean,
+            }),
+          );
+          set({ products: mappedProducts, loading: false, error: null });
+        } catch (error: any) {
+          // console.error('Error refreshing products:', error.message || error);
+          set({ error: 'Failed to refresh products', loading: false });
         }
       },
     }),
@@ -97,5 +116,5 @@ export const useFeaturedProductsStore = create<FeaturedProductsState>()(
   ),
 );
 
-// Initialize store by fetching all products on app load
-useFeaturedProductsStore.getState().fetchProducts();
+// Initialize store
+useProductStore.getState().fetchProducts();
