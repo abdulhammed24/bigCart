@@ -5,7 +5,8 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { databases } from '@/lib/appwriteconfig';
 import { Models } from 'react-native-appwrite';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Category {
   $id: string;
@@ -61,25 +62,20 @@ export default function Categories({ refreshKey }: CategoriesProps) {
   if (loading) {
     return (
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {/* Render 5 skeleton placeholders to mimic categories */}
-        {[...Array(5)].map((_, index) => (
-          <SkeletonPlaceholder
+        {[...Array(7)].map((_, index) => (
+          <View
             key={index}
-            backgroundColor="#E0E0E0"
-            highlightColor="#F5F5F5"
+            style={{ alignItems: 'center', marginHorizontal: 8 }}
           >
-            <View style={{ alignItems: 'center', marginHorizontal: 8 }}>
-              <View style={{ width: 64, height: 64, borderRadius: 32 }} />
-              <View
-                style={{
-                  width: 60,
-                  height: 12,
-                  borderRadius: 4,
-                  marginTop: 12,
-                }}
-              />
-            </View>
-          </SkeletonPlaceholder>
+            <ShimmerPlaceholder
+              LinearGradient={LinearGradient}
+              style={{ width: 64, height: 64, borderRadius: 32 }}
+            />
+            <ShimmerPlaceholder
+              LinearGradient={LinearGradient}
+              style={{ width: 60, height: 12, borderRadius: 4, marginTop: 12 }}
+            />
+          </View>
         ))}
       </ScrollView>
     );
@@ -111,7 +107,7 @@ export default function Categories({ refreshKey }: CategoriesProps) {
                   source={{ uri: category.icon }} // Cloudinary URL
                   style={{ width: 32, height: 32 }}
                   contentFit="contain"
-                  placeholder={require('@/assets/images/cart.png')}
+                  // placeholder={require('@/assets/images/placeholder.png')}
                 />
               ) : (
                 <Text className="text-gray-500 text-xs">No Icon</Text>
