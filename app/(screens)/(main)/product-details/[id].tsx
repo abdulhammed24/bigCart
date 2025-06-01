@@ -1,11 +1,13 @@
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import Rating from '@/components/Rating';
 import { useProductStore } from '@/store/featuredProductsStore';
+import { useFavoritesStore } from '@/store/favoritesStore';
+import { useFavoriteToggle } from '@/hooks/useFavoriteToggle';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { StatusBar, ScrollView, RefreshControl } from 'react-native';
+import { StatusBar, ScrollView } from 'react-native';
 import { ImageBackground, Text, View } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
 import {
@@ -16,16 +18,18 @@ import { ErrorState } from '@/components/ErrorState';
 import { LoadingState } from '@/components/LoadingState';
 
 export default function SingleProductDetails() {
-  const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
   const [quantity, setQuantity] = useState(1);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const { products, loading, error, fetchProducts, refreshProducts } =
-    useProductStore();
-
-  // State for pull-to-refresh
-  const [refreshing, setRefreshing] = useState(false);
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+    fetchProducts,
+  } = useProductStore();
+  const { isFavorite, error: favoritesError } = useFavoritesStore();
+  const { handleFavoriteToggle } = useFavoriteToggle();
 
   // Fetch products if not already loaded
   useEffect(() => {
@@ -37,35 +41,31 @@ export default function SingleProductDetails() {
   // Find the product by id from the store
   const product = products.find((p) => p.$id === id);
 
-  const toggleFavorite = (productId: string) => {
-    setFavorites((prev) => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
-  };
-
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () =>
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
-  // Handle pull-to-refresh
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refreshProducts();
-    setRefreshing(false);
-  };
-
   // Handle loading state
-  if (loading) {
+  if (productsLoading) {
     return <LoadingState message="Loading product..." />;
   }
 
   // Handle error or no product found
-  if (error || !product) {
+  if (productsError || !product) {
     return (
       <ErrorState
-        message={error || `Product with ID ${id} not found`}
+        message={productsError || `Product with ID ${id} not found`}
         onRetry={fetchProducts}
+      />
+    );
+  }
+
+  // Handle favorites error
+  if (favoritesError) {
+    return (
+      <ErrorState
+        message={favoritesError}
+        onRetry={() => useFavoritesStore.getState().fetchFavorites()}
       />
     );
   }
@@ -78,20 +78,10 @@ export default function SingleProductDetails() {
         edges={['bottom', 'left', 'right']}
         className="bg-white"
       >
-        {/*  */}
         <ScrollView
           className="flex-1 bg-offWhite"
           contentContainerStyle={{ paddingBottom: 140 }}
           showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={['#6CC51D']}
-              tintColor="#6CC51D"
-              progressViewOffset={insets.top + 60}
-            />
-          }
         >
           {/* Image Section */}
           <View className="h-[400px]">
@@ -121,7 +111,7 @@ export default function SingleProductDetails() {
             </ImageBackground>
           </View>
 
-          {/*  */}
+          {/* Content Section */}
           <View className="p-6 bg-offWhite rounded-t-[20px] mt-[-20px]">
             <View className="flex flex-row justify-between mb-2">
               <Text className="text-[20px] font-poppinsBold text-deepPrimary">
@@ -129,16 +119,16 @@ export default function SingleProductDetails() {
               </Text>
 
               <TouchableRipple
-                onPress={() => toggleFavorite(product.$id)}
+                onPress={() => handleFavoriteToggle(product.$id, product.name)}
                 rippleColor="rgba(0, 0, 0, 0.1)"
                 borderless={true}
                 className="absolute rounded-full top-1 right-1 p-2"
                 style={{ margin: -8 }}
               >
                 <Ionicons
-                  name={favorites[product.$id] ? 'heart' : 'heart-outline'}
+                  name={isFavorite(product.$id) ? 'heart' : 'heart-outline'}
                   size={24}
-                  color={favorites[product.$id] ? 'red' : 'gray'}
+                  color={isFavorite(product.$id) ? 'red' : 'gray'}
                 />
               </TouchableRipple>
             </View>
@@ -170,7 +160,7 @@ export default function SingleProductDetails() {
           </View>
         </ScrollView>
 
-        {/*  */}
+        {/* Footer Section */}
         <View
           style={{
             position: 'absolute',

@@ -1,4 +1,3 @@
-// components/FeaturedProducts.tsx
 import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Image } from 'expo-image';
@@ -7,6 +6,7 @@ import { TouchableRipple } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useProductStore } from '@/store/featuredProductsStore';
 import { useFavoritesStore } from '@/store/favoritesStore';
+import { useFavoriteToggle } from '@/hooks/useFavoriteToggle';
 import FeaturedProductsSkeleton from './FeaturedProductsSkeleton';
 import { ErrorState } from '../ErrorState';
 
@@ -23,17 +23,16 @@ export default function FeaturedProducts({
   const {
     products,
     loading: productsLoading,
-    error,
+    error: productsError,
     fetchProducts,
     refreshProducts,
   } = useProductStore();
   const {
-    favorites,
     isFavorite,
-    addFavorite,
-    removeFavorite,
     loading: favoritesLoading,
+    error: favoritesError,
   } = useFavoritesStore();
+  const { handleFavoriteToggle } = useFavoriteToggle();
   const [addedToCart, setAddedToCart] = useState<{ [key: number]: boolean }>(
     {},
   );
@@ -84,15 +83,16 @@ export default function FeaturedProducts({
     return <FeaturedProductsSkeleton />;
   }
 
-  if (error) {
-    return <ErrorState message={error} onRetry={refreshProducts} />;
+  if (productsError) {
+    return <ErrorState message={productsError} onRetry={refreshProducts} />;
   }
 
-  if (filteredProducts.length === 0) {
+  if (favoritesError) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-gray-500 text-center">No products available</Text>
-      </View>
+      <ErrorState
+        message={favoritesError}
+        onRetry={() => useFavoritesStore.getState().fetchFavorites()}
+      />
     );
   }
 
@@ -114,11 +114,7 @@ export default function FeaturedProducts({
           <View>
             {/* Favorite (Heart) Icon */}
             <TouchableRipple
-              onPress={() =>
-                isFavorite(item.$id)
-                  ? removeFavorite(item.$id)
-                  : addFavorite(item.$id)
-              }
+              onPress={() => handleFavoriteToggle(item.$id, item.name)}
               rippleColor="rgba(0, 0, 0, 0.1)"
               borderless={true}
               className="absolute rounded-full top-1 right-1 p-2"

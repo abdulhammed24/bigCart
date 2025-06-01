@@ -1,3 +1,4 @@
+// store/favoritesStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +12,7 @@ interface FavoriteDocument extends Models.Document {
 }
 
 interface FavoriteState {
-  favorites: string[]; // Store product IDs
+  favorites: string[];
   loading: boolean;
   error: string | null;
   fetchFavorites: () => Promise<void>;
@@ -31,14 +32,17 @@ export const useFavoritesStore = create<FavoriteState>()(
         try {
           set({ loading: true, error: null });
           const user = await account.get();
+          // console.log('Fetching favorites for user:', user.$id);
           const response = await databases.listDocuments<FavoriteDocument>(
             process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
             process.env.EXPO_PUBLIC_APPWRITE_FAVORITES_COLLECTION_ID!,
             [Query.equal('userId', user.$id), Query.limit(100)],
           );
           const favoriteIds = response.documents.map((doc) => doc.productId);
+          // console.log('Fetched favorites:', favoriteIds);
           set({ favorites: favoriteIds, loading: false, error: null });
         } catch (error: any) {
+          console.error('Error fetching favorites:', error);
           set({
             error: `Failed to load favorites: ${
               error.message || 'Unknown error'
@@ -51,6 +55,7 @@ export const useFavoritesStore = create<FavoriteState>()(
         try {
           set({ loading: true, error: null });
           const user = await account.get();
+          // console.log('Adding favorite:', { userId: user.$id, productId });
           await databases.createDocument(
             process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
             process.env.EXPO_PUBLIC_APPWRITE_FAVORITES_COLLECTION_ID!,
@@ -62,7 +67,9 @@ export const useFavoritesStore = create<FavoriteState>()(
             loading: false,
             error: null,
           }));
+          // console.log('Favorite added:', productId);
         } catch (error: any) {
+          console.error('Error adding favorite:', error);
           set({
             error: `Failed to add favorite: ${
               error.message || 'Unknown error'
@@ -75,6 +82,7 @@ export const useFavoritesStore = create<FavoriteState>()(
         try {
           set({ loading: true, error: null });
           const user = await account.get();
+          // console.log('Removing favorite:', { userId: user.$id, productId });
           const response = await databases.listDocuments<FavoriteDocument>(
             process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
             process.env.EXPO_PUBLIC_APPWRITE_FAVORITES_COLLECTION_ID!,
@@ -83,6 +91,7 @@ export const useFavoritesStore = create<FavoriteState>()(
               Query.equal('productId', productId),
             ],
           );
+          // console.log('Found favorite documents:', response.documents);
           if (response.documents.length > 0) {
             await databases.deleteDocument(
               process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
@@ -94,8 +103,13 @@ export const useFavoritesStore = create<FavoriteState>()(
               loading: false,
               error: null,
             }));
+            // console.log('Favorite removed:', productId);
+          } else {
+            console.warn('No favorite document found for product:', productId);
+            set({ loading: false, error: null });
           }
         } catch (error: any) {
+          console.error('Error removing favorite:', error);
           set({
             error: `Failed to remove favorite: ${
               error.message || 'Unknown error'
@@ -104,7 +118,11 @@ export const useFavoritesStore = create<FavoriteState>()(
           });
         }
       },
-      isFavorite: (productId: string) => get().favorites.includes(productId),
+      isFavorite: (productId: string) => {
+        const isFav = get().favorites.includes(productId);
+        // console.log('Checking isFavorite:', { productId, isFav });
+        return isFav;
+      },
     }),
     {
       name: 'favorites-storage',
