@@ -1,4 +1,3 @@
-// stores/cartStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +20,7 @@ interface CartItem {
 interface CartState {
   cartItems: CartItem[];
   loading: boolean;
+  updating: boolean;
   error: string | null;
   fetchCart: () => Promise<void>;
   addToCart: (productId: string, quantity?: number) => Promise<void>;
@@ -35,12 +35,16 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       cartItems: [],
       loading: false,
+      updating: false,
       error: null,
       fetchCart: async () => {
         if (get().loading) return;
         try {
           set({ loading: true, error: null });
           const user = await account.get();
+          if (!user?.$id) {
+            throw new Error('User not authenticated');
+          }
           const response = await databases.listDocuments<CartDocument>(
             process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
             process.env.EXPO_PUBLIC_APPWRITE_CART_COLLECTION_ID!,
@@ -53,10 +57,14 @@ export const useCartStore = create<CartState>()(
           }));
           set({ cartItems: items, loading: false, error: null });
         } catch (error: any) {
+          const errorMsg = error.message || 'Unknown error';
           set({
-            error: `Failed to load cart: ${error.message || 'Unknown error'}`,
+            error: `Failed to load cart: ${errorMsg}`,
             loading: false,
           });
+          console.log('Fetch cart error:', errorMsg);
+        } finally {
+          set((state) => (state.loading ? { loading: false } : {}));
         }
       },
       addToCart: async (productId: string, quantity = 1) => {
@@ -67,7 +75,6 @@ export const useCartStore = create<CartState>()(
             (item) => item.productId === productId,
           );
           if (existingItem) {
-            // Update quantity if item exists
             await databases.updateDocument(
               process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
               process.env.EXPO_PUBLIC_APPWRITE_CART_COLLECTION_ID!,
@@ -84,7 +91,6 @@ export const useCartStore = create<CartState>()(
               error: null,
             }));
           } else {
-            // Add new item
             const response = await databases.createDocument(
               process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
               process.env.EXPO_PUBLIC_APPWRITE_CART_COLLECTION_ID!,
@@ -105,12 +111,14 @@ export const useCartStore = create<CartState>()(
             error: `Failed to add to cart: ${error.message || 'Unknown error'}`,
             loading: false,
           });
+        } finally {
+          set((state) => (state.loading ? { loading: false } : {}));
         }
       },
       updateQuantity: async (productId: string, quantity: number) => {
         if (quantity < 1) return;
         try {
-          set({ loading: true, error: null });
+          set({ updating: true, error: null });
           const item = get().cartItems.find(
             (item) => item.productId === productId,
           );
@@ -125,7 +133,7 @@ export const useCartStore = create<CartState>()(
               cartItems: state.cartItems.map((i) =>
                 i.productId === productId ? { ...i, quantity } : i,
               ),
-              loading: false,
+              updating: false,
               error: null,
             }));
           }
@@ -134,13 +142,15 @@ export const useCartStore = create<CartState>()(
             error: `Failed to update quantity: ${
               error.message || 'Unknown error'
             }`,
-            loading: false,
+            updating: false,
           });
+        } finally {
+          set((state) => (state.updating ? { updating: false } : {}));
         }
       },
       removeFromCart: async (productId: string) => {
         try {
-          set({ loading: true, error: null });
+          set({ updating: true, error: null });
           const item = get().cartItems.find(
             (item) => item.productId === productId,
           );
@@ -154,7 +164,7 @@ export const useCartStore = create<CartState>()(
               cartItems: state.cartItems.filter(
                 (i) => i.productId !== productId,
               ),
-              loading: false,
+              updating: false,
               error: null,
             }));
           }
@@ -163,8 +173,10 @@ export const useCartStore = create<CartState>()(
             error: `Failed to remove from cart: ${
               error.message || 'Unknown error'
             }`,
-            loading: false,
+            updating: false,
           });
+        } finally {
+          set((state) => (state.updating ? { updating: false } : {}));
         }
       },
       clearCart: async () => {
@@ -191,6 +203,8 @@ export const useCartStore = create<CartState>()(
             error: `Failed to clear cart: ${error.message || 'Unknown error'}`,
             loading: false,
           });
+        } finally {
+          set((state) => (state.loading ? { loading: false } : {}));
         }
       },
       isInCart: (productId: string) =>

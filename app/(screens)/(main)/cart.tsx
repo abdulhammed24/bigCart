@@ -1,7 +1,5 @@
-// screens/Cart.tsx
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -13,9 +11,10 @@ import { useProductStore } from '@/store/featuredProductsStore';
 import { useCartToggle } from '@/hooks/useCartToggle';
 import { ErrorState } from '@/components/ErrorState';
 import { LoadingState } from '@/components/LoadingState';
+import { useEffect, useState } from 'react';
 
 interface CartItemDisplay {
-  id: string; // Cart document ID
+  id: string;
   productId: string;
   name: string;
   price: number;
@@ -29,6 +28,7 @@ export default function Cart() {
   const {
     cartItems,
     loading: cartLoading,
+    updating: cartUpdating,
     error: cartError,
     fetchCart,
   } = useCartStore();
@@ -41,13 +41,28 @@ export default function Cart() {
   const { handleIncrementQuantity, handleDecrementQuantity, handleDeleteItem } =
     useCartToggle();
 
-  // Fetch cart and products on mount
+  // Track whether initial fetch has been attempted
+  const [cartFetched, setCartFetched] = useState(false);
+  const [productsFetched, setProductsFetched] = useState(false);
+
+  // Fetch data on mount if needed
   useEffect(() => {
-    fetchCart();
-    if (products.length === 0) {
-      fetchProducts();
+    if (!cartFetched && !cartLoading && !cartError) {
+      fetchCart().then(() => setCartFetched(true));
     }
-  }, [fetchCart, fetchProducts, products.length]);
+    if (!productsFetched && !productsLoading && !productsError) {
+      fetchProducts().then(() => setProductsFetched(true));
+    }
+  }, [
+    cartFetched,
+    cartLoading,
+    cartError,
+    productsFetched,
+    productsLoading,
+    productsError,
+    fetchCart,
+    fetchProducts,
+  ]);
 
   // Combine cart items with product details
   const displayItems: CartItemDisplay[] = cartItems
@@ -85,7 +100,7 @@ export default function Cart() {
         <ErrorState message={cartError} onRetry={fetchCart} />
       ) : productsError ? (
         <ErrorState message={productsError} onRetry={fetchProducts} />
-      ) : displayItems.length === 0 ? (
+      ) : displayItems.length === 0 && cartFetched ? (
         <EmptyCart />
       ) : (
         <>

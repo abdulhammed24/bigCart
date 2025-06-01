@@ -8,7 +8,7 @@ import { useCartToggle } from '@/hooks/useCartToggle';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, ScrollView } from 'react-native';
 import { ImageBackground, Text, View } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
@@ -34,17 +34,28 @@ export default function SingleProductDetails() {
   const { handleFavoriteToggle } = useFavoriteToggle();
   const { handleAddToCart, handleUpdateQuantity, isInCart } = useCartToggle();
 
+  // Local state for optimistic quantity updates
+  const [localQuantity, setLocalQuantity] = useState(1);
+
+  // Find the product by id from the store
+  const product = products.find((p) => p.$id === id);
+  const cartItem = cartItems.find((ci) => ci.productId === id);
+
+  // Sync local quantity with cart state
+  useEffect(() => {
+    if (cartItem) {
+      setLocalQuantity(cartItem.quantity);
+    } else {
+      setLocalQuantity(1);
+    }
+  }, [cartItem]);
+
   // Fetch products if not already loaded
   useEffect(() => {
     if (products.length === 0) {
       fetchProducts();
     }
   }, [fetchProducts, products.length]);
-
-  // Find the product by id from the store
-  const product = products.find((p) => p.$id === id);
-  const cartItem = cartItems.find((ci) => ci.productId === id);
-  const quantity = cartItem?.quantity || 1;
 
   // Handle loading state
   if (productsLoading) {
@@ -191,9 +202,16 @@ export default function SingleProductDetails() {
             </View>
             <View className="flex-row items-center justify-between rounded-[10px] h-full overflow-hidden">
               <TouchableRipple
-                onPress={() =>
-                  handleUpdateQuantity(product.$id, product.name, quantity - 1)
-                }
+                onPress={() => {
+                  if (localQuantity > 1) {
+                    setLocalQuantity(localQuantity - 1);
+                    handleUpdateQuantity(
+                      product.$id,
+                      product.name,
+                      localQuantity - 1,
+                    );
+                  }
+                }}
                 rippleColor="rgba(0, 0, 0, 0.1)"
                 borderless={true}
                 className="px-5 h-full justify-center"
@@ -202,13 +220,18 @@ export default function SingleProductDetails() {
               </TouchableRipple>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
               <Text className="text-black text-[20px] w-[50px] text-center font-poppinsBold">
-                {quantity}
+                {localQuantity}
               </Text>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
               <TouchableRipple
-                onPress={() =>
-                  handleUpdateQuantity(product.$id, product.name, quantity + 1)
-                }
+                onPress={() => {
+                  setLocalQuantity(localQuantity + 1);
+                  handleUpdateQuantity(
+                    product.$id,
+                    product.name,
+                    localQuantity + 1,
+                  );
+                }}
                 rippleColor="rgba(0, 0, 0, 0.1)"
                 borderless={true}
                 className="px-5 h-full justify-center"
@@ -222,7 +245,7 @@ export default function SingleProductDetails() {
             title={isInCart(product.$id) ? 'View Cart' : 'Add to Cart'}
             onPress={() => {
               if (!isInCart(product.$id)) {
-                handleAddToCart(product.$id, product.name);
+                handleAddToCart(product.$id, product.name, localQuantity);
               }
               router.push('/(screens)/(main)/cart');
             }}

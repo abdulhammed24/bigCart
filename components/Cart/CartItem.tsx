@@ -6,22 +6,24 @@ import { TouchableRipple } from 'react-native-paper';
 
 interface CartItemProps {
   item: {
-    id: string;
+    id: string; // Cart document ID
+    productId: string;
     name: string;
     price: number;
     quantity: number;
     weight: string;
     image: any;
   };
-  onIncrement: (id: string) => void;
-  onDecrement: (id: string) => void;
-  onDelete: (id: string) => void;
+  onIncrement: (productId: string) => void;
+  onDecrement: (productId: string) => void;
+  onDelete: (productId: string, name: string) => void;
 }
 
 export const CartItem: React.FC<CartItemProps> = ({
   item,
   onIncrement,
   onDecrement,
+  onDelete,
 }) => {
   return (
     <View className="flex flex-row gap-5 p-2.5 justify-between items-center bg-white rounded-lg">
@@ -48,7 +50,7 @@ export const CartItem: React.FC<CartItemProps> = ({
       <View className="flex-[0.3] flex items-end">
         <View className="flex-col items-center justify-between overflow-hidden">
           <TouchableRipple
-            onPress={() => onIncrement(item.id)}
+            onPress={() => onIncrement(item.productId)}
             rippleColor="rgba(0, 0, 0, 0.1)"
             borderless={true}
             className="p-3 items-center justify-center rounded-full"
@@ -63,7 +65,7 @@ export const CartItem: React.FC<CartItemProps> = ({
             {item.quantity}
           </Text>
           <TouchableRipple
-            onPress={() => onDecrement(item.id)}
+            onPress={() => onDecrement(item.productId)}
             rippleColor="rgba(0, 0, 0, 0.1)"
             borderless={true}
             className="p-3 items-center justify-center rounded-full"
@@ -84,7 +86,7 @@ export const HiddenCartItem: React.FC<
     <View className="flex flex-row gap-5 p-2.5 justify-end flex-1 items-center bg-[#FF3B30] rounded-lg">
       <Pressable
         className="w-12 h-full items-center justify-center"
-        onPress={() => onDelete(item.id)}
+        onPress={() => onDelete(item.productId, item.name)}
       >
         <Ionicons name="trash" size={24} color="white" />
       </Pressable>

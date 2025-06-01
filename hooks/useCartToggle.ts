@@ -1,4 +1,3 @@
-// hooks/useCartToggle.ts
 import { useCartStore } from '@/store/cartStore';
 import Toast from 'react-native-toast-message';
 

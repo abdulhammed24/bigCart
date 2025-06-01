@@ -185,9 +185,11 @@ export default function FeaturedProducts({
               ) : (
                 <View className="flex-row items-center justify-between rounded-lg h-[36px] overflow-hidden">
                   <TouchableRipple
-                    onPress={() =>
-                      handleUpdateQuantity(item.$id, item.name, quantity - 1)
-                    }
+                    onPress={() => {
+                      if (quantity > 1) {
+                        handleUpdateQuantity(item.$id, item.name, quantity - 1);
+                      }
+                    }}
                     className="px-3 h-full justify-center"
                     rippleColor="rgba(0, 0, 0, 0.1)"
                   >
