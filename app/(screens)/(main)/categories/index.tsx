@@ -74,14 +74,12 @@ export default function CategoryList() {
                 className="w-16 h-16 rounded-full justify-center items-center"
                 style={{ backgroundColor: '#E0E0E0' }}
               >
-                {item.icon ? (
+                {item.icon && (
                   <Image
                     source={{ uri: item.icon }}
                     style={{ width: 32, height: 32 }}
                     contentFit="cover"
                   />
-                ) : (
-                  <Text className="text-gray text-center">No Image</Text>
                 )}
               </View>
               <Text className="mt-3 text-[12px] font-poppinsMedium text-center text-gray">

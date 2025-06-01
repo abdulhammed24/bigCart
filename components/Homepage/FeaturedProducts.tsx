@@ -1,4 +1,3 @@
-// components/FeaturedProducts.tsx
 import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { useEffect } from 'react';
 import { Image } from 'expo-image';
@@ -156,7 +155,7 @@ export default function FeaturedProducts({
                 <Text className="text-green-600 font-poppinsMedium text-[14px]">
                   ${item.price ? item.price.toFixed(2) : '0.00'}
                 </Text>
-                <Text className="font-poppinsBold text-[16px] mt-1">
+                <Text className="font-poppinsBold text-center text-[16px] mt-1">
                   {item.name || 'Unnamed Product'}
                 </Text>
                 <Text className="text-gray-500 text-[13px] font-poppinsRegular">
@@ -220,7 +219,7 @@ export default function FeaturedProducts({
       contentContainerStyle={{ paddingBottom: 20 }}
       refreshControl={
         <RefreshControl
-          refreshing={productsLoading || favoritesLoading}
+          refreshing={productsLoading}
           onRefresh={async () => {
             await Promise.all([
               refreshProducts(),
