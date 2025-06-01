@@ -8,7 +8,6 @@ interface Category {
   $id: string;
   name: string;
   icon?: string;
-  backgroundColor?: string;
 }
 
 interface CategoriesState {
@@ -47,7 +46,6 @@ export const useCategoriesStore = create<CategoriesState>()(
               $id: doc.$id,
               name: doc.name as string,
               icon: doc.icon as string | undefined,
-              backgroundColor: doc.backgroundColor as string | undefined,
             }),
           );
           set({ categories: mappedCategories, loading: false, error: null });

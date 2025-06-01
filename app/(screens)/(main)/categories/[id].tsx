@@ -14,14 +14,13 @@ export default function CategoryDetail() {
   const { id } = useLocalSearchParams<CategoryParams>();
   const { categories } = useCategoriesStore();
 
-  // Find category by $id
   const category = categories.find((cat) => cat.$id === id);
   const categoryName = category ? category.name : 'Category';
-  console.log(categoryName);
+  console.log('Category Name:', categoryName);
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar backgroundColor="#fff" barStyle="default" />
       <Header title={categoryName} />
       <View className="flex-1 p-6 bg-offWhite">
         <FeaturedProducts category={categoryName} />

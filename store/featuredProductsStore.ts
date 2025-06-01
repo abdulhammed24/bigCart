@@ -3,9 +3,10 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Models } from 'react-native-appwrite';
 import { databases } from '@/lib/appwriteconfig';
+import { Query } from 'react-native-appwrite';
 
-interface Product {
-  id: string;
+// Define a single type for Appwrite document attributes
+interface ProductDocument extends Models.Document {
   name: string;
   price: number;
   unit: string;
@@ -19,7 +20,7 @@ interface Product {
 }
 
 interface ProductState {
-  products: Product[];
+  products: ProductDocument[];
   loading: boolean;
   error: string | null;
   fetchProducts: () => Promise<void>;
@@ -33,9 +34,8 @@ export const useProductStore = create<ProductState>()(
       loading: false,
       error: null,
       fetchProducts: async () => {
-        const { loading, products } = get();
+        const { loading } = get();
         if (loading) return;
-        if (products.length > 0) return;
 
         try {
           set({ loading: true, error: null });
@@ -47,64 +47,41 @@ export const useProductStore = create<ProductState>()(
             throw new Error('Missing Appwrite configuration.');
           }
 
-          const response = await databases.listDocuments(
+          const response = await databases.listDocuments<ProductDocument>(
             databaseId,
             collectionId,
+            [Query.limit(100)],
           );
-          const mappedProducts: Product[] = response.documents.map(
-            (doc: Models.Document) => ({
-              id: doc.$id,
-              name: doc.name as string,
-              price: doc.price as number,
-              unit: doc.unit as string,
-              image: doc.image as string,
-              category: doc.category as string,
-              status: doc.status as string | undefined,
-              discountPercentage: doc.discountPercentage as number | undefined,
-              rating: doc.rating as number,
-              description: doc.description as string,
-              inStock: doc.inStock as boolean,
+          const mappedProducts: ProductDocument[] = response.documents.map(
+            (doc: ProductDocument) => ({
+              ...doc,
+              name: doc.name || 'Unnamed Product',
+              price: doc.price || 0,
+              unit: doc.unit || 'N/A',
+              image: doc.image || 'https://via.placeholder.com/100x80',
+              category: doc.category || 'Uncategorized',
+              status: doc.status,
+              discountPercentage: doc.discountPercentage,
+              rating: doc.rating || 0,
+              description: doc.description || 'No description',
+              inStock: doc.inStock ?? true,
             }),
           );
           set({ products: mappedProducts, loading: false, error: null });
         } catch (error: any) {
-          // console.error('Error fetching products:', error.message || error);
-          set({ error: 'Failed to load products', loading: false });
+          const errorMsg = error.message || 'Unknown error';
+          set({
+            error: `Failed to load products: ${errorMsg}`,
+            loading: false,
+          });
         }
       },
       refreshProducts: async () => {
         try {
           set({ loading: true, error: null });
-          const databaseId = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID;
-          const collectionId =
-            process.env.EXPO_PUBLIC_APPWRITE_PRODUCTS_COLLECTION_ID;
-          if (!databaseId || !collectionId) {
-            throw new Error('Missing Appwrite configuration.');
-          }
-
-          const response = await databases.listDocuments(
-            databaseId,
-            collectionId,
-          );
-          const mappedProducts: Product[] = response.documents.map(
-            (doc: Models.Document) => ({
-              id: doc.$id,
-              name: doc.name as string,
-              price: doc.price as number,
-              unit: doc.unit as string,
-              image: doc.image as string,
-              category: doc.category as string,
-              status: doc.status as string | undefined,
-              discountPercentage: doc.discountPercentage as number | undefined,
-              rating: doc.rating as number,
-              description: doc.description as string,
-              inStock: doc.inStock as boolean,
-            }),
-          );
-          set({ products: mappedProducts, loading: false, error: null });
-        } catch (error: any) {
-          // console.error('Error refreshing products:', error.message || error);
-          set({ error: 'Failed to refresh products', loading: false });
+          await get().fetchProducts();
+        } finally {
+          set({ loading: false });
         }
       },
     }),
@@ -112,6 +89,7 @@ export const useProductStore = create<ProductState>()(
       name: 'products-storage',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({ products: state.products }),
+      version: 1,
     },
   ),
 );

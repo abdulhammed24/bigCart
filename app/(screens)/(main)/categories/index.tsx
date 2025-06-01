@@ -70,7 +70,7 @@ export default function CategoryList() {
             <View className="bg-white p-3 rounded-lg items-center">
               <View
                 className="w-16 h-16 rounded-full justify-center items-center"
-                style={{ backgroundColor: item.backgroundColor || '#E0E0E0' }}
+                style={{ backgroundColor: '#E0E0E0' }}
               >
                 {item.icon ? (
                   <Image
@@ -101,7 +101,7 @@ export default function CategoryList() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar backgroundColor="#fff" barStyle="default" />
       <Header title="Categories" />
       <View className="flex-1 px-6 bg-offWhite py-6">{renderContent()}</View>
     </SafeAreaView>

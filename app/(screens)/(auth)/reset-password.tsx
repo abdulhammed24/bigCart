@@ -50,7 +50,7 @@ export default function ResetPassword() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#F4F5F9" barStyle="dark-content" />
+      <StatusBar backgroundColor="#F4F5F9" barStyle="default" />
       <Header backgroundColor="bg-offWhite" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}

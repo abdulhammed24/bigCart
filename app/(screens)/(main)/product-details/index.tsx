@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function FeaturedProductsPage() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar backgroundColor="#fff" barStyle="default" />
       <Header title="Featured Products" />
       <View className="flex-1 px-6 bg-offWhite py-6">
         <FeaturedProducts />

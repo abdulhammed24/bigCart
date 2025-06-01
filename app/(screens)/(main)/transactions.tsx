@@ -69,7 +69,7 @@ export default function Transactions() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar backgroundColor="#fff" barStyle="default" />
       <Header title="Transactions" />
       <ScrollView
         contentContainerStyle={{ paddingBottom: 50 }}

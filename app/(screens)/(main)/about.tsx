@@ -93,7 +93,7 @@ export default function About() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar backgroundColor="#fff" barStyle="default" />
       {/*  */}
       <Header title="About me" />
       <KeyboardAwareScrollView

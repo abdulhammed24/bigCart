@@ -22,19 +22,23 @@ export default function FeaturedProducts({
   );
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
   const router = useRouter();
-
-  // Get data from Zustand store
   const { products, loading, error, fetchProducts, refreshProducts } =
     useProductStore();
 
-  // Fetch products when component mounts
   useEffect(() => {
+    // console.log('useEffect triggered', {
+    //   productsLength: products.length,
+    //   category,
+    // });
     fetchProducts();
-  }, [fetchProducts]);
+  }, [fetchProducts, category]);
 
-  // Filter products based on category and limit
   let filteredProducts = category
-    ? products.filter((product) => product.category === category)
+    ? products.filter(
+        (product) =>
+          product.category?.trim().toLowerCase() ===
+          category.trim().toLowerCase(),
+      )
     : products;
 
   if (limit) {
@@ -107,7 +111,7 @@ export default function FeaturedProducts({
           onPress={() => {
             router.push({
               pathname: '/(screens)/(main)/product-details/[id]',
-              params: { id: item.id },
+              params: { id: item.$id },
             });
           }}
           rippleColor="rgba(0, 0, 0, 0.1)"
@@ -220,7 +224,7 @@ export default function FeaturedProducts({
           </View>
         </TouchableRipple>
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.$id}
       numColumns={2}
       showsVerticalScrollIndicator={false}
       columnWrapperStyle={{ justifyContent: 'space-between' }}

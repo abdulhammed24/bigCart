@@ -60,7 +60,7 @@ export default function Favorites() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar backgroundColor="#fff" barStyle="default" />
 
       <Header title="Favorites" onBackPress={() => router.back()} />
       {items.length === 0 ? (
