@@ -16,7 +16,7 @@ export default function CategoryDetail() {
 
   const category = categories.find((cat) => cat.$id === id);
   const categoryName = category ? category.name : 'Category';
-  console.log('Category Name:', categoryName);
+  // console.log('Category Name:', categoryName);
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>

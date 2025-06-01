@@ -6,10 +6,11 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import HorizontalCategoriesSkeleton from './HorizontalCategoriesSkeleton';
+import { ErrorState } from '../ErrorState';
 
 export default function Categories() {
   const router = useRouter();
-  const { categories, loading, error } = useCategoriesStore();
+  const { categories, loading, error, fetchCategories } = useCategoriesStore();
 
   const handleCategoryPress = (category: { $id: string; name: string }) => {
     router.push({
@@ -24,8 +25,9 @@ export default function Categories() {
     return <HorizontalCategoriesSkeleton />;
   }
 
+  // Handle error or no product found
   if (error) {
-    return <Text className="text-red-500 text-center">{error}</Text>;
+    return <ErrorState message={error} onRetry={fetchCategories} />;
   }
 
   if (categories.length === 0) {

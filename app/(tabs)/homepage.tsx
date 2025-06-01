@@ -21,14 +21,14 @@ export default function Homepage() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      console.log('Homepage: Starting refresh');
+      // console.log('Homepage: Starting refresh');
       await Promise.all([refreshCategories(), refreshProducts()]);
-      console.log('Homepage: Refresh successful');
+      // console.log('Homepage: Refresh successful');
     } catch (error: any) {
       console.error('Homepage: Refresh error:', error.message || error);
     } finally {
       setRefreshing(false);
-      console.log('Homepage: Refreshing state reset');
+      // console.log('Homepage: Refreshing state reset');
     }
   }, [refreshCategories, refreshProducts]);
 

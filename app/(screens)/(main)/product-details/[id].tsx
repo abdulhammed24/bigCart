@@ -76,11 +76,11 @@ export default function SingleProductDetails() {
       <SafeAreaView
         style={{ flex: 1 }}
         edges={['bottom', 'left', 'right']}
-        className="bg-offWhite"
+        className="bg-white"
       >
         {/*  */}
         <ScrollView
-          className="flex-1"
+          className="flex-1 bg-offWhite"
           contentContainerStyle={{ paddingBottom: 140 }}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -179,7 +179,7 @@ export default function SingleProductDetails() {
             right: 0,
             paddingHorizontal: 24,
             paddingVertical: 12,
-            backgroundColor: '#F5F5F5',
+            backgroundColor: '#F4F5F9',
           }}
         >
           <View className="mb-4 rounded-[10px] h-[50px] bg-white flex items-center justify-between flex-row">

@@ -13,6 +13,7 @@ import { Header } from '@/components/Header';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import { useState, useCallback } from 'react';
 import GridCategoriesSkeleton from '@/components/Homepage/GridCategoriesSkeleton';
+import { ErrorState } from '@/components/ErrorState';
 
 export default function CategoryList() {
   const router = useRouter();
@@ -43,8 +44,9 @@ export default function CategoryList() {
       return <GridCategoriesSkeleton />;
     }
 
+    // Handle error or no product found
     if (error) {
-      return <Text className="text-destructive text-center">{error}</Text>;
+      return <ErrorState message={error} onRetry={refreshCategories} />;
     }
 
     if (categories.length === 0) {

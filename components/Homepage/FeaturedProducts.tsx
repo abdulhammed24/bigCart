@@ -1,3 +1,4 @@
+// components/FeaturedProducts.tsx
 import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Image } from 'expo-image';
@@ -5,7 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useProductStore } from '@/store/featuredProductsStore';
+import { useFavoritesStore } from '@/store/favoritesStore';
 import FeaturedProductsSkeleton from './FeaturedProductsSkeleton';
+import { ErrorState } from '../ErrorState';
 
 type FeaturedProductsProps = {
   category?: string;
@@ -16,22 +19,29 @@ export default function FeaturedProducts({
   category,
   limit,
 }: FeaturedProductsProps) {
-  const [favorites, setFavorites] = useState<{ [key: number]: boolean }>({});
+  const router = useRouter();
+  const {
+    products,
+    loading: productsLoading,
+    error,
+    fetchProducts,
+    refreshProducts,
+  } = useProductStore();
+  const {
+    favorites,
+    isFavorite,
+    addFavorite,
+    removeFavorite,
+    loading: favoritesLoading,
+  } = useFavoritesStore();
   const [addedToCart, setAddedToCart] = useState<{ [key: number]: boolean }>(
     {},
   );
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-  const router = useRouter();
-  const { products, loading, error, fetchProducts, refreshProducts } =
-    useProductStore();
 
   useEffect(() => {
-    // console.log('useEffect triggered', {
-    //   productsLength: products.length,
-    //   category,
-    // });
     fetchProducts();
-  }, [fetchProducts, category]);
+  }, [fetchProducts]);
 
   let filteredProducts = category
     ? products.filter(
@@ -44,13 +54,6 @@ export default function FeaturedProducts({
   if (limit) {
     filteredProducts = filteredProducts.slice(0, limit);
   }
-
-  const toggleFavorite = (index: number) => {
-    setFavorites((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
 
   const addToCart = (index: number) => {
     setAddedToCart((prev) => ({
@@ -77,22 +80,12 @@ export default function FeaturedProducts({
     }));
   };
 
-  if (loading && products.length === 0) {
+  if (productsLoading && products.length === 0) {
     return <FeaturedProductsSkeleton />;
   }
 
   if (error) {
-    return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-red-500 text-center">{error}</Text>
-        <TouchableRipple
-          onPress={refreshProducts}
-          className="mt-4 p-2 bg-green-600 rounded"
-        >
-          <Text className="text-white">Retry</Text>
-        </TouchableRipple>
-      </View>
-    );
+    return <ErrorState message={error} onRetry={refreshProducts} />;
   }
 
   if (filteredProducts.length === 0) {
@@ -121,16 +114,20 @@ export default function FeaturedProducts({
           <View>
             {/* Favorite (Heart) Icon */}
             <TouchableRipple
-              onPress={() => toggleFavorite(index)}
+              onPress={() =>
+                isFavorite(item.$id)
+                  ? removeFavorite(item.$id)
+                  : addFavorite(item.$id)
+              }
               rippleColor="rgba(0, 0, 0, 0.1)"
               borderless={true}
               className="absolute rounded-full top-1 right-1 p-2"
               style={{ margin: -8 }}
             >
               <Ionicons
-                name={favorites[index] ? 'heart' : 'heart-outline'}
+                name={isFavorite(item.$id) ? 'heart' : 'heart-outline'}
                 size={20}
-                color={favorites[index] ? 'red' : 'gray'}
+                color={isFavorite(item.$id) ? 'red' : 'gray'}
               />
             </TouchableRipple>
 
@@ -231,8 +228,13 @@ export default function FeaturedProducts({
       contentContainerStyle={{ paddingBottom: 20 }}
       refreshControl={
         <RefreshControl
-          refreshing={loading}
-          onRefresh={refreshProducts}
+          refreshing={productsLoading || favoritesLoading}
+          onRefresh={async () => {
+            await Promise.all([
+              refreshProducts(),
+              useFavoritesStore.getState().fetchFavorites(),
+            ]);
+          }}
           colors={['#6CC51D']}
           tintColor="#6CC51D"
         />
