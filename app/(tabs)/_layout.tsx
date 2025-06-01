@@ -120,8 +120,8 @@ export default function TabLayout() {
                       alignItems: 'center',
                     }}
                   >
-                    <Text style={{ color: 'white', fontSize: 12 }}>
-                      {cartQuantity}
+                    <Text style={{ color: 'white', fontSize: 10 }}>
+                      {cartQuantity > 10 ? '9+' : cartQuantity}
                     </Text>
                   </View>
                 </Pressable>
