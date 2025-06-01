@@ -47,7 +47,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
         <View>
           <PrimaryBtn
             title="Checkout"
-            onPress={() => router.push('/(screens)/shipping-method')}
+            onPress={() => router.push('/(screens)/(main)/shipping-method')}
           />
         </View>
       </View>

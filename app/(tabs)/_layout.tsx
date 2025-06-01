@@ -4,9 +4,14 @@ import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { useCartStore } from '@/store/cartStore';
 
 export default function TabLayout() {
   const router = useRouter();
+
+  const { cartItems } = useCartStore();
+
+  const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <ProtectedRoute>
       <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
@@ -115,7 +120,9 @@ export default function TabLayout() {
                       alignItems: 'center',
                     }}
                   >
-                    <Text style={{ color: 'white', fontSize: 12 }}>3</Text>
+                    <Text style={{ color: 'white', fontSize: 12 }}>
+                      {cartQuantity}
+                    </Text>
                   </View>
                 </Pressable>
               ),

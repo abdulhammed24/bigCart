@@ -2,11 +2,13 @@ import { PrimaryBtn } from '@/components/PrimaryBtn';
 import Rating from '@/components/Rating';
 import { useProductStore } from '@/store/featuredProductsStore';
 import { useFavoritesStore } from '@/store/favoritesStore';
+import { useCartStore } from '@/store/cartStore';
 import { useFavoriteToggle } from '@/hooks/useFavoriteToggle';
+import { useCartToggle } from '@/hooks/useCartToggle';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, ScrollView } from 'react-native';
 import { ImageBackground, Text, View } from 'react-native';
 import { IconButton, TouchableRipple } from 'react-native-paper';
@@ -18,7 +20,6 @@ import { ErrorState } from '@/components/ErrorState';
 import { LoadingState } from '@/components/LoadingState';
 
 export default function SingleProductDetails() {
-  const [quantity, setQuantity] = useState(1);
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams();
@@ -29,7 +30,9 @@ export default function SingleProductDetails() {
     fetchProducts,
   } = useProductStore();
   const { isFavorite, error: favoritesError } = useFavoritesStore();
+  const { cartItems, error: cartError } = useCartStore();
   const { handleFavoriteToggle } = useFavoriteToggle();
+  const { handleAddToCart, handleUpdateQuantity, isInCart } = useCartToggle();
 
   // Fetch products if not already loaded
   useEffect(() => {
@@ -40,10 +43,8 @@ export default function SingleProductDetails() {
 
   // Find the product by id from the store
   const product = products.find((p) => p.$id === id);
-
-  const incrementQuantity = () => setQuantity((prev) => prev + 1);
-  const decrementQuantity = () =>
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const cartItem = cartItems.find((ci) => ci.productId === id);
+  const quantity = cartItem?.quantity || 1;
 
   // Handle loading state
   if (productsLoading) {
@@ -66,6 +67,16 @@ export default function SingleProductDetails() {
       <ErrorState
         message={favoritesError}
         onRetry={() => useFavoritesStore.getState().fetchFavorites()}
+      />
+    );
+  }
+
+  // Handle cart error
+  if (cartError) {
+    return (
+      <ErrorState
+        message={cartError}
+        onRetry={() => useCartStore.getState().fetchCart()}
       />
     );
   }
@@ -148,7 +159,7 @@ export default function SingleProductDetails() {
               </Text>
               <Rating rating={product.rating} />
               <Text className="text-gray font-poppinsMedium text-[14px]">
-                ({product.reviews || 0} reviews)
+                ({product.reviews} reviews)
               </Text>
             </View>
 
@@ -180,7 +191,9 @@ export default function SingleProductDetails() {
             </View>
             <View className="flex-row items-center justify-between rounded-[10px] h-full overflow-hidden">
               <TouchableRipple
-                onPress={decrementQuantity}
+                onPress={() =>
+                  handleUpdateQuantity(product.$id, product.name, quantity - 1)
+                }
                 rippleColor="rgba(0, 0, 0, 0.1)"
                 borderless={true}
                 className="px-5 h-full justify-center"
@@ -193,7 +206,9 @@ export default function SingleProductDetails() {
               </Text>
               <View className="h-full w-[1px] bg-[#EBEBEB]" />
               <TouchableRipple
-                onPress={incrementQuantity}
+                onPress={() =>
+                  handleUpdateQuantity(product.$id, product.name, quantity + 1)
+                }
                 rippleColor="rgba(0, 0, 0, 0.1)"
                 borderless={true}
                 className="px-5 h-full justify-center"
@@ -204,8 +219,11 @@ export default function SingleProductDetails() {
           </View>
 
           <PrimaryBtn
-            title="Add to Cart"
+            title={isInCart(product.$id) ? 'View Cart' : 'Add to Cart'}
             onPress={() => {
+              if (!isInCart(product.$id)) {
+                handleAddToCart(product.$id, product.name);
+              }
               router.push('/(screens)/(main)/cart');
             }}
             rightIcon={require('@/assets/icons/cart.svg')}

@@ -1,89 +1,73 @@
+// screens/Cart.tsx
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { CartItem, HiddenCartItem } from '@/components/Cart/CartItem';
 import { CartSummary } from '@/components/Cart/CartSummary';
 import { EmptyCart } from '@/components/Cart/EmptyCart';
+import { useCartStore } from '@/store/cartStore';
+import { useProductStore } from '@/store/featuredProductsStore';
+import { useCartToggle } from '@/hooks/useCartToggle';
+import { ErrorState } from '@/components/ErrorState';
+import { LoadingState } from '@/components/LoadingState';
 
-// Define the CartItem interface
-interface CartItem {
-  id: string;
+interface CartItemDisplay {
+  id: string; // Cart document ID
+  productId: string;
   name: string;
   price: number;
   quantity: number;
   weight: string;
-  image: any;
+  image: string;
 }
-
-// Dummy data array
-const cartItems: CartItem[] = [
-  {
-    id: '1',
-    name: 'Fresh Broccoli',
-    price: 2.22,
-    quantity: 4,
-    weight: '1.50 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-  {
-    id: '2',
-    name: 'Organic Apples',
-    price: 3.15,
-    quantity: 2,
-    weight: '2.00 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-  {
-    id: '3',
-    name: 'Carrots',
-    price: 1.99,
-    quantity: 3,
-    weight: '1.00 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-  {
-    id: '4',
-    name: 'Carrots',
-    price: 1.99,
-    quantity: 3,
-    weight: '1.00 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-];
 
 export default function Cart() {
   const router = useRouter();
-  const [items, setItems] = useState<CartItem[]>(cartItems);
+  const {
+    cartItems,
+    loading: cartLoading,
+    error: cartError,
+    fetchCart,
+  } = useCartStore();
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+    fetchProducts,
+  } = useProductStore();
+  const { handleIncrementQuantity, handleDecrementQuantity, handleDeleteItem } =
+    useCartToggle();
 
-  const incrementQuantity = (id: string) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
-      ),
-    );
-  };
+  // Fetch cart and products on mount
+  useEffect(() => {
+    fetchCart();
+    if (products.length === 0) {
+      fetchProducts();
+    }
+  }, [fetchCart, fetchProducts, products.length]);
 
-  const decrementQuantity = (id: string) => {
-    setItems((prevItems) => {
-      const item = prevItems.find((i) => i.id === id);
-      if (item && item.quantity === 1) {
-        return prevItems.filter((i) => i.id !== id);
-      }
-      return prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
-      );
-    });
-  };
-
-  const deleteItem = (id: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
+  // Combine cart items with product details
+  const displayItems: CartItemDisplay[] = cartItems
+    .map((cartItem) => {
+      const product = products.find((p) => p.$id === cartItem.productId);
+      if (!product) return null;
+      return {
+        id: cartItem.id,
+        productId: cartItem.productId,
+        name: product.name,
+        price: product.price,
+        quantity: cartItem.quantity,
+        weight: product.unit,
+        image: product.image,
+      };
+    })
+    .filter((item): item is CartItemDisplay => item !== null);
 
   // Calculate totals
-  const subtotal: number = items.reduce(
+  const subtotal: number = displayItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
@@ -95,22 +79,35 @@ export default function Cart() {
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
 
       <Header title="Shopping Cart" />
-      {items.length === 0 ? (
+      {cartLoading || productsLoading ? (
+        <LoadingState message="Loading cart..." />
+      ) : cartError ? (
+        <ErrorState message={cartError} onRetry={fetchCart} />
+      ) : productsError ? (
+        <ErrorState message={productsError} onRetry={fetchProducts} />
+      ) : displayItems.length === 0 ? (
         <EmptyCart />
       ) : (
         <>
           <SwipeListView
-            data={items}
+            data={displayItems}
             renderItem={({ item }) => (
               <CartItem
                 item={item}
-                onIncrement={incrementQuantity}
-                onDecrement={decrementQuantity}
-                onDelete={deleteItem}
+                onIncrement={() =>
+                  handleIncrementQuantity(item.productId, item.name)
+                }
+                onDecrement={() =>
+                  handleDecrementQuantity(item.productId, item.name)
+                }
+                onDelete={() => handleDeleteItem(item.productId, item.name)}
               />
             )}
             renderHiddenItem={({ item }) => (
-              <HiddenCartItem item={item} onDelete={deleteItem} />
+              <HiddenCartItem
+                item={item}
+                onDelete={() => handleDeleteItem(item.productId, item.name)}
+              />
             )}
             rightOpenValue={-75}
             disableRightSwipe

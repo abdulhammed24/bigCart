@@ -1,7 +1,7 @@
 // screens/Favorites.tsx
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -10,73 +10,89 @@ import {
   HiddenFavoriteItem,
 } from '@/components/Favorites/FavoriteItem';
 import { EmptyFavorites } from '@/components/Favorites/EmptyFavorites';
+import { useFavoritesStore } from '@/store/favoritesStore';
+import { useProductStore } from '@/store/featuredProductsStore';
+import { useCartToggle } from '@/hooks/useCartToggle';
+import { useFavoriteToggle } from '@/hooks/useFavoriteToggle';
+import { ErrorState } from '@/components/ErrorState';
+import { LoadingState } from '@/components/LoadingState';
 
-// Define the FavoriteItem interface
-interface FavoriteItem {
+interface FavoriteItemDisplay {
   id: string;
   name: string;
   price: number;
   weight: string;
-  image: any;
+  image: string;
 }
-
-// Dummy data array for favorites
-const favoriteItems: FavoriteItem[] = [
-  {
-    id: '1',
-    name: 'Fresh Broccoli',
-    price: 2.22,
-    weight: '1.50 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-  {
-    id: '2',
-    name: 'Organic Apples',
-    price: 3.15,
-    weight: '2.00 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-  {
-    id: '3',
-    name: 'Carrots',
-    price: 1.99,
-    weight: '1.00 lbs',
-    image: require('@/assets/images/products/broccoli.png'),
-  },
-];
 
 export default function Favorites() {
   const router = useRouter();
-  const [items, setItems] = useState<FavoriteItem[]>(favoriteItems);
+  const {
+    favorites,
+    loading: favoritesLoading,
+    error: favoritesError,
+    fetchFavorites,
+  } = useFavoritesStore();
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+    fetchProducts,
+  } = useProductStore();
+  const { handleAddToCart } = useCartToggle();
+  const { handleFavoriteToggle } = useFavoriteToggle();
 
-  const removeItem = (id: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
+  // Fetch favorites and products on mount
+  useEffect(() => {
+    fetchFavorites();
+    if (products.length === 0) {
+      fetchProducts();
+    }
+  }, [fetchFavorites, fetchProducts, products.length]);
 
-  const addToCart = (item: FavoriteItem) => {
-    // Simulate adding to cart (replace with actual cart logic)
-    console.log(`Added to cart: ${item.name}`, item);
-  };
+  // Map favorites to product details
+  const displayItems: FavoriteItemDisplay[] = favorites
+    .map((productId) => {
+      const product = products.find((p) => p.$id === productId);
+      if (!product) return null;
+      return {
+        id: product.$id,
+        name: product.name,
+        price: product.price,
+        weight: product.unit,
+        image: product.image,
+      };
+    })
+    .filter((item): item is FavoriteItemDisplay => item !== null);
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-
       <Header title="Favorites" onBackPress={() => router.back()} />
-      {items.length === 0 ? (
+
+      {favoritesLoading || productsLoading ? (
+        <LoadingState message="Loading favorites..." />
+      ) : favoritesError ? (
+        <ErrorState message={favoritesError} onRetry={fetchFavorites} />
+      ) : productsError ? (
+        <ErrorState message={productsError} onRetry={fetchProducts} />
+      ) : displayItems.length === 0 ? (
         <EmptyFavorites />
       ) : (
         <SwipeListView
-          data={items}
+          data={displayItems}
           renderItem={({ item }) => (
             <FavoriteItem
               item={item}
-              onRemove={removeItem}
-              onAddToCart={addToCart}
+              onRemove={() => handleFavoriteToggle(item.id, item.name)}
+              onAddToCart={() => handleAddToCart(item.id, item.name)}
             />
           )}
           renderHiddenItem={({ item }) => (
-            <HiddenFavoriteItem item={item} onRemove={removeItem} />
+            <HiddenFavoriteItem
+              item={item}
+              onRemove={() => handleFavoriteToggle(item.id, item.name)}
+            />
           )}
           rightOpenValue={-75}
           disableRightSwipe
