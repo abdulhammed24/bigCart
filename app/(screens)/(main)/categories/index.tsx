@@ -101,7 +101,7 @@ export default function CategoryList() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="default" />
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title="Categories" />
       <View className="flex-1 px-6 bg-offWhite py-6">{renderContent()}</View>
     </SafeAreaView>

@@ -10,7 +10,7 @@ export default function OrderSuccess() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="default" />
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       {/* Header */}
       <Header title="Order Success" showBackButton={false} />
 

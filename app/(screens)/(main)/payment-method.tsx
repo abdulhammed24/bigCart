@@ -91,7 +91,7 @@ export default function PaymentMethod() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="default" />
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title="Payment Method" />
       {/*  */}
       <ProgressSteps currentStep="Payment" />

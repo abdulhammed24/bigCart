@@ -20,7 +20,7 @@ export default function CategoryDetail() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <StatusBar backgroundColor="#fff" barStyle="default" />
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title={categoryName} />
       <View className="flex-1 p-6 bg-offWhite">
         <FeaturedProducts category={categoryName} />
