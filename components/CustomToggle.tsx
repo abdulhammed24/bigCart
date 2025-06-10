@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { View, Pressable, Animated } from 'react-native';
 
-// Define the props interface for CustomToggle
 interface CustomToggleProps {
   value: boolean;
-  onValueChange?: (value: boolean) => void; // Callback for when the toggle changes
+  onValueChange?: (value: boolean) => void;
 }
 
 const CustomToggle: React.FC<CustomToggleProps> = ({
@@ -21,7 +20,6 @@ const CustomToggle: React.FC<CustomToggleProps> = ({
       onValueChange(newValue);
     }
 
-    // Animate the circle movement
     Animated.timing(animatedValue, {
       toValue: newValue ? 1 : 0,
       duration: 200,
@@ -29,10 +27,9 @@ const CustomToggle: React.FC<CustomToggleProps> = ({
     }).start();
   };
 
-  // Interpolate the circle's position from left (0) to right (1)
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [1, 15], // Adjusted for smaller toggle width and circle size
+    outputRange: [1, 15],
   });
 
   return (

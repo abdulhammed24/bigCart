@@ -1,5 +1,5 @@
 import { View, Text, Pressable, StatusBar } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '@/components/Header';
 import { Image } from 'expo-image';
@@ -7,8 +7,9 @@ import { ScrollView } from 'moti';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import { useRouter } from 'expo-router';
 import CreditCard from '@/components/CreditCard';
+import { useCardStore } from '@/store/cardStore';
+import Toast from 'react-native-toast-message';
 
-// Define the Card interface
 interface Card {
   name: string;
   cardNumber: string;
@@ -17,58 +18,64 @@ interface Card {
   isDefault?: boolean;
 }
 
-// Dummy data for cards
-const initialCards: Card[] = [
-  {
-    name: 'Russell Austin',
-    cardNumber: '4532015112830366', // Visa
-    expiry: '12/26',
-    cvv: '123',
-    isDefault: true,
-  },
-  {
-    name: 'Emily Carter',
-    cardNumber: '5555555555554444', // Mastercard
-    expiry: '09/25',
-    cvv: '456',
-    isDefault: false,
-  },
-  {
-    name: 'Liam Brown',
-    cardNumber: '378282246310005', // PayPal/Amex
-    expiry: '06/27',
-    cvv: '7890',
-    isDefault: false,
-  },
-];
-
 export default function MyCards() {
   const router = useRouter();
+  const { cards, fetchCards, updateCard, setDefaultCard, loading, error } =
+    useCardStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // State to manage the list of cards
-  const [cards, setCards] = useState<Card[]>(initialCards);
+  useEffect(() => {
+    fetchCards();
+  }, [fetchCards]);
 
-  // Handle saving an updated card
-  const handleSaveCard = (index: number) => (updatedCard: Card) => {
-    setCards((prev) =>
-      prev.map((card, i) => (i === index ? updatedCard : card)),
-    );
+  const handleSaveCard =
+    (index: number) => async (updatedCard: Partial<Card>) => {
+      try {
+        await updateCard(cards[index].id, updatedCard);
+      } catch (err) {
+        // Toast handled in CreditCard
+      }
+    };
+
+  const handleMakeDefault = (index: number) => async () => {
+    try {
+      await setDefaultCard(cards[index].id);
+      Toast.show({
+        type: 'success',
+        text1: 'Default Card Set',
+        text2: `${cards[index].name}'s card is now the default.`,
+      });
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to set default card. Please try again.',
+      });
+    }
   };
 
-  // Handle making a card the default
-  const handleMakeDefault = (index: number) => () => {
-    setCards((prev) =>
-      prev.map((card, i) => ({
-        ...card,
-        isDefault: i === index,
-      })),
-    );
+  const handleSaveSettings = async () => {
+    setIsLoading(true);
+    try {
+      Toast.show({
+        type: 'success',
+        text1: 'Settings Saved',
+        text2: 'Your card settings have been saved.',
+      });
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to save settings. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-      {/* Header */}
       <Header
         title="My Cards"
         rightComponent={
@@ -87,24 +94,36 @@ export default function MyCards() {
         showsVerticalScrollIndicator={false}
         className="flex-1 px-6 bg-offWhite py-6"
       >
-        <View className="flex flex-col gap-5">
-          {/* Render CreditCard Components */}
-          {cards.map((card, index) => (
-            <CreditCard
-              key={index}
-              card={card}
-              onSave={handleSaveCard(index)}
-              onMakeDefault={handleMakeDefault(index)}
-            />
-          ))}
-        </View>
+        {error && (
+          <Text className="text-destructive text-center text-[12px] font-poppinsRegular mb-4">
+            {error}
+          </Text>
+        )}
+        {cards.length === 0 && !loading && !error ? (
+          <Text className="text-center text-gray-500 text-[14px] font-poppinsRegular">
+            No cards found. Add a new card.
+          </Text>
+        ) : (
+          <View className="flex flex-col gap-5">
+            {cards.map((card, index) => (
+              <CreditCard
+                key={card.id}
+                card={card}
+                onSave={handleSaveCard(index)}
+                onMakeDefault={handleMakeDefault(index)}
+              />
+            ))}
+          </View>
+        )}
       </ScrollView>
 
-      {/* Save Button */}
       <View className="px-6 pb-6 bg-offWhite">
         <PrimaryBtn
           title="Save settings"
-          onPress={() => console.log('Saved cards:', cards)}
+          onPress={handleSaveSettings}
+          isLoading={isLoading}
+          loadingText="Saving..."
+          disabled={isLoading}
         />
       </View>
     </SafeAreaView>

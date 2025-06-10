@@ -1,110 +1,53 @@
-import { View } from 'react-native';
+import { Text } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { Header } from '@/components/Header';
 import { ProgressSteps } from '@/components/ProgressSteps';
-import { PaymentForm } from '@/components/PaymentMethod/PaymentForm';
-import {
-  formatCardNumber,
-  formatExpiry,
-  validateCardNumber,
-  validateExpiry,
-  validateCVV,
-} from '@/utils/paymentUtils';
+import PaymentForm from '@/components/PaymentMethod/PaymentForm';
 import { PaymentOptions } from '@/components/PaymentMethod/PaymentOption';
 import { StatusBar } from 'react-native';
-
-interface PaymentFormData {
-  name: string;
-  cardNumber: string;
-  expiry: string;
-  cvv: string;
-  isDefault?: boolean;
-}
+import Toast from 'react-native-toast-message';
 
 export default function PaymentMethod() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [formData, setFormData] = useState<PaymentFormData>({
-    name: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    isDefault: false,
-  });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (key: keyof PaymentFormData, value: string) => {
-    let formattedValue = value;
-
-    if (key === 'cardNumber') {
-      // Remove non-digits and limit to 16 before formatting
-      const digits = value.replace(/\D/g, '').slice(0, 16);
-      formattedValue = formatCardNumber(digits);
-    } else if (key === 'expiry') {
-      // Remove non-digits and limit to 4 before formatting
-      const digits = value.replace(/\D/g, '').slice(0, 4);
-      formattedValue = formatExpiry(digits);
-    } else if (key === 'cvv') {
-      // Remove non-digits and limit to 4 (for Amex)
-      formattedValue = value.replace(/\D/g, '').slice(0, 4);
+  const handleProceed = async (values: any) => {
+    setIsLoading(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      Toast.show({
+        type: 'success',
+        text1: 'Payment Processed',
+        text2: 'Your payment method has been successfully added.',
+      });
+      router.replace({
+        pathname: '/(screens)/(main)/order-success',
+        params: {
+          paymentMethod: 'Credit Card',
+          paymentDetails: JSON.stringify(values),
+          address: params.newAddress,
+        },
+      });
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to process payment. Please try again.',
+      });
+      setIsLoading(false);
     }
-
-    setFormData((prev) => ({ ...prev, [key]: formattedValue }));
-  };
-
-  const handleToggleChange = (value: boolean) => {
-    setFormData((prev) => ({ ...prev, isDefault: value }));
-  };
-
-  const handleProceed = () => {
-    // if (!formData.name.trim()) {
-    //   alert('Please enter the name on card');
-    //   return;
-    // }
-    // if (!validateCardNumber(formData.cardNumber)) {
-    //   alert('Invalid card number (must be 16 digits and pass validation)');
-    //   return;
-    // }
-    // if (!validateExpiry(formData.expiry)) {
-    //   alert('Invalid or expired expiry date (must be MM/YY, not in past)');
-    //   return;
-    // }
-    // if (!validateCVV(formData.cvv, formData.cardNumber)) {
-    //   alert('Invalid CVV (must be 3 or 4 digits based on card type)');
-    //   return;
-    // }
-
-    router.replace({
-      pathname: '/(screens)/(main)/order-success',
-      params: {
-        paymentMethod: 'Credit Card',
-        paymentDetails: JSON.stringify({
-          ...formData,
-          cardNumber: formData.cardNumber.replace(/\s/g, ''), // Store without spaces
-        }),
-        address: params.newAddress,
-      },
-    });
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Header title="Payment Method" />
-      {/*  */}
       <ProgressSteps currentStep="Payment" />
-
-      {/*  */}
       <PaymentOptions />
-
-      <PaymentForm
-        formData={formData}
-        handleInputChange={handleInputChange}
-        handleToggleChange={handleToggleChange}
-        handleProceed={handleProceed}
-      />
+      <PaymentForm handleProceed={handleProceed} isLoading={isLoading} />
     </SafeAreaView>
   );
 }

@@ -4,91 +4,155 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { InputField } from '@/components/InputField';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import CustomToggle from '@/components/CustomToggle';
-
-interface PaymentFormData {
-  name: string;
-  cardNumber: string;
-  expiry: string;
-  cvv: string;
-  isDefault?: boolean;
-}
+import { Formik } from 'formik';
+import { paymentSchema } from '@/lib/validationSchemas';
+import { formatCardNumber, formatExpiry } from '@/utils/paymentUtils';
 
 interface PaymentFormProps {
-  formData: PaymentFormData;
-  handleInputChange: (key: keyof PaymentFormData, value: string) => void;
-  handleToggleChange: (value: boolean) => void;
-  handleProceed: () => void;
+  handleProceed: (values: any) => void;
+  isLoading: boolean;
+  buttonTitle?: string;
 }
 
-export const PaymentForm: React.FC<PaymentFormProps> = ({
-  formData,
-  handleInputChange,
-  handleToggleChange,
+export default function PaymentForm({
   handleProceed,
-}) => {
+  isLoading,
+  buttonTitle = 'Make a payment',
+}: PaymentFormProps) {
   return (
     <KeyboardAwareScrollView
       contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
       showsVerticalScrollIndicator={false}
       className="flex-1 bg-offWhite"
     >
-      <View className="px-6 flex-1 py-6 flex flex-col gap-4">
-        <View className="flex flex-col gap-2">
-          <InputField
-            iconSource={require('@/assets/icons/my-address/user.svg')}
-            placeholder="Name on Card"
-            value={formData.name}
-            onChangeText={(text) => handleInputChange('name', text)}
-            backgroundColor="bg-white"
-          />
-          <InputField
-            iconSource={require('@/assets/icons/my-address/credit-card.svg')}
-            placeholder="Card Number"
-            value={formData.cardNumber}
-            onChangeText={(text) => handleInputChange('cardNumber', text)}
-            backgroundColor="bg-white"
-            maxLength={19}
-            keyboardType="numeric"
-          />
-          <View className="flex flex-row gap-2">
-            <View className="flex-1">
+      <Formik
+        initialValues={{
+          name: 'John Doe',
+          cardNumber: formatCardNumber('5555555555554444'),
+          expiry: '12/26',
+          cvv: '123',
+          isDefault: true,
+        }}
+        validationSchema={paymentSchema}
+        onSubmit={(values) =>
+          handleProceed({
+            ...values,
+            cardNumber: values.cardNumber.replace(/\s/g, ''),
+          })
+        }
+      >
+        {({
+          handleChange,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          setFieldValue,
+        }) => (
+          <View className="px-6 py-6 flex flex-col gap-4 flex-1">
+            <View className="flex flex-col gap-2">
               <InputField
-                iconSource={require('@/assets/icons/my-address/calendar.svg')}
-                placeholder="MM/YY"
-                value={formData.expiry}
-                onChangeText={(text) => handleInputChange('expiry', text)}
+                iconSource={require('@/assets/icons/my-address/user.svg')}
+                placeholder="Name on Card"
+                value={values.name}
+                onChangeText={handleChange('name')}
                 backgroundColor="bg-white"
-                maxLength={5}
-                keyboardType="numeric"
+                autoCapitalize="words"
               />
-            </View>
-            <View className="flex-1">
+              {touched.name && errors.name && (
+                <Text className="text-destructive text-[12px] font-poppinsRegular">
+                  {errors.name}
+                </Text>
+              )}
               <InputField
-                iconSource={require('@/assets/icons/lock.svg')}
-                placeholder="CVV"
-                value={formData.cvv}
-                onChangeText={(text) => handleInputChange('cvv', text)}
+                iconSource={require('@/assets/icons/my-address/credit-card.svg')}
+                placeholder="Card Number"
+                value={values.cardNumber}
+                onChangeText={(text) => {
+                  const digits = text.replace(/\D/g, '').slice(0, 16);
+                  const formatted = formatCardNumber(digits);
+                  setFieldValue('cardNumber', formatted);
+                }}
                 backgroundColor="bg-white"
+                maxLength={19}
                 keyboardType="numeric"
-                maxLength={4}
-                secureTextEntry
+                autoCapitalize="none"
+              />
+              {touched.cardNumber && errors.cardNumber && (
+                <Text className="text-destructive text-[12px] font-poppinsRegular">
+                  {errors.cardNumber}
+                </Text>
+              )}
+              <View className="flex flex-row gap-2">
+                <View className="flex-1">
+                  <InputField
+                    iconSource={require('@/assets/icons/my-address/calendar.svg')}
+                    placeholder="MM/YY"
+                    value={values.expiry}
+                    onChangeText={(text) => {
+                      const digits = text.replace(/\D/g, '').slice(0, 4);
+                      const formatted = formatExpiry(digits);
+                      setFieldValue('expiry', formatted);
+                    }}
+                    backgroundColor="bg-white"
+                    maxLength={5}
+                    keyboardType="numeric"
+                    autoCapitalize="none"
+                  />
+                  {touched.expiry && errors.expiry && (
+                    <Text className="text-destructive text-[12px] font-poppinsRegular">
+                      {errors.expiry}
+                    </Text>
+                  )}
+                </View>
+                <View className="flex-1">
+                  <InputField
+                    iconSource={require('@/assets/icons/lock.svg')}
+                    placeholder="CVV"
+                    value={values.cvv}
+                    onChangeText={(text) => {
+                      const digits = text.replace(/\D/g, '').slice(0, 4);
+                      setFieldValue('cvv', digits);
+                    }}
+                    backgroundColor="bg-white"
+                    maxLength={4}
+                    keyboardType="numeric"
+                    autoCapitalize="none"
+                    secureTextEntry
+                  />
+                  {touched.cvv && errors.cvv && (
+                    <Text className="text-destructive text-[12px] font-poppinsRegular">
+                      {errors.cvv}
+                    </Text>
+                  )}
+                </View>
+              </View>
+            </View>
+
+            <View className="flex flex-row items-center gap-2">
+              <CustomToggle
+                onValueChange={(value) => setFieldValue('isDefault', value)}
+                value={values.isDefault}
+              />
+              <Text className="font-poppinsMedium text-[12px]">
+                Save this card
+              </Text>
+            </View>
+
+            <View className="flex-1" />
+
+            <View className="pb-6 bg-offWhite">
+              <PrimaryBtn
+                title={buttonTitle}
+                onPress={() => handleSubmit()}
+                isLoading={isLoading}
+                loadingText={`Processing ${buttonTitle.toLowerCase()}...`}
+                disabled={isLoading}
               />
             </View>
           </View>
-        </View>
-
-        <View className="flex flex-row items-center gap-2">
-          <CustomToggle
-            onValueChange={handleToggleChange}
-            value={formData.isDefault || false}
-          />
-          <Text className="font-poppinsMedium text-[12px]">Save this card</Text>
-        </View>
-      </View>
-
-      <View className="px-6 pb-6 bg-offWhite mt-auto">
-        <PrimaryBtn title="Make a payment" onPress={handleProceed} />
-      </View>
+        )}
+      </Formik>
     </KeyboardAwareScrollView>
   );
-};
+}

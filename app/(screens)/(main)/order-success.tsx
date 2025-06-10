@@ -31,7 +31,7 @@ export default function OrderSuccess() {
         <View>
           <PrimaryBtn
             title="Track order"
-            onPress={() => console.log('Track order')}
+            onPress={() => router.push('/(screens)/(main)/my-orders')}
           />
         </View>
       </View>

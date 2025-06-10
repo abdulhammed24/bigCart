@@ -3,32 +3,26 @@ import { View, Text, Pressable } from 'react-native';
 import { InputField } from '@/components/InputField';
 import CustomToggle from '@/components/CustomToggle';
 import { Image } from 'expo-image';
+import { Formik } from 'formik';
+import { paymentSchema } from '@/lib/validationSchemas';
+import { formatCardNumber, formatExpiry } from '@/utils/paymentUtils';
+import Toast from 'react-native-toast-message';
 
-// Define the Card interface
 interface Card {
+  id: string;
   name: string;
   cardNumber: string;
   expiry: string;
   cvv: string;
-  isDefault?: boolean;
+  isDefault: boolean;
 }
 
-// Define the FormData interface for the form
-interface FormData {
-  name: string;
-  cardNumber: string;
-  expiry: string;
-  cvv: string;
-}
-
-// Props for the CreditCard component
-interface CardCardProps {
+interface CreditCardProps {
   card: Card;
-  onSave: (updatedCard: Card) => void; // Callback to save updated card
-  onMakeDefault?: () => void; // Optional callback to set as default
+  onSave: (updatedCard: Partial<Card>) => Promise<void>;
+  onMakeDefault: () => Promise<void>;
 }
 
-// Helper function to detect card brand based on card number
 const getCardBrandIcon = (cardNumber: string) => {
   const cleanedNumber = cardNumber.replace(/\s/g, '');
   if (/^4/.test(cleanedNumber)) {
@@ -42,58 +36,19 @@ const getCardBrandIcon = (cardNumber: string) => {
   }
 };
 
-const CreditCard: React.FC<CardCardProps> = ({
+const CreditCard: React.FC<CreditCardProps> = ({
   card,
   onSave,
   onMakeDefault,
 }) => {
-  // State for form data, initialized with the provided card
-  const [formData, setFormData] = useState<FormData>({
-    name: card.name,
-    cardNumber: card.cardNumber,
-    expiry: card.expiry,
-    cvv: card.cvv,
-  });
-
-  // State to track whether the form is expanded or collapsed
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Type-safe handler for input changes
-  const handleInputChange = (field: keyof FormData, value: string) => {
-    // Format card number with spaces (e.g., 1234 5678 9012 3456)
-    if (field === 'cardNumber') {
-      const cleaned = value.replace(/\D/g, '');
-      value = cleaned.replace(/(.{4})/g, '$1 ').trim();
-    }
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  // Toggle the expanded/collapsed state
   const toggleExpand = () => {
     setIsExpanded((prev) => !prev);
   };
 
-  // Handle saving the updated card
-  const handleSave = () => {
-    // Basic validation
-    const cleanedCardNumber = formData.cardNumber.replace(/\s/g, '');
-    if (!/^\d{15,16}$/.test(cleanedCardNumber)) {
-      alert('Invalid card number');
-      return;
-    }
-    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiry)) {
-      alert('Invalid expiry date');
-      return;
-    }
-    if (!/^\d{3,4}$/.test(formData.cvv)) {
-      alert('Invalid CVV');
-      return;
-    }
-    onSave({ ...formData, isDefault: card.isDefault });
-  };
-
-  // Format card number for display (e.g., **** **** **** 1234)
-  const formatCardNumber = (number: string) => {
+  const formatDisplayCardNumber = (number: string) => {
     const cleaned = number.replace(/\s/g, '');
     if (cleaned.length <= 4) return cleaned;
     return `**** **** **** ${cleaned.slice(-4)}`;
@@ -101,7 +56,6 @@ const CreditCard: React.FC<CardCardProps> = ({
 
   return (
     <View className="bg-white gap-5 p-6 rounded-lg shadow-sm">
-      {/* Default Label */}
       {card.isDefault && (
         <View className="absolute top-0 left-0 px-2 z-10 py-[2px] rounded-sm bg-[#EBFFD7]">
           <Text className="text-xs font-poppinsMedium text-primary">
@@ -110,7 +64,6 @@ const CreditCard: React.FC<CardCardProps> = ({
         </View>
       )}
 
-      {/* Card Summary (Always Visible) */}
       <Pressable
         onPress={toggleExpand}
         accessibilityLabel={isExpanded ? 'Collapse form' : 'Expand form'}
@@ -129,14 +82,13 @@ const CreditCard: React.FC<CardCardProps> = ({
         <View className="flex-[0.75] px-4 space-y-2">
           <Text className="font-poppinsBold text-[16px]">{card.name}</Text>
           <Text className="font-poppinsRegular text-[12px] text-gray">
-            {formatCardNumber(card.cardNumber)}
+            {formatDisplayCardNumber(card.cardNumber)}
           </Text>
           <Text className="font-poppinsBold text-[12px]">
-            Expires {formData.expiry}
+            Expires {card.expiry}
           </Text>
         </View>
 
-        {/* Collapse/Expand Toggle */}
         <View className="flex-[0.05] items-center">
           <Image
             source={require('@/assets/icons/my-address/collapse.svg')}
@@ -150,70 +102,150 @@ const CreditCard: React.FC<CardCardProps> = ({
         </View>
       </Pressable>
 
-      {/* Conditionally Render Form Fields */}
       {isExpanded && (
-        <>
-          <View className="h-[1px] w-full bg-[#EBEBEB]" />
+        <Formik
+          initialValues={{
+            name: card.name,
+            cardNumber: formatCardNumber(card.cardNumber),
+            expiry: card.expiry,
+            cvv: card.cvv,
+          }}
+          validationSchema={paymentSchema}
+          onSubmit={async (values) => {
+            setIsLoading(true);
+            try {
+              await onSave({
+                ...values,
+                cardNumber: values.cardNumber.replace(/\s/g, ''),
+                isDefault: card.isDefault,
+              });
+              setIsExpanded(false);
+            } catch (err) {
+              Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Failed to update card. Please try again.',
+              });
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+        >
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            setFieldValue,
+          }) => (
+            <>
+              <View className="h-[1px] w-full bg-[#EBEBEB]" />
 
-          <View className="flex flex-col gap-2">
-            {/* Cardholder Name */}
-            <InputField
-              iconSource={require('@/assets/icons/my-address/user.svg')}
-              placeholder="Name on Card"
-              value={formData.name}
-              onChangeText={(text) => handleInputChange('name', text)}
-              accessibilityLabel="Cardholder name"
-            />
-
-            {/* Card Number */}
-            <InputField
-              iconSource={getCardBrandIcon(formData.cardNumber)}
-              placeholder="Card Number"
-              value={formData.cardNumber}
-              onChangeText={(text) => handleInputChange('cardNumber', text)}
-              keyboardType="numeric"
-              maxLength={19}
-              accessibilityLabel="Card number"
-            />
-
-            {/* Expiry and CVV (Row) */}
-            <View className="flex flex-row gap-2 items-center">
-              <View className="flex-[0.5]">
+              <View className="flex flex-col gap-2">
                 <InputField
-                  iconSource={require('@/assets/icons/my-address/calendar.svg')}
-                  placeholder="MM/YY"
-                  value={formData.expiry}
-                  onChangeText={(text) => handleInputChange('expiry', text)}
-                  keyboardType="numeric"
-                  maxLength={5}
-                  accessibilityLabel="Expiry date"
+                  iconSource={require('@/assets/icons/my-address/user.svg')}
+                  placeholder="Name on Card"
+                  value={values.name}
+                  onChangeText={handleChange('name')}
+                  accessibilityLabel="Cardholder name"
+                  backgroundColor="bg-offWhite"
+                  autoCapitalize="words"
                 />
-              </View>
-              <View className="flex-[0.5]">
+                {touched.name && errors.name && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.name}
+                  </Text>
+                )}
                 <InputField
-                  iconSource={require('@/assets/icons/lock.svg')}
-                  placeholder="CVV"
-                  value={formData.cvv}
-                  onChangeText={(text) => handleInputChange('cvv', text)}
+                  iconSource={getCardBrandIcon(values.cardNumber)}
+                  placeholder="Card Number"
+                  value={values.cardNumber}
+                  onChangeText={(text) => {
+                    const digits = text.replace(/\D/g, '').slice(0, 16);
+                    const formatted = formatCardNumber(digits);
+                    setFieldValue('cardNumber', formatted);
+                  }}
                   keyboardType="numeric"
-                  maxLength={4}
-                  secureTextEntry
-                  accessibilityLabel="CVV"
+                  maxLength={19}
+                  accessibilityLabel="Card number"
+                  backgroundColor="bg-offWhite"
                 />
+                {touched.cardNumber && errors.cardNumber && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.cardNumber}
+                  </Text>
+                )}
+                <View className="flex flex-row gap-2 items-center">
+                  <View className="flex-[0.5]">
+                    <InputField
+                      iconSource={require('@/assets/icons/my-address/calendar.svg')}
+                      placeholder="MM/YY"
+                      value={values.expiry}
+                      onChangeText={(text) => {
+                        const digits = text.replace(/\D/g, '').slice(0, 4);
+                        const formatted = formatExpiry(digits);
+                        setFieldValue('expiry', formatted);
+                      }}
+                      keyboardType="numeric"
+                      maxLength={5}
+                      accessibilityLabel="Expiry date"
+                      backgroundColor="bg-offWhite"
+                    />
+                    {touched.expiry && errors.expiry && (
+                      <Text className="text-destructive text-[12px] font-poppinsRegular">
+                        {errors.expiry}
+                      </Text>
+                    )}
+                  </View>
+                  <View className="flex-[0.5]">
+                    <InputField
+                      iconSource={require('@/assets/icons/lock.svg')}
+                      placeholder="CVV"
+                      value={values.cvv}
+                      onChangeText={(text) => {
+                        const digits = text.replace(/\D/g, '').slice(0, 4);
+                        setFieldValue('cvv', digits);
+                      }}
+                      keyboardType="numeric"
+                      maxLength={4}
+                      secureTextEntry
+                      accessibilityLabel="CVV"
+                      backgroundColor="bg-offWhite"
+                    />
+                    {touched.cvv && errors.cvv && (
+                      <Text className="text-destructive text-[12px] font-poppinsRegular">
+                        {errors.cvv}
+                      </Text>
+                    )}
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
 
-          <View className="flex flex-row gap-2 items-center">
-            <CustomToggle
-              onValueChange={onMakeDefault}
-              value={card.isDefault || false}
-            />
-            <Text className="font-poppinsMedium text   text-[12px]">
-              Make default
-            </Text>
-          </View>
-        </>
+              <View className="flex flex-row gap-2 items-center">
+                <CustomToggle
+                  onValueChange={onMakeDefault}
+                  value={card.isDefault || false}
+                />
+                <Text className="font-poppinsMedium text-[12px]">
+                  Make default
+                </Text>
+              </View>
+
+              <Pressable
+                onPress={() => handleSubmit()}
+                className={`bg-primary p-2 rounded-lg mt-2 ${
+                  isLoading ? 'opacity-50' : ''
+                }`}
+                disabled={isLoading}
+              >
+                <Text className="text-white text-center font-poppinsMedium">
+                  {isLoading ? 'Saving...' : 'Save'}
+                </Text>
+              </Pressable>
+            </>
+          )}
+        </Formik>
       )}
     </View>
   );

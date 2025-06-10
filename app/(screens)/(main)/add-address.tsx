@@ -1,71 +1,42 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import React, { useState } from 'react';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
 import { InputField } from '@/components/InputField';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
 import CustomToggle from '@/components/CustomToggle';
 import { Header } from '@/components/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { StatusBar } from 'react-native';
-
-interface Address {
-  name: string;
-  email: string;
-  address: string;
-  city: string;
-  zipCode: string;
-  country: string;
-  phone: string;
-  isDefault?: boolean;
-}
+import { Formik } from 'formik';
+import { addressSchema } from '@/lib/validationSchemas';
+import { useAddressStore } from '@/store/addressStore';
+import Toast from 'react-native-toast-message';
 
 export default function AddAddress() {
   const router = useRouter();
-  const params = useLocalSearchParams();
+  const { addAddress } = useAddressStore();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Form state for the new address
-  const [formData, setFormData] = useState<Address>({
-    name: '',
-    email: '',
-    address: '',
-    city: '',
-    zipCode: '',
-    country: '',
-    phone: '',
-    isDefault: false,
-  });
-
-  // Handle input changes
-  const handleInputChange = (key: keyof Address, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  };
-
-  // Handle toggle for setting default address
-  const handleToggleChange = (value: boolean) => {
-    setFormData((prev) => ({ ...prev, isDefault: value }));
-  };
-
-  // Handle saving the address
-  const handleSave = () => {
-    // Validate form data
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.address ||
-      !formData.city ||
-      !formData.zipCode ||
-      !formData.country ||
-      !formData.phone
-    ) {
-      alert('Please fill in all fields');
-      return;
+  const handleSubmit = async (values: any) => {
+    setIsLoading(true);
+    try {
+      await addAddress(values);
+      Toast.show({
+        type: 'success',
+        text1: 'Address Added',
+        text2: 'Your address has been successfully saved.',
+      });
+      router.back();
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to add address. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
     }
-
-    // Navigate back and pass the new address
-    router.back();
-    router.setParams({ newAddress: JSON.stringify(formData) });
   };
 
   return (
@@ -77,77 +48,150 @@ export default function AddAddress() {
         showsVerticalScrollIndicator={false}
         className="flex-1 bg-offWhite"
       >
-        <View className="px-6 flex-1 py-6 flex flex-col gap-4">
-          <View className="flex flex-col gap-2">
-            <InputField
-              iconSource={require('@/assets/icons/my-address/user.svg')}
-              placeholder="Name"
-              value={formData.name}
-              onChangeText={(text) => handleInputChange('name', text)}
-              backgroundColor="bg-white"
-            />
-            <InputField
-              iconSource={require('@/assets/icons/mail.svg')}
-              placeholder="Email Address"
-              value={formData.email}
-              onChangeText={(text) => handleInputChange('email', text)}
-              backgroundColor="bg-white"
-              keyboardType="email-address"
-            />
-            <InputField
-              iconSource={require('@/assets/icons/my-address/telephone.svg')}
-              placeholder="Phone Number"
-              value={formData.phone}
-              onChangeText={(text) => handleInputChange('phone', text)}
-              backgroundColor="bg-white"
-              keyboardType="phone-pad"
-            />
-            <InputField
-              iconSource={require('@/assets/icons/my-address/address.svg')}
-              placeholder="Address"
-              value={formData.address}
-              onChangeText={(text) => handleInputChange('address', text)}
-              backgroundColor="bg-white"
-            />
-            <InputField
-              iconSource={require('@/assets/icons/my-address/zip.svg')}
-              placeholder="Zip Code"
-              value={formData.zipCode}
-              onChangeText={(text) => handleInputChange('zipCode', text)}
-              backgroundColor="bg-white"
-              keyboardType="numeric"
-            />
-            <InputField
-              iconSource={require('@/assets/icons/my-address/city.svg')}
-              placeholder="City"
-              value={formData.city}
-              onChangeText={(text) => handleInputChange('city', text)}
-              backgroundColor="bg-white"
-            />
-            <InputField
-              iconSource={require('@/assets/icons/my-address/globe.svg')}
-              placeholder="Country"
-              value={formData.country}
-              onChangeText={(text) => handleInputChange('country', text)}
-              backgroundColor="bg-white"
-            />
-          </View>
+        <Formik
+          initialValues={{
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            address: '123 Main Street',
+            city: 'Boston',
+            zipCode: '02108',
+            country: 'USA',
+            phone: '+1234567890',
+            isDefault: true,
+          }}
+          validationSchema={addressSchema}
+          onSubmit={handleSubmit}
+        >
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            setFieldValue,
+          }) => (
+            <View className="px-6 py-6 flex flex-col gap-4 flex-1">
+              <View className="flex flex-col gap-2">
+                <InputField
+                  iconSource={require('@/assets/icons/my-address/user.svg')}
+                  placeholder="Name"
+                  value={values.name}
+                  onChangeText={handleChange('name')}
+                  backgroundColor="bg-white"
+                  autoCapitalize="words"
+                />
+                {touched.name && errors.name && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.name}
+                  </Text>
+                )}
+                <InputField
+                  iconSource={require('@/assets/icons/mail.svg')}
+                  placeholder="Email Address"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  backgroundColor="bg-white"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                {touched.email && errors.email && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.email}
+                  </Text>
+                )}
+                <InputField
+                  iconSource={require('@/assets/icons/my-address/telephone.svg')}
+                  placeholder="Phone Number"
+                  value={values.phone}
+                  onChangeText={handleChange('phone')}
+                  backgroundColor="bg-white"
+                  keyboardType="phone-pad"
+                  autoCapitalize="none"
+                />
+                {touched.phone && errors.phone && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.phone}
+                  </Text>
+                )}
+                <InputField
+                  iconSource={require('@/assets/icons/my-address/address.svg')}
+                  placeholder="Address"
+                  value={values.address}
+                  onChangeText={handleChange('address')}
+                  backgroundColor="bg-white"
+                  autoCapitalize="words"
+                />
+                {touched.address && errors.address && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.address}
+                  </Text>
+                )}
+                <InputField
+                  iconSource={require('@/assets/icons/my-address/zip.svg')}
+                  placeholder="Zip Code"
+                  value={values.zipCode}
+                  onChangeText={handleChange('zipCode')}
+                  backgroundColor="bg-white"
+                  keyboardType="numeric"
+                  autoCapitalize="none"
+                />
+                {touched.zipCode && errors.zipCode && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.zipCode}
+                  </Text>
+                )}
+                <InputField
+                  iconSource={require('@/assets/icons/my-address/city.svg')}
+                  placeholder="City"
+                  value={values.city}
+                  onChangeText={handleChange('city')}
+                  backgroundColor="bg-white"
+                  autoCapitalize="words"
+                />
+                {touched.city && errors.city && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.city}
+                  </Text>
+                )}
+                <InputField
+                  iconSource={require('@/assets/icons/my-address/globe.svg')}
+                  placeholder="Country"
+                  value={values.country}
+                  onChangeText={handleChange('country')}
+                  backgroundColor="bg-white"
+                  autoCapitalize="words"
+                />
+                {touched.country && errors.country && (
+                  <Text className="text-destructive text-[12px] font-poppinsRegular">
+                    {errors.country}
+                  </Text>
+                )}
+              </View>
 
-          <View className="flex flex-row items-center gap-2">
-            <CustomToggle
-              onValueChange={handleToggleChange}
-              value={formData.isDefault || false}
-            />
-            <Text className="font-poppinsMedium text-[12px]">
-              Set as default address
-            </Text>
-          </View>
-        </View>
+              <View className="flex flex-row items-center gap-2">
+                <CustomToggle
+                  onValueChange={(value) => setFieldValue('isDefault', value)}
+                  value={values.isDefault}
+                />
+                <Text className="font-poppinsMedium text-[12px]">
+                  Set as default address
+                </Text>
+              </View>
 
-        {/*  */}
-        <View className="px-6 pb-6 bg-offWhite mt-auto">
-          <PrimaryBtn title="Add address" onPress={handleSave} />
-        </View>
+              <View className="flex-1" />
+
+              <View className="pb-6 bg-offWhite">
+                <PrimaryBtn
+                  title="Add address"
+                  onPress={() => handleSubmit()}
+                  isLoading={isLoading}
+                  loadingText="Adding address..."
+                  disabled={isLoading}
+                />
+              </View>
+            </View>
+          )}
+        </Formik>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );

@@ -5,13 +5,11 @@ import { useRouter } from 'expo-router';
 
 interface CartSummaryProps {
   subtotal: number;
-  shipping: number;
   total: number;
 }
 
 export const CartSummary: React.FC<CartSummaryProps> = ({
   subtotal,
-  shipping,
   total,
 }) => {
   const router = useRouter();
@@ -26,14 +24,6 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
             </Text>
             <Text className="text-gray font-poppinsRegular text-[12px]">
               ${subtotal.toFixed(2)}
-            </Text>
-          </View>
-          <View className="flex flex-row justify-between items-center">
-            <Text className="text-gray font-poppinsRegular text-[12px]">
-              Shipping Charges
-            </Text>
-            <Text className="text-gray font-poppinsRegular text-[12px]">
-              ${shipping.toFixed(2)}
             </Text>
           </View>
         </View>

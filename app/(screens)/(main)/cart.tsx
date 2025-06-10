@@ -81,13 +81,12 @@ export default function Cart() {
     })
     .filter((item): item is CartItemDisplay => item !== null);
 
-  // Calculate totals
+  // Calculate subtotal (no shipping fee)
   const subtotal: number = displayItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
-  const shipping: number = 5.0;
-  const total: number = subtotal + shipping;
+  const total: number = subtotal;
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
@@ -138,7 +137,7 @@ export default function Cart() {
             style={{ backgroundColor: '#F5F5F5' }}
             ItemSeparatorComponent={() => <View className="h-3" />}
           />
-          <CartSummary subtotal={subtotal} shipping={shipping} total={total} />
+          <CartSummary subtotal={subtotal} total={total} />
         </>
       )}
     </SafeAreaView>
