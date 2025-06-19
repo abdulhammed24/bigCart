@@ -42,7 +42,6 @@ export default function Favorites() {
   const { handleAddToCart } = useCartToggle();
   const { handleFavoriteToggle } = useFavoriteToggle();
 
-  // Fetch favorites and products on mount
   useEffect(() => {
     fetchFavorites();
     if (products.length === 0) {
@@ -50,7 +49,6 @@ export default function Favorites() {
     }
   }, [fetchFavorites, fetchProducts, products.length]);
 
-  // Map favorites to product details
   const displayItems: FavoriteItemDisplay[] = favorites
     .map((productId) => {
       const product = products.find((p) => p.$id === productId);
