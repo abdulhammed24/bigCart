@@ -57,7 +57,7 @@ export default function ShippingAddress() {
       <ProgressSteps currentStep="Address" />
 
       <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 0 }}
         showsVerticalScrollIndicator={false}
         className="flex-1 bg-offWhite"
       >

@@ -1,5 +1,5 @@
-import { View, Text, Pressable, Animated, StatusBar } from 'react-native';
-import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PrimaryBtn } from '@/components/PrimaryBtn';
@@ -8,8 +8,8 @@ import { ProgressSteps } from '@/components/ProgressSteps';
 import { useRouter } from 'expo-router';
 import { useCartStore } from '@/store/cartStore';
 import { useProductStore } from '@/store/featuredProductsStore';
+import { TouchableRipple } from 'react-native-paper';
 
-// ShippingOption Component
 interface ShippingOptionProps {
   title: string;
   description: string;
@@ -25,59 +25,34 @@ const ShippingOption: React.FC<ShippingOptionProps> = ({
   price,
   isSelected,
   onSelect,
-}) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 0.95,
-      friction: 6,
-      tension: 40,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      friction: 6,
-      tension: 40,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  return (
-    <Pressable
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      onPress={onSelect}
-    >
-      <Animated.View
-        style={{ transform: [{ scale: scaleAnim }] }}
-        className="flex flex-row gap-5 p-6 justify-between items-center bg-white"
-      >
-        <View className="flex gap-2 flex-[0.9]">
-          <View className="flex flex-row items-center gap-2">
-            <Text className="text-black font-poppinsBold text-[16px]">
-              {title}
-            </Text>
-            {isSelected && (
-              <Ionicons name="checkmark-circle" size={20} color="#6CC51D" />
-            )}
-          </View>
-          <Text className="text-gray font-poppinsRegular text-[12px]">
-            {description}
+}) => (
+  <TouchableRipple
+    onPress={onSelect}
+    rippleColor="rgba(0, 0, 0, 0.1)"
+    borderless={true}
+  >
+    <View className="flex flex-row gap-5 p-6 justify-between items-center bg-white">
+      <View className="flex gap-2 flex-[0.9]">
+        <View className="flex flex-row items-center gap-2">
+          <Text className="text-black font-poppinsBold text-[16px]">
+            {title}
           </Text>
+          {isSelected && (
+            <Ionicons name="checkmark-circle" size={20} color="#6CC51D" />
+          )}
         </View>
-        <View className="flex-[0.1]">
-          <Text className="text-primary font-poppinsBold text-[16px]">
-            {price}
-          </Text>
-        </View>
-      </Animated.View>
-    </Pressable>
-  );
-};
+        <Text className="text-gray font-poppinsRegular text-[12px]">
+          {description}
+        </Text>
+      </View>
+      <View className="flex-[0.1]">
+        <Text className="text-primary font-poppinsBold text-[16px]">
+          {price}
+        </Text>
+      </View>
+    </View>
+  </TouchableRipple>
+);
 
 // Main ShippingMethod Component
 export default function ShippingMethod() {
@@ -98,7 +73,7 @@ export default function ShippingMethod() {
   } = useProductStore();
   const [dataFetched, setDataFetched] = useState(false);
 
-  // Shipping options
+  // Static shipping options
   const shippingOptions = [
     {
       title: 'Standard Delivery',
@@ -187,27 +162,19 @@ export default function ShippingMethod() {
 
       {/* Shipping Options */}
       <View className="flex-1 px-6 bg-offWhite py-6">
-        {cartLoading || productsLoading ? (
-          <Text className="text-center text-gray">Loading...</Text>
-        ) : cartError ? (
-          <Text className="text-center text-red-500">{cartError}</Text>
-        ) : productsError ? (
-          <Text className="text-center text-red-500">{productsError}</Text>
-        ) : (
-          <View className="flex flex-col gap-5">
-            {shippingOptions.map((option) => (
-              <ShippingOption
-                key={option.title}
-                title={option.title}
-                description={option.description}
-                price={option.price}
-                priceValue={option.priceValue}
-                isSelected={selectedOption === option.title}
-                onSelect={() => setSelectedOption(option.title)}
-              />
-            ))}
-          </View>
-        )}
+        <View className="flex flex-col gap-5">
+          {shippingOptions.map((option) => (
+            <ShippingOption
+              key={option.title}
+              title={option.title}
+              description={option.description}
+              price={option.price}
+              priceValue={option.priceValue}
+              isSelected={selectedOption === option.title}
+              onSelect={() => setSelectedOption(option.title)}
+            />
+          ))}
+        </View>
       </View>
 
       {/* Cart Summary */}

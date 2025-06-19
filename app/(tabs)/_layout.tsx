@@ -121,7 +121,7 @@ export default function TabLayout() {
                     }}
                   >
                     <Text style={{ color: 'white', fontSize: 10 }}>
-                      {cartQuantity > 10 ? '9+' : cartQuantity}
+                      {cartQuantity > 9 ? '9+' : cartQuantity}
                     </Text>
                   </View>
                 </Pressable>

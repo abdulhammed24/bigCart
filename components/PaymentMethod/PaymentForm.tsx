@@ -21,7 +21,7 @@ export default function PaymentForm({
 }: PaymentFormProps) {
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 0 }}
       showsVerticalScrollIndicator={false}
       className="flex-1 bg-offWhite"
     >
@@ -141,7 +141,7 @@ export default function PaymentForm({
 
             <View className="flex-1" />
 
-            <View className="pb-6 bg-offWhite">
+            <View className="mt-auto bg-offWhite">
               <PrimaryBtn
                 title={buttonTitle}
                 onPress={() => handleSubmit()}
