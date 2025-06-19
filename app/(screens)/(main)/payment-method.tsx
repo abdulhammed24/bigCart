@@ -12,6 +12,7 @@ import { useProductStore } from '@/store/featuredProductsStore';
 import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import { useOrderStore } from '@/store/useOrderStore';
+import { useCardStore } from '@/store/cardStore';
 
 export default function PaymentMethod() {
   const router = useRouter();
@@ -20,25 +21,24 @@ export default function PaymentMethod() {
   const { addOrder } = useOrderStore();
   const { cartItems, clearCart } = useCartStore();
   const { products, fetchProducts } = useProductStore();
+  const { cards, fetchCards } = useCardStore();
 
   useEffect(() => {
-    if (!products.length) {
-      fetchProducts();
-    }
-  }, [fetchProducts, products.length]);
+    if (!products.length) fetchProducts();
+    if (!cards.length) fetchCards();
+  }, [fetchProducts, products.length, fetchCards, cards.length]);
 
   const handleProceed = async (values: any) => {
     setIsLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const now = toZonedTime(new Date(), 'America/New_York');
+      const now = toZonedTime(new Date(), 'Africa/Lagos');
       const orderNumber = `ORD-${Date.now()}`;
       const placedOn = format(now, "MMMM d, yyyy 'at' hh:mm a z");
       const itemsCount =
         cartItems.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
-      // Use total from params as amount, with fallback to calculated value
       const totalFromParams = Number(params.total) || 0;
       const displayItems = cartItems
         .map((cartItem) => {
@@ -68,22 +68,30 @@ export default function PaymentMethod() {
         subtotalFromParams + shippingFromParams ||
         subtotalFromCart + shippingFromParams ||
         0;
+      if (amount === 0) {
+        console.warn(
+          'Amount is 0, falling back to cart subtotal or defaulting:',
+          {
+            totalFromParams,
+            subtotalFromParams,
+            shippingFromParams,
+            subtotalFromCart,
+          },
+        );
+      }
 
-      const currentDate = format(now, 'MMM d yyyy');
-      const trackingSteps = [
-        { label: 'Order placed', date: currentDate, done: true },
-        { label: 'Order confirmed', date: '', done: false },
-        { label: 'Order shipped', date: 'pending', done: false },
-        { label: 'Out for delivery', date: 'pending', done: false },
-        { label: 'Order delivered', date: 'pending', done: false },
-      ];
+      const cardNumber = values.cardNumber;
+
+      const paymentMethod = getCardBrandFromCardNumber(cardNumber);
+      const cardName = values.name;
 
       await addOrder({
         orderNumber,
         placedOn,
         items: itemsCount,
         amount,
-        tracking: trackingSteps,
+        paymentMethod,
+        cardName,
       });
 
       await clearCart();
@@ -97,7 +105,7 @@ export default function PaymentMethod() {
       router.replace({
         pathname: '/(screens)/(main)/order-success',
         params: {
-          paymentMethod: 'Credit Card',
+          paymentMethod,
           paymentDetails: JSON.stringify(values),
           address: params.newAddress,
         },
@@ -110,6 +118,18 @@ export default function PaymentMethod() {
       });
       setIsLoading(false);
     }
+  };
+
+  const getCardBrandFromCardNumber = (
+    cardNumber: string,
+  ): 'mastercard' | 'paypal' | 'visa' => {
+    const cleanedNumber = cardNumber.replace(/\s/g, '');
+    console.log('Checking card number:', cleanedNumber);
+    if (cleanedNumber.startsWith('4')) return 'visa';
+    if (cleanedNumber.startsWith('5')) return 'mastercard';
+    if (cleanedNumber.startsWith('3')) return 'paypal';
+    console.warn('Unknown card type, defaulting to mastercard:', cleanedNumber);
+    return 'mastercard';
   };
 
   return (

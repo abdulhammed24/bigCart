@@ -32,7 +32,7 @@ export default function Notifications() {
       <View className="flex-1 px-6 bg-offWhite py-6">
         <View className="flex flex-col gap-5">
           {/* Allow Notifications */}
-          <View className="flex flex-row gap-5 p-6 bg-white">
+          <View className="flex flex-row gap-5 p-6 bg-white rounded-lg">
             <View className="flex gap-2 flex-[0.9]">
               <Text className="text-black font-poppinsBold text-[16px]">
                 Allow Notifications
@@ -51,7 +51,7 @@ export default function Notifications() {
           </View>
 
           {/* Email Notifications */}
-          <View className="flex flex-row gap-5 p-6 bg-white">
+          <View className="flex flex-row gap-5 p-6 bg-white rounded-lg">
             <View className="flex gap-2 flex-[0.9]">
               <Text className="text-black font-poppinsBold text-[16px]">
                 Email Notifications
@@ -70,7 +70,7 @@ export default function Notifications() {
           </View>
 
           {/* Order Notifications */}
-          <View className="flex flex-row gap-5 p-6 bg-white">
+          <View className="flex flex-row gap-5 p-6 bg-white rounded-lg">
             <View className="flex gap-2 flex-[0.9]">
               <Text className="text-black font-poppinsBold text-[16px]">
                 Order Notifications
@@ -88,7 +88,7 @@ export default function Notifications() {
           </View>
 
           {/* General Notifications */}
-          <View className="flex flex-row gap-5 p-6 bg-white">
+          <View className="flex flex-row gap-5 p-6 bg-white rounded-lg">
             <View className="flex gap-2 flex-[0.9]">
               <Text className="text-black font-poppinsBold text-[16px]">
                 General Notifications

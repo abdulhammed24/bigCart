@@ -28,7 +28,7 @@ export default function PaymentForm({
       <Formik
         initialValues={{
           name: 'John Doe',
-          cardNumber: formatCardNumber('5555555555554444'),
+          cardNumber: formatCardNumber('4012888888881881'),
           expiry: '12/26',
           cvv: '123',
           isDefault: true,

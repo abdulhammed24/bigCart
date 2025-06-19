@@ -242,12 +242,11 @@ export default function SingleProductDetails() {
           </View>
 
           <PrimaryBtn
-            title={isInCart(product.$id) ? 'View Cart' : 'Add to Cart'}
+            title="Add to Cart"
             onPress={() => {
               if (!isInCart(product.$id)) {
                 handleAddToCart(product.$id, product.name, localQuantity);
               }
-              router.push('/(screens)/(main)/cart');
             }}
             rightIcon={require('@/assets/icons/cart.svg')}
             style={{ borderRadius: 10 }}

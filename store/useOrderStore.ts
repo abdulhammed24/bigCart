@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Models } from 'react-native-appwrite';
 import { databases, account } from '@/lib/appwriteconfig';
 import { Query } from 'react-native-appwrite';
+import { format, toZonedTime } from 'date-fns-tz';
 
 interface TrackingStep {
   label: string;
@@ -17,7 +18,9 @@ interface OrderDocument extends Models.Document {
   placedOn: string;
   items: number;
   amount: number;
-  tracking: string[];
+  tracking: string;
+  paymentMethod: 'mastercard' | 'paypal' | 'visa';
+  cardName: string;
 }
 
 interface Order {
@@ -27,6 +30,8 @@ interface Order {
   items: number;
   amount: number;
   tracking: TrackingStep[];
+  paymentMethod: 'mastercard' | 'paypal' | 'visa';
+  cardName: string;
 }
 
 interface OrderState {
@@ -34,7 +39,7 @@ interface OrderState {
   loading: boolean;
   error: string | null;
   fetchOrders: () => Promise<void>;
-  addOrder: (order: Omit<Order, 'id'>) => Promise<void>;
+  addOrder: (order: Partial<Omit<Order, 'id'>>) => Promise<void>;
 }
 
 export const useOrderStore = create<OrderState>()(
@@ -55,13 +60,9 @@ export const useOrderStore = create<OrderState>()(
           );
           const orders: Order[] = response.documents
             .map((doc) => {
-              const trackingSteps: TrackingStep[] = doc.tracking.map(
-                (label) => ({
-                  label,
-                  date: '',
-                  done: false,
-                }),
-              );
+              const trackingSteps: TrackingStep[] = doc.tracking
+                ? JSON.parse(doc.tracking)
+                : [];
               return {
                 id: doc.$id,
                 orderNumber: doc.orderNumber,
@@ -69,12 +70,14 @@ export const useOrderStore = create<OrderState>()(
                 items: doc.items,
                 amount: doc.amount || 0,
                 tracking: trackingSteps,
+                paymentMethod: doc.paymentMethod || 'mastercard',
+                cardName: doc.cardName || 'Default Card',
               };
             })
             .reverse();
           set({ orders, loading: false, error: null });
         } catch (error: any) {
-          // console.error('Error fetching orders:', error);
+          console.error('Error fetching orders:', error);
           set({
             error: `Failed to load orders: ${error.message || 'Unknown error'}`,
             loading: false,
@@ -85,15 +88,33 @@ export const useOrderStore = create<OrderState>()(
         try {
           set({ loading: true, error: null });
           const user = await account.get();
+          const now = format(
+            toZonedTime(new Date(), 'Africa/Lagos'),
+            'MMM d yyyy',
+          );
+          const defaultTracking: TrackingStep[] = [
+            { label: 'Order placed', date: now, done: true },
+            { label: 'Order confirmed', date: '', done: false },
+            { label: 'Order shipped', date: '', done: false },
+            { label: 'Out for delivery', date: '', done: false },
+            { label: 'Order delivered', date: '', done: false },
+          ];
           const newOrder = {
             userId: user.$id,
-            orderNumber: order.orderNumber,
-            placedOn: order.placedOn,
-            items: order.items,
-            amount: order.amount,
-            tracking: order.tracking.map((step) => step.label),
+            orderNumber: order.orderNumber || `ORD-${Date.now()}`,
+            placedOn:
+              order.placedOn ||
+              format(
+                toZonedTime(new Date(), 'Africa/Lagos'),
+                "MMMM d, yyyy 'at' hh:mm a z",
+              ),
+            items: order.items || 0,
+            amount: order.amount || 0,
+            tracking: JSON.stringify(defaultTracking),
+            paymentMethod: order.paymentMethod || 'mastercard',
+            cardName: order.cardName || 'Default Card',
           };
-          // console.log('New order being saved:', newOrder);
+          console.log('New order being saved:', newOrder);
           const response = await databases.createDocument<OrderDocument>(
             process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
             process.env.EXPO_PUBLIC_APPWRITE_ORDERS_COLLECTION_ID!,
@@ -102,11 +123,13 @@ export const useOrderStore = create<OrderState>()(
           );
           const addedOrder: Order = {
             id: response.$id,
-            orderNumber: order.orderNumber,
-            placedOn: order.placedOn,
-            items: order.items,
-            amount: order.amount,
-            tracking: order.tracking,
+            orderNumber: newOrder.orderNumber,
+            placedOn: newOrder.placedOn,
+            items: newOrder.items,
+            amount: newOrder.amount,
+            tracking: defaultTracking,
+            paymentMethod: newOrder.paymentMethod,
+            cardName: newOrder.cardName,
           };
           set((state) => ({
             orders: [
@@ -117,7 +140,7 @@ export const useOrderStore = create<OrderState>()(
             error: null,
           }));
         } catch (error: any) {
-          // console.error('Error adding order:', error);
+          console.error('Error adding order:', error);
           set({
             error: `Failed to add order: ${error.message || 'Unknown error'}`,
             loading: false,

@@ -9,6 +9,7 @@ import { Header } from '@/components/Header';
 import { StatusBar } from 'react-native';
 import { useAddressStore } from '@/store/addressStore';
 import Toast from 'react-native-toast-message';
+import { EmptyState } from '@/components/EmptyState';
 
 //
 interface Address {
@@ -112,9 +113,7 @@ export default function MyAddress() {
           </Text>
         )}
         {addresses.length === 0 && !loading && !error ? (
-          <Text className="text-center text-gray-500 text-[14px] font-poppinsRegular">
-            No addresses found. Add a new address.
-          </Text>
+          <EmptyState message="No addresses found. Add a new address." />
         ) : (
           <View className="flex flex-col gap-5">
             {addresses.map((address, index) => (

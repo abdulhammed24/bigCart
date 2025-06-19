@@ -31,7 +31,7 @@ const ShippingOption: React.FC<ShippingOptionProps> = ({
     rippleColor="rgba(0, 0, 0, 0.1)"
     borderless={true}
   >
-    <View className="flex flex-row gap-5 p-6 justify-between items-center bg-white">
+    <View className="flex flex-row gap-5 p-6 justify-between items-center bg-white rounded-lg">
       <View className="flex gap-2 flex-[0.9]">
         <View className="flex flex-row items-center gap-2">
           <Text className="text-black font-poppinsBold text-[16px]">
