@@ -124,7 +124,7 @@ export default function PaymentMethod() {
     cardNumber: string,
   ): 'mastercard' | 'paypal' | 'visa' => {
     const cleanedNumber = cardNumber.replace(/\s/g, '');
-    console.log('Checking card number:', cleanedNumber);
+    // console.log('Checking card number:', cleanedNumber);
     if (cleanedNumber.startsWith('4')) return 'visa';
     if (cleanedNumber.startsWith('5')) return 'mastercard';
     if (cleanedNumber.startsWith('3')) return 'paypal';

@@ -114,7 +114,7 @@ export const useOrderStore = create<OrderState>()(
             paymentMethod: order.paymentMethod || 'mastercard',
             cardName: order.cardName || 'Default Card',
           };
-          console.log('New order being saved:', newOrder);
+          // console.log('New order being saved:', newOrder);
           const response = await databases.createDocument<OrderDocument>(
             process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
             process.env.EXPO_PUBLIC_APPWRITE_ORDERS_COLLECTION_ID!,
