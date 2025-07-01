@@ -5,6 +5,7 @@ import { TouchableRipple } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/authStore';
 import Toast from 'react-native-toast-message';
+import { Ionicons } from '@expo/vector-icons';
 
 interface AccountItem {
   icon: any;
@@ -89,34 +90,30 @@ export default function Account() {
   return (
     <View className="flex-1">
       {/* Header */}
-      <View className="p-6 h-32 bg-white" />
+      <View className="p-6 h-28 bg-white" />
 
       {/* Floating profile card */}
       <View className="absolute top-10 left-0 right-0 items-center z-10">
         {/* Profile Image Wrapper */}
-        <View className="relative">
-          <View className="w-[120px] h-[120px] rounded-full overflow-hidden">
-            <Image
-              source={require('@/assets/images/user-pp.png')}
-              style={{ width: '100%', height: '100%' }}
-              contentFit="contain"
-            />
-          </View>
+        <View className="relative ">
+          <Ionicons name="person-outline" size={120} color={'#6CC51D'} />
 
           {/* Camera Icon Outside and Overlapping */}
-          <View className="bg-deepPrimary size-6 rounded-full justify-center items-center absolute bottom-2 right-2 z-20">
+          {/* <View className="bg-deepPrimary size-6 rounded-full justify-center items-center absolute bottom-2 right-2 z-20">
             <Image
               source={require('@/assets/icons/camera.svg')}
               style={{ width: 13, height: 10 }}
               contentFit="contain"
             />
-          </View>
+          </View> */}
         </View>
 
         {/* Name & Email */}
 
-        <View className="items-center mt-4">
-          <Text className="font-poppinsBold text-[18px]">{user?.name}</Text>
+        <View className="items-center mt-2">
+          <Text className="font-poppinsBold text-black text-[18px]">
+            {user?.name}
+          </Text>
 
           {/* <Text className="font-poppinsBold text-[18px]">Olivia Austin</Text> */}
           <Text className="text-[14px] font-poppinsRegular text-gray">

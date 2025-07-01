@@ -7,10 +7,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useCategoriesStore } from '@/store/categoriesStore';
 import HorizontalCategoriesSkeleton from './HorizontalCategoriesSkeleton';
 import { ErrorState } from '../ErrorState';
+import { useEffect } from 'react';
 
 export default function Categories() {
   const router = useRouter();
   const { categories, loading, error, fetchCategories } = useCategoriesStore();
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const handleCategoryPress = (category: { $id: string; name: string }) => {
     router.push({
