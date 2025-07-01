@@ -99,13 +99,6 @@ export default function Register() {
           >
             <View className="absolute inset-0 bg-black opacity-70" />
             <View className="flex mt-5 flex-row items-center justify-between">
-              <Pressable onPress={() => router.push('/(screens)/(auth)/login')}>
-                <Image
-                  source={require('@/assets/icons/back-arrow.svg')}
-                  style={{ width: 24, height: 24 }}
-                  contentFit="contain"
-                />
-              </Pressable>
               <View className="flex-1 items-center">
                 <Text className="text-[40px] font-poppinsBold text-white">
                   Welcome

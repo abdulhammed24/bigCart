@@ -4,7 +4,7 @@
     "slug": "bigcart",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/bigCart.png",
+    "icon": "./assets/images/icon.svg",
     "scheme": "movies",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,21 +14,22 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/bigCart.png",
+        "foregroundImage": "./assets/images/adaptive-icon.svg",
         "package": "com.big-cart.app"
-      }
+      },
+      "package": "com.bigcart.app"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/bigCart.png"
+      "favicon": "./assets/images/icon.svg"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/bigCart.png",
+          "image": "./assets/images/splash-icon.svg",
           "imageWidth": 200,
           "resizeMode": "contain"
         }

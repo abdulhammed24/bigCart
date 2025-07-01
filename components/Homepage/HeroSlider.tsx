@@ -25,17 +25,17 @@ const slides: Slide[] = [
   {
     id: '2',
     image: require('@/assets/images/homepage/heroBg2.png'),
-    text: 'Explore Slide 2',
+    text: 'Shop New Arrivals\nToday',
   },
   {
     id: '3',
     image: require('@/assets/images/homepage/heroBg3.png'),
-    text: 'Discover Slide 3',
+    text: 'Exclusive Deals\nAwait You',
   },
   {
     id: '4',
     image: require('@/assets/images/homepage/heroBg1.png'),
-    text: 'Enjoy Slide 4',
+    text: 'Join Now for\nSpecial Offers',
   },
 ];
 
@@ -52,7 +52,7 @@ export default function HeroSlider() {
         resizeMode="cover"
       >
         <View className="flex-1 absolute bottom-20 justify-center items-start">
-          <Text className="text-[18px] font-poppinsBold text-center px-4 py-2">
+          <Text className="text-[18px] font-poppinsBold text-left px-4 py-2">
             {item.text}
           </Text>
         </View>

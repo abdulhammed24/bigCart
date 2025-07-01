@@ -116,13 +116,11 @@ export default function Account() {
         {/* Name & Email */}
 
         <View className="items-center mt-4">
-          <Text className="font-poppinsBold text-[18px]">
-            {user?.name || 'User'}
-          </Text>
+          <Text className="font-poppinsBold text-[18px]">{user?.name}</Text>
 
           {/* <Text className="font-poppinsBold text-[18px]">Olivia Austin</Text> */}
           <Text className="text-[14px] font-poppinsRegular text-gray">
-            {user?.email || 'No email'}
+            {user?.email}
           </Text>
         </View>
       </View>

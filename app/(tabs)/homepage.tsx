@@ -21,14 +21,11 @@ export default function Homepage() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      // console.log('Homepage: Starting refresh');
       await Promise.all([refreshCategories(), refreshProducts()]);
-      // console.log('Homepage: Refresh successful');
     } catch (error: any) {
       console.error('Homepage: Refresh error:', error.message || error);
     } finally {
       setRefreshing(false);
-      // console.log('Homepage: Refreshing state reset');
     }
   }, [refreshCategories, refreshProducts]);
 
@@ -40,15 +37,15 @@ export default function Homepage() {
       end={{ x: 0, y: 1 }}
       className="flex-1"
     >
-      <View className="px-6 pt-6">
+      {/* <View className="px-6 pt-6">
         <SearchBar />
-      </View>
+      </View> */}
       <FlatList
         data={data}
         renderItem={() => null}
         keyExtractor={(item, index) => index.toString()}
         ListHeaderComponent={
-          <View className="px-6">
+          <View className="px-6 pt-6">
             <HeroSlider />
             <View className="mb-8">
               <View className="flex-row justify-between items-center mb-2">

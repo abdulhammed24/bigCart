@@ -58,7 +58,7 @@ export default function Welcome() {
         </View>
 
         <View className="mb-6 flex flex-col gap-2">
-          <Pressable
+          {/* <Pressable
             // onPress={() => router.push('/(screens)/onboarding')}
             className="flex w-full bg-white flex-row p-4 rounded-md items-center h-[60px]"
           >
@@ -72,7 +72,7 @@ export default function Welcome() {
                 Continue with Google
               </Text>
             </View>
-          </Pressable>
+          </Pressable> */}
 
           <PrimaryBtn
             title="Create an account"

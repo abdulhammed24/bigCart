@@ -92,15 +92,6 @@ export default function Login() {
           >
             <View className="absolute inset-0 bg-black opacity-70" />
             <View className="flex flex-row mt-5 items-center justify-between">
-              <Pressable
-                onPress={() => router.push('/(screens)/(auth)/welcome')}
-              >
-                <Image
-                  source={require('@/assets/icons/back-arrow.svg')}
-                  style={{ width: 24, height: 24 }}
-                  contentFit="contain"
-                />
-              </Pressable>
               <View className="flex-1 items-center">
                 <Text className="text-[40px] font-poppinsBold text-white">
                   Welcome
@@ -168,7 +159,7 @@ export default function Login() {
                       Remember me
                     </Text>
                   </View>
-                  <Pressable
+                  {/* <Pressable
                     onPress={() =>
                       router.push('/(screens)/(auth)/forgot-password')
                     }
@@ -176,7 +167,7 @@ export default function Login() {
                     <Text className="text-blue text-[14px] font-poppinsMedium">
                       Forgot password
                     </Text>
-                  </Pressable>
+                  </Pressable> */}
                 </View>
 
                 <PrimaryBtn
