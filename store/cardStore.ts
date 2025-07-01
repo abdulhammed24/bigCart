@@ -197,4 +197,4 @@ export const useCardStore = create<CardState>()(
 );
 
 // Initialize store
-useCardStore.getState().fetchCards();
+// useCardStore.getState().fetchCards();

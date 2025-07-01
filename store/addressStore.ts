@@ -205,4 +205,4 @@ export const useAddressStore = create<AddressState>()(
 );
 
 // Initialize store
-useAddressStore.getState().fetchAddresses();
+// useAddressStore.getState().fetchAddresses();

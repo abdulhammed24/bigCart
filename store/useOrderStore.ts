@@ -158,4 +158,4 @@ export const useOrderStore = create<OrderState>()(
   ),
 );
 
-useOrderStore.getState().fetchOrders();
+// useOrderStore.getState().fetchOrders();

@@ -133,4 +133,4 @@ export const useFavoritesStore = create<FavoriteState>()(
 );
 
 // Initialize store
-useFavoritesStore.getState().fetchFavorites();
+// useFavoritesStore.getState().fetchFavorites();

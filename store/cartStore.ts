@@ -220,4 +220,4 @@ export const useCartStore = create<CartState>()(
 );
 
 // Initialize store
-useCartStore.getState().fetchCart();
+// useCartStore.getState().fetchCart();
