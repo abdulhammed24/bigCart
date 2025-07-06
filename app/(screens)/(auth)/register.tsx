@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  Pressable,
-  StatusBar,
-} from 'react-native';
+import { View, Text, ImageBackground, StatusBar } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Formik } from 'formik';
 import { InputField } from '@/components/InputField';
