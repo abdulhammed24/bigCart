@@ -46,7 +46,7 @@ export default function Register() {
         {
           userId: user.$id,
           name: values.name,
-          phoneNumber: values.phoneNumber || null,
+          phoneNumber: values.phoneNumber,
           email: values.email,
         },
       );

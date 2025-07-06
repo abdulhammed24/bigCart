@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  Pressable,
-  StatusBar,
-} from 'react-native';
+import { View, Text, ImageBackground, StatusBar } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Formik } from 'formik';
 import { InputField } from '@/components/InputField';
@@ -17,7 +10,7 @@ import CustomToggle from '@/components/CustomToggle';
 import Toast from 'react-native-toast-message';
 import { useAuthStore } from '../../../store/authStore';
 import { loginSchema } from '../../../lib/validationSchemas';
-import { account } from '../../../lib/appwriteconfig';
+import { account, databases } from '../../../lib/appwriteconfig';
 
 export default function Login() {
   const router = useRouter();
@@ -27,11 +20,16 @@ export default function Login() {
   const login = async (email: string, password: string) => {
     await account.createEmailPasswordSession(email, password);
     const userData = await account.get();
+    const userDoc = await databases.getDocument(
+      process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
+      process.env.EXPO_PUBLIC_APPWRITE_USERS_COLLECTION_ID!,
+      userData.$id,
+    );
     setUser({
       userId: userData.$id,
       email: userData.email,
       name: userData.name,
-      phoneNumber: userData.phone || '',
+      phoneNumber: userDoc.phoneNumber || '',
     });
   };
 
