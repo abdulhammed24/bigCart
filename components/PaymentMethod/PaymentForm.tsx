@@ -27,11 +27,11 @@ export default function PaymentForm({
     >
       <Formik
         initialValues={{
-          name: 'John Doe',
-          cardNumber: formatCardNumber('4012888888881881'),
-          expiry: '12/26',
-          cvv: '123',
-          isDefault: true,
+          name: '',
+          cardNumber: formatCardNumber(''),
+          expiry: '',
+          cvv: '',
+          isDefault: false,
         }}
         validationSchema={paymentSchema}
         onSubmit={(values) =>

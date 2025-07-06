@@ -63,14 +63,14 @@ export default function ShippingAddress() {
       >
         <Formik
           initialValues={{
-            name: 'John Doe',
-            email: 'john.doe@example.com',
-            address: '123 Main Street',
-            city: 'Boston',
-            zipCode: '02108',
-            country: 'USA',
-            phone: '+1234567890',
-            isDefault: true,
+            name: '',
+            email: '',
+            address: '',
+            city: '',
+            zipCode: '',
+            country: '',
+            phone: '',
+            isDefault: false,
           }}
           validationSchema={addressSchema}
           onSubmit={handleSubmit}
