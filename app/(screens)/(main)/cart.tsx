@@ -91,7 +91,6 @@ export default function Cart() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-
       <Header title="Shopping Cart" />
       {cartLoading || productsLoading ? (
         <LoadingState message="Loading cart..." />
