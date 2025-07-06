@@ -1,7 +1,6 @@
-// screens/Favorites.tsx
 import { Header } from '@/components/Header';
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -42,12 +41,28 @@ export default function Favorites() {
   const { handleAddToCart } = useCartToggle();
   const { handleFavoriteToggle } = useFavoriteToggle();
 
+  // Track whether initial fetch has been attempted
+  const [favoritesFetched, setFavoritesFetched] = useState(false);
+  const [productsFetched, setProductsFetched] = useState(false);
+
+  // Fetch data on mount if needed
   useEffect(() => {
-    fetchFavorites();
-    if (products.length === 0) {
-      fetchProducts();
+    if (!favoritesFetched && !favoritesLoading && !favoritesError) {
+      fetchFavorites().then(() => setFavoritesFetched(true));
     }
-  }, [fetchFavorites, fetchProducts, products.length]);
+    if (!productsFetched && !productsLoading && !productsError) {
+      fetchProducts().then(() => setProductsFetched(true));
+    }
+  }, [
+    favoritesFetched,
+    favoritesLoading,
+    favoritesError,
+    productsFetched,
+    productsLoading,
+    productsError,
+    fetchFavorites,
+    fetchProducts,
+  ]);
 
   const displayItems: FavoriteItemDisplay[] = favorites
     .map((productId) => {
