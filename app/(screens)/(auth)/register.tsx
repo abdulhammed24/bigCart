@@ -32,7 +32,7 @@ export default function Register() {
     try {
       // Create user account with Appwrite
       const user = await account.create(
-        ID.unique(), // Unique user ID
+        ID.unique(),
         values.email,
         values.password,
         values.name,
@@ -55,6 +55,8 @@ export default function Register() {
       useAuthStore.getState().setUser({
         userId: user.$id,
         email: user.email,
+        name: user.name,
+        phoneNumber: values.phoneNumber,
       });
 
       // Show success toast
@@ -67,7 +69,6 @@ export default function Register() {
       // Redirect to login screen
       router.replace('/(screens)/(auth)/login');
     } catch (error: any) {
-      // Show error toast
       Toast.show({
         type: 'error',
         text1: 'Registration Failed',

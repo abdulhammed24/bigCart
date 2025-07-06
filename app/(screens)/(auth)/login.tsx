@@ -30,6 +30,8 @@ export default function Login() {
     setUser({
       userId: userData.$id,
       email: userData.email,
+      name: userData.name,
+      phoneNumber: userData.phone || '',
     });
   };
 

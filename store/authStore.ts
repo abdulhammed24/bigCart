@@ -1,14 +1,14 @@
-// store/authStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { account } from '../lib/appwriteconfig';
+import { account, databases } from '../lib/appwriteconfig';
 import { useRouter } from 'expo-router';
 
 interface User {
   userId: string;
   email: string;
   name?: string;
+  phoneNumber?: string;
 }
 interface AuthState {
   user: User | null;
@@ -38,11 +38,17 @@ export const useAuthStore = create<AuthState>()(
       checkSession: async () => {
         try {
           const userData = await account.get();
+          const userDoc = await databases.getDocument(
+            process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!,
+            process.env.EXPO_PUBLIC_APPWRITE_USERS_COLLECTION_ID!,
+            userData.$id,
+          );
           set({
             user: {
               userId: userData.$id,
               email: userData.email,
               name: userData.name,
+              phoneNumber: userDoc.phoneNumber || '',
             },
             isAuthenticated: true,
           });
