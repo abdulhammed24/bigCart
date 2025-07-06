@@ -94,7 +94,7 @@ export default function SingleProductDetails() {
 
   return (
     <View className="flex-1">
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" translucent />
+      <StatusBar barStyle="light-content" backgroundColor="#000" translucent />
       <SafeAreaView
         style={{ flex: 1 }}
         edges={['bottom', 'left', 'right']}

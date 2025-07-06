@@ -3,6 +3,7 @@
     "name": "BigCart",
     "slug": "bigcart",
     "version": "1.0.0",
+    "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "movies",
@@ -14,8 +15,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "package": "com.big-cart.app"
+        "foregroundImage": "./assets/images/adaptive-icon.png"
       },
       "package": "com.bigcart.app"
     },
@@ -39,6 +39,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fd0a0739-0a18-424c-b0f6-f219efa0102f"
+      }
     }
   }
 }
