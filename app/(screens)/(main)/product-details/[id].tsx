@@ -98,7 +98,7 @@ export default function SingleProductDetails() {
       edges={['top', 'left', 'right']}
       className="bg-white"
     >
-      <StatusBar barStyle="light-content" backgroundColor="#000" />
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <View className="flex-1 bg-offWhite">
         {/* Image Section */}
         <View className="h-[400px]">
